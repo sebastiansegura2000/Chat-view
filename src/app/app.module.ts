@@ -1,5 +1,6 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,7 +10,6 @@ import { MessageHistoryComponent } from './message-history/message-history.compo
 import { GroupInfoComponent } from './group-info/group-info.component';
 import { ProfileInfoComponent } from './profile-info/profile-info.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { GroupChatComponent } from './group-chat/group-chat.component';
 
 @NgModule({
   declarations: [
@@ -19,14 +19,14 @@ import { GroupChatComponent } from './group-chat/group-chat.component';
     MessageHistoryComponent,
     GroupInfoComponent,
     ProfileInfoComponent,
-    GroupChatComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    HttpClientModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
