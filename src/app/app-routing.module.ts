@@ -5,6 +5,7 @@ import { ContactsComponent } from './contacts/contacts.component';
 import { GroupInfoComponent } from './group-info/group-info.component';
 import { MessageHistoryComponent } from './message-history/message-history.component';
 import { ProfileInfoComponent } from './profile-info/profile-info.component';
+import { GroupChatComponent } from './group-chat/group-chat.component';
 
 const routes: Routes = [
   { path: 'chat', component: ChatComponent },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'group-info', component: GroupInfoComponent },
   { path: 'message-history', component: MessageHistoryComponent },
   { path: 'profile-info', component: ProfileInfoComponent },
+  { path: 'group-chat', component: GroupChatComponent },
 ];
 
 @NgModule({

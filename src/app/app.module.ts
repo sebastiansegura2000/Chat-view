@@ -9,6 +9,7 @@ import { MessageHistoryComponent } from './message-history/message-history.compo
 import { GroupInfoComponent } from './group-info/group-info.component';
 import { ProfileInfoComponent } from './profile-info/profile-info.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { GroupChatComponent } from './group-chat/group-chat.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ChatComponent,
     MessageHistoryComponent,
     GroupInfoComponent,
-    ProfileInfoComponent
+    ProfileInfoComponent,
+    GroupChatComponent
   ],
   imports: [
     BrowserModule,

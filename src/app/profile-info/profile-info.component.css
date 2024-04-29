@@ -28,7 +28,7 @@ body {
   cursor: pointer;
   overflow: hidden;
   max-width: clamp(320px, 70vw, 740px);
-  min-width: 320px;
+  min-width: 400px;
   min-height: 280px;
 }
 
