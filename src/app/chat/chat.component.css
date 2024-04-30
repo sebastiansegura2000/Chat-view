@@ -34,7 +34,8 @@ body {
     margin-left: 6px;
     position: absolute;
     top: 20px;
-    right: -160px;
+    /* right: -160px; */
+    right: -50px;
 }
 
 .msg_status {

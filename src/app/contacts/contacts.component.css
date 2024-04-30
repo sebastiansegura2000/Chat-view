@@ -7,9 +7,18 @@ body {
 
 }
 
-.action_menu.show {
-  display: block;
+
+.btn-group {
+display: flex;
+justify-content: center;
 }
+
+
+.action_menu.show {
+display: block;
+}
+
+
 
 .unread_indicator {
   display: inline-block;
@@ -25,7 +34,8 @@ body {
   margin-left: 6px;
   position: absolute;
   top: 20px;
-  right: -160px;
+  /* right: -160px; */
+  right: -50px;
 }
 
 .msg_status {
