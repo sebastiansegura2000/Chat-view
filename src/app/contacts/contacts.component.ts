@@ -7,6 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContactsComponent implements OnInit {
 
+  showChat: boolean = true;
+
+  toggleChatView(): void {
+    this.showChat = !this.showChat;
+  }
+
   constructor() { }
 
   ngOnInit(): void {

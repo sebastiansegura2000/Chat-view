@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+// import { Component, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-group-chat',
   templateUrl: './group-chat.component.html',
   styleUrls: ['./group-chat.component.css']
 })
-export class GroupChatComponent implements OnInit {
+export class GroupChatComponent {
 
   showActionMenu: boolean = false;
 
@@ -13,9 +15,13 @@ export class GroupChatComponent implements OnInit {
     this.showActionMenu = !this.showActionMenu;
   }
 
-  constructor() { }
+  constructor(private router: Router) {}
 
-  ngOnInit(): void {
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey(event: KeyboardEvent) {
+    this.router.navigate(['/group-def']);
   }
 
 }
+

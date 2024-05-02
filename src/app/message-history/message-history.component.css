@@ -4,7 +4,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
   line-height: 1.42em;
-  color:#A7A1AE;
+  background-color: #D8E3FA;
 
 
 }
@@ -24,7 +24,7 @@ h2 {
   display: block;
   line-height:1em;
   padding-bottom: 2em;
-  color: #4b4b4b;
+  color: #191717;
 }
 
 h2 a {
@@ -41,11 +41,12 @@ h2 a {
 	  font-weight: bold;
 	  font-size: 1em;
   text-align: left;
-  color: #7d7676;
+  color: #D8E3FA;
 }
 
 .container td {
 	  font-weight: normal;
+    color: #D8E3FA;
 	  font-size: 1em;
     -webkit-box-shadow: 0 2px 2px -2px #0E1119;
 	   -moz-box-shadow: 0 2px 2px -2px #0E1119;
@@ -82,7 +83,7 @@ h2 a {
 }
 
 .container td:first-child {
-	  color: #FB667A;
+	  color: #D8E3FA;
 }
 
 .container tr:hover {

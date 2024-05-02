@@ -11,62 +11,11 @@
 
 		<div class="container-fluid h-100">
 			<div class="row justify-content-center h-100">
-				<div class="col-md-4 col-xl-3 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
-					<div class="card-header">
-						<div class="input-group">
-							<input type="text" placeholder="Search..." name="" class="form-control search">
-							<div class="input-group-append">
-								<span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
-								<!-- <button class="btn btn-outline-light ml-1" type="button"><i class="fas fa-plus"></i></button> -->
-								<button class="btn btn-outline-light ml-1" type="button" data-toggle="modal" data-target="#createGroupModal"><i class="fas fa-plus"></i></button>
-								<!-- <button class="btn btn-outline-light ml-1" type="button"><i class="fas fa-cog"></i></button> -->
-							</div>
-						</div>
-					</div>
 
-          <div class="btn-group">
-            <a href="/chat" class="btn btn-secondary btn-lg">
-              <i class="fas fa-comment"></i> Chats
-            </a>
-            <a href="/group-chat" class="btn btn-secondary btn-lg">
-              <i class="fas fa-users"></i> Group chats
-            </a>
-          </div>
+        <div class="col-md-4 col-xl-3 chat">
+          <app-group-list></app-group-list>
+				</div>
 
-
-					<div class="card-body contacts_body">
-						<ul class="contacts">
-						<li class="active">
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://e1.pngegg.com/pngimages/670/695/png-clipart-goku-ssj-blue-v3-son-guko-character.png" class="rounded-circle user_img">
-									<span class="online_icon"></span>
-								</div>
-								<div class="user_info">
-									<span>Khalid</span>
-									<p>roto</p>
-									<div class="unread_indicator">1</div>
-								</div>
-
-							</div>
-						</li>
-						<li>
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://i.pinimg.com/564x/ad/09/46/ad09465f323ce049c9f56cdd95071fbd.jpg" class="rounded-circle user_img">
-									<span class="online_icon offline"></span>
-								</div>
-								<div class="user_info">
-									<span>Taherah Big</span>
-									<p>kaka</p>
-								</div>
-							</div>
-						</li>
-
-						</ul>
-					</div>
-					<div class="card-footer"></div>
-				</div></div>
 				<div class="col-md-8 col-xl-6 chat">
 					<div class="card">
 						<div class="card-header msg_head">
@@ -151,37 +100,6 @@
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Modal -->
-		<div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog" aria-labelledby="createGroupModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="createGroupModalLabel">Create Group</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<form>
-							<div class="form-group">
-								<label for="groupName">Name</label>
-								<input type="text" class="form-control" id="groupName" placeholder="">
-							</div>
-
-							<div class="form-check">
-								<input type="checkbox" class="form-check-input" id="privateGroup">
-								<label class="form-check-label" for="privateGroup">Members</label>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Create Gruop</button>
 					</div>
 				</div>
 			</div>
