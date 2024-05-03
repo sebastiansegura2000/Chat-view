@@ -35,7 +35,7 @@ export class GroupInfoComponent implements OnInit {
     });
   }
 
-  confirmUpdate(): void {
+  updateGroup(): void {
     Swal.fire({
       title: '¿Estás seguro?',
       text: '¿Quieres actualizar este grupo?',
@@ -47,12 +47,17 @@ export class GroupInfoComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Aquí puedes agregar la lógica para actualizar el grupo
+        // Lógica de actualización del grupo aquí
         Swal.fire(
           '¡Grupo actualizado!',
           'El grupo ha sido actualizado correctamente.',
           'success'
         );
+        // Cierra el modal
+        const modal = document.getElementById('createGroupModal');
+        if (modal) {
+          modal.dispatchEvent(new Event('hide.bs.modal'));
+        }
       }
     });
   }
