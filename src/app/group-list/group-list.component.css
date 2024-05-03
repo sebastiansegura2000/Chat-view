@@ -302,3 +302,16 @@ display: block;
       margin-bottom: 15px !important;
   }
 }
+
+ul a:hover {
+  cursor: pointer;
+  background-color: #d8e3fa;
+}
+
+ul a {
+  text-decoration: none;
+}
+
+.contacts li:hover {
+  background-color: #0000003d;
+}
