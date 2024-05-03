@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
@@ -38,161 +38,110 @@
             </div>
         </div> -->
 
-          <div class="btn-group">
-            <a routerLink="/chat-def" routerLinkActive="active" class="btn btn-secondary btn-lg">
-              <i class="fas fa-comment"></i> Chats
-            </a>
-            <a routerLink="/group-def" routerLinkActive="active" class="btn btn-secondary btn-lg">
-              <i class="fas fa-users"></i> Group chats
-            </a>
-          </div>
+      <div class="btn-group">
+        <a
+          routerLink="/chat-def"
+          routerLinkActive="active"
+          class="btn btn-secondary btn-lg"
+        >
+          <i class="fas fa-comment"></i> Chats
+        </a>
+        <a
+          routerLink="/group-def"
+          routerLinkActive="active"
+          class="btn btn-secondary btn-lg"
+        >
+          <i class="fas fa-users"></i> Group chats
+        </a>
+      </div>
 
+      <!-- content of chats normal -->
 
+      <div class="card-body contacts_body">
+        <ul class="contacts">
+          <a *ngFor="let user of users" href="/chat">
+            <li>
+              <div class="d-flex bd-highlight">
+                <div class="img_cont">
+                  <img
+                    src="https://i.pinimg.com/564x/b3/cd/fe/b3cdfe6f0a48e9b6e6c0ec1889e6e038.jpg"
+                    class="rounded-circle user_img"
+                  />
 
-
-
-          <!-- content of chats normal -->
-
-					<div class="card-body contacts_body">
-						<ul class="contacts">
-
-              <a href="/chat">
-                <li class="active">
-                  <div class="d-flex bd-highlight">
-                    <div class="img_cont">
-                      <img src="https://i.pinimg.com/564x/b3/cd/fe/b3cdfe6f0a48e9b6e6c0ec1889e6e038.jpg" class="rounded-circle user_img">
-                      <span class="online_icon"></span>
-                    </div>
-                    <div class="user_info">
-                      <span>Khalid</span>
-                      <p>Kalid is online</p>
-                      <div class="unread_indicator">1</div>
-                    </div>
-
-                  </div>
-                </li>
-              </a>
-
-              <!-- <a href="/chat">
-                <li *ngFor="let contact of filteredContacts">
-                  <div class="d-flex bd-highlight">
-                    <div class="img_cont">
-                      <img src="https://i.pinimg.com/564x/b3/cd/fe/b3cdfe6f0a48e9b6e6c0ec1889e6e038.jpg" class="rounded-circle user_img">
-                      <span class="online_icon"></span>
-                    </div>
-                    <div class="user_info">
-                      <span>{{ contact.name }}</span>
-                      <p>{{ contact.online ? 'Online' : 'Offline' }}</p>
-                      <div class="unread_indicator">1</div>
-                    </div>
-
-                  </div>
-                </li>
-              </a> -->
-
-<!--
-              <li class="active">
-                <div class="d-flex bd-highlight">
-                    <div class="img_cont">
-                        <img src="https://i.pinimg.com/564x/b3/cd/fe/b3cdfe6f0a48e9b6e6c0ec1889e6e038.jpg" class="rounded-circle user_img">
-                        <span class="online_icon"></span>
-                    </div>
-                    <div class="user_info">
-                        <a routerLink="/chat" routerLinkActive="active">
-                            <span>Khalid</span>
-                            <p>Kalid is online</p>
-                            <div class="unread_indicator">1</div>
-                        </a>
-                    </div>
                 </div>
-              </li> -->
+                <div class="user_info">
+                  <span>{{ user.name }}</span>
+                  <p *ngIf="user.lastMessage">{{ (currentUser.userData.id == user.lastMessage.sender_id) ? 'Tu: ' : (user.name | slice:0:3) + ': ' }}{{ (user.lastMessage.content | slice: 0:10) + '... ' + (user.lastMessage.created_at | date: 'dd/MM/yyyy h:mm a') }}</p>
+                  <p *ngIf="!user.lastMessage">No hay mensajes</p>
+                  <div *ngIf="user.unreadMessages" class="unread_indicator">{{ user.unreadMessages }}</div>
+                </div>
+              </div>
+            </li>
+          </a>
+        </ul>
+      </div>
 
-						<li>
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://e1.pngegg.com/pngimages/670/695/png-clipart-goku-ssj-blue-v3-son-guko-character.png" class="rounded-circle user_img">
-									<span class="online_icon offline"></span>
-								</div>
-								<div class="user_info">
-									<span>Taherah Big</span>
-									<p>Taherah left 7 mins ago</p>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://e1.pngegg.com/pngimages/670/695/png-clipart-goku-ssj-blue-v3-son-guko-character.png" class="rounded-circle user_img">
-									<span class="online_icon"></span>
-								</div>
-								<div class="user_info">
-									<span>Sami Rafi</span>
-									<p>Sami is online</p>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://e1.pngegg.com/pngimages/670/695/png-clipart-goku-ssj-blue-v3-son-guko-character.png" class="rounded-circle user_img">
-									<span class="online_icon offline"></span>
-								</div>
-								<div class="user_info">
-									<span>Nargis Hawa</span>
-									<p>Nargis left 30 mins ago</p>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://e1.pngegg.com/pngimages/670/695/png-clipart-goku-ssj-blue-v3-son-guko-character.png" class="rounded-circle user_img">
-									<span class="online_icon offline"></span>
-								</div>
-								<div class="user_info">
-									<span>Rashid Samim</span>
-									<p>Rashid left 50 mins ago</p>
-								</div>
-							</div>
-						</li>
-						</ul>
-					</div>
+      <div class="card-footer"></div>
+    </div>
 
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="createGroupModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="createGroupModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createGroupModalLabel">Create Group</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="groupName">Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="groupName"
+                  placeholder=""
+                />
+              </div>
 
-					<div class="card-footer"></div>
-				</div>
-
-		<!-- Modal -->
-		<div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog" aria-labelledby="createGroupModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="createGroupModalLabel">Create Group</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<form>
-							<div class="form-group">
-								<label for="groupName">Name</label>
-								<input type="text" class="form-control" id="groupName" placeholder="">
-							</div>
-
-							<div class="form-check">
-								<input type="checkbox" class="form-check-input" id="privateGroup">
-								<label class="form-check-label" for="privateGroup">Members</label>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Create Gruop</button>
-					</div>
-				</div>
-			</div>
-		</div>
-
-</body>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="privateGroup"
+                />
+                <label class="form-check-label" for="privateGroup"
+                  >Members</label
+                >
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Create Gruop</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
-

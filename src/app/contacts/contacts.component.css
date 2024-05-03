@@ -1,28 +1,23 @@
 body {
   height: 100vh;
   margin: 0;
-  background-color: #D8E3FA;
+  background-color: #d8e3fa;
   display: grid;
   place-items: center;
-
 }
-
 
 .btn-group {
-display: flex;
-justify-content: center;
+  display: flex;
+  justify-content: center;
 }
-
 
 .action_menu.show {
-display: block;
+  display: block;
 }
-
-
 
 .unread_indicator {
   display: inline-block;
-  background-color: #25D366;
+  background-color: #25d366;
   color: white;
   font-size: 12px;
   font-weight: 600;
@@ -297,8 +292,20 @@ display: block;
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-@media(max-width: 576px) {
+@media (max-width: 576px) {
   .contacts_card {
-      margin-bottom: 15px !important;
+    margin-bottom: 15px !important;
   }
+}
+
+ul a:hover {
+  cursor: pointer;
+  background-color: #d8e3fa;
+}
+
+ul a {
+  text-decoration: none;
+}
+.contacts li:hover {
+  background-color: #0000003d;
 }

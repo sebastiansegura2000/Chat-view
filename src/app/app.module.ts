@@ -17,6 +17,9 @@ import { GroupListComponent } from './group-list/group-list.component';
 import { ChatDefComponent } from './chat-def/chat-def.component';
 import { GroupDefComponent } from './group-def/group-def.component';
 
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +39,7 @@ import { GroupDefComponent } from './group-def/group-def.component';
     AppRoutingModule,
     NgbModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

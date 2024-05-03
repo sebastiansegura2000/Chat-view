@@ -51,35 +51,22 @@
 					<div class="card-body contacts_body">
             <ul class="contacts">
 
-              <a href="/group-chat">
-              <li class="active">
+              <a *ngFor="let group of groups" href="/group-chat">
+              <li>
                 <div class="d-flex bd-highlight">
                   <div class="img_cont">
                     <img src="https://e1.pngegg.com/pngimages/670/695/png-clipart-goku-ssj-blue-v3-son-guko-character.png" class="rounded-circle user_img">
-                    <span class="online_icon"></span>
                   </div>
                   <div class="user_info">
-                    <span>Khalid</span>
-                    <p>roto</p>
-                    <div class="unread_indicator">1</div>
+                    <span>{{ group.name }}</span>
+                    <p *ngIf="group.lastMessage">{{ (group.lastMessage.sender_id == currentUser.userData.id) ? 'tu: ' : (group.lastMessage.sender_name | slice:0:5) + ': '}} {{ (group.lastMessage.content | slice: 0:15) + '... ' + (group.lastMessage.created_at | date: 'dd/MM/yyyy h:mm a') }}</p>
+                    <p *ngIf="!group.lastMessage">No hay mensajes</p>
+                    <div *ngIf="group.unreadMessages" class="unread_indicator">{{ group.unreadMessages }}</div>
                   </div>
 
                 </div>
               </li>
               </a>
-              <li>
-                <div class="d-flex bd-highlight">
-                  <div class="img_cont">
-                    <img src="https://i.pinimg.com/564x/ad/09/46/ad09465f323ce049c9f56cdd95071fbd.jpg" class="rounded-circle user_img">
-                    <span class="online_icon offline"></span>
-                  </div>
-                  <div class="user_info">
-                    <span>Taherah Big</span>
-                    <p>kaka</p>
-                  </div>
-                </div>
-              </li>
-
               </ul>
 					</div>
 
