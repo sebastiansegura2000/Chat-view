@@ -16,24 +16,18 @@ export class ContactsComponent implements OnInit {
     private messageService: MessageQueryForUserService
   ) {}
 
-  // contacts = [
-  //   { name: 'Khalid', online: true },
-  //   { name: 'Taherah Big', online: false },
-  //   { name: 'Sami Rafi', online: true },
-  //   { name: 'Nargis Hawa', online: false },
-  //   { name: 'Rashid Samim', online: false }
-  // ];
-
-  // filteredContacts: any[] = [];
-  // filterValue: string = '';
 
 
-  // applyFilter() {
-  //   this.filteredContacts = this.contacts.filter(contact =>
-  //     contact.name.toLowerCase().includes(this.filterValue.toLowerCase())
-  //   );
-  // }
+  filteredContacts: any[] = [];
+  filterValue: string = '';
 
+
+  applyFilter() {
+    this.filteredContacts = this.users.filter(contact =>
+      contact.name.toLowerCase().includes(this.filterValue.toLowerCase())
+    );
+  }
+  
   users: User[];
   showChat: boolean = true;
 
@@ -47,14 +41,14 @@ export class ContactsComponent implements OnInit {
     this.fetchUsers();
     this.fetchUnreadMessages();
     this.currentUser = this.globalService.userAuth.value;
-    // this.filteredContacts = this.contacts;
   }
   /**
    * Fetches the list of users from the server.
    */
   private fetchUsers(): void {
     this.userService.getUsers().subscribe((response) => {
-      this.users = this.SortUsers(response.users);
+      this.filteredContacts = this.SortUsers(response.users);
+      this.users = this.filteredContacts;
     });
   }
   /**
@@ -72,7 +66,7 @@ export class ContactsComponent implements OnInit {
    */
   private updateUnreadMessages(unreadMessages: any[]): void {
     unreadMessages.forEach((message) => {
-      const user = this.users.find((user) => user.id === message.sender_id);
+      const user = this.filteredContacts.find((user) => user.id === message.sender_id);
       if (user) {
         user.unreadMessages = message.unread_messages_count;
       }

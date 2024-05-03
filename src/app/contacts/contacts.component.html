@@ -10,33 +10,20 @@
 <body>
 
 				<div class="card mb-sm-3 mb-md-0 contacts_card">
-					<div class="card-header">
-						<div class="input-group">
-							<input type="text" placeholder="Search..." name="" class="form-control search">
-							<div class="input-group-append">
-								<span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
-								<!-- <button class="btn btn-outline-light ml-1" type="button"><i class="fas fa-plus"></i></button> -->
-								<!-- <button class="btn btn-outline-light ml-1" type="button" data-toggle="modal" data-target="#createGroupModal"><i class="fas fa-plus"></i></button> -->
-								<!-- <button class="btn btn-outline-light ml-1" type="button"><i class="fas fa-cog"></i></button> -->
-                <a routerLink="/message-history" routerLinkActive="active" class="btn btn-outline-light ml-1">
-                  <i class="fas fa-cog"></i> History
-                </a>
-							</div>
-						</div>
-					</div>
-
-          <!-- <div class="card-header">
+					 <div class="card-header">
             <div class="input-group">
                 <input type="text" placeholder="Search..." [(ngModel)]="filterValue" (input)="applyFilter()" class="form-control search">
                 <div class="input-group-append">
                     <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
-                    <button class="btn btn-outline-light ml-1" type="button" data-toggle="modal" data-target="#createGroupModal"><i class="fas fa-plus"></i></button>
+                    
                     <a routerLink="/message-history" routerLinkActive="active" class="btn btn-outline-light ml-1">
                         <i class="fas fa-cog"></i> History
                     </a>
                 </div>
             </div>
-        </div> -->
+        </div>
+
+         
 
       <div class="btn-group">
         <a
@@ -59,7 +46,7 @@
 
       <div class="card-body contacts_body">
         <ul class="contacts">
-          <a *ngFor="let user of users" href="/chat">
+          <a *ngFor="let user of filteredContacts" href="/chat">
             <li>
               <div class="d-flex bd-highlight">
                 <div class="img_cont">
@@ -82,66 +69,6 @@
       </div>
 
       <div class="card-footer"></div>
-    </div>
-
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="createGroupModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="createGroupModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="createGroupModalLabel">Create Group</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="groupName">Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="groupName"
-                  placeholder=""
-                />
-              </div>
-
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="privateGroup"
-                />
-                <label class="form-check-label" for="privateGroup"
-                  >Members</label
-                >
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">Create Gruop</button>
-          </div>
-        </div>
-      </div>
     </div>
   </body>
 </html>
