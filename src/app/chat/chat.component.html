@@ -55,6 +55,7 @@
                       <span class="msg_status"><i class="fas fa-check-double"></i></span>
                   </div>
 							</div>
+
 							<div class="d-flex justify-content-end mb-4">
 								<div class="msg_cotainer_send">
 									Hi Khalid i am good tnx how about you?
@@ -63,16 +64,29 @@
 								<div class="img_cont_msg">
 								</div>
 							</div>
+
+              <ng-container *ngFor="let msg of sentMessages">
+                <div class="d-flex justify-content-end mb-4">
+                  <div class="msg_cotainer_send">
+                    {{ msg.text }}
+                    <span class="msg_time_send">{{ msg.time }}</span>
+                  </div>
+                  <div class="img_cont_msg"></div>
+                </div>
+              </ng-container>
+
 						</div>
 						<div class="card-footer">
 							<div class="input-group">
 								<div class="input-group-append">
 									<!-- <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span> -->
 								</div>
-								<textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
-								<div class="input-group-append">
-									<span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
-								</div>
+
+                <textarea name="" class="form-control type_msg" placeholder="Type your message..." (keyup.enter)="sendMessage()"></textarea>
+                <div class="input-group-append">
+                    <span class="input-group-text send_btn" (click)="sendMessage()"><i class="fas fa-location-arrow"></i></span>
+                </div>
+
 							</div>
 						</div>
 					</div>

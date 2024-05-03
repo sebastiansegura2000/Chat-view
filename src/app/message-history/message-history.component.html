@@ -9,50 +9,74 @@
 
   <br><br>
 
-    <h1><b>Messages</b>
-      <a routerLink="/chat-def" routerLinkActive="active" class="btn btn-outline-light ml-1">
-        <i class="fas fa-cog"></i> History
-      </a>
+    <h1><b>Messages</b><br><br>
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <a routerLink="/chat-def" routerLinkActive="active" class="btn btn-secondary">
+          <i class="fa-solid fa-backward"></i> Come back
+        </a>
+        <button (click)="showReceiverMessages()" class="btn btn-secondary">Receiver Messages</button>
+        <button (click)="showGroupMessages()" class="btn btn-secondary">Group Messages</button>
+      </div>
     </h1>
   <br>
+  <!-- <div class="mb-3">
+    <label for="filterInput" class="form-label">Filter by Sender, Receiver, Group, or Message:</label>
+    <div class="input-group">
+        <input type="text" class="form-control" id="filterInput" [(ngModel)]="filterValue" placeholder="Type here to filter">
+        <button class="btn btn-primary" (click)="applyFilter()">Search</button>
+    </div>
+</div> -->
 
+  <div class="mb-3 d-flex justify-content-center">
+    <div style="max-width: 300px;">
+        <label for="filterInput" class="form-label">Filter:</label>
+        <div class="input-group input-group-sm">
+            <input type="text" class="form-control" id="filterInput" [(ngModel)]="filterValue" placeholder="Type here to filter">
+            <button class="btn btn-primary" (click)="applyFilter()">Search</button>
+        </div>
+    </div>
+  </div>
+
+
+  <br>
+
+  <div *ngIf="showReceiver">
     <h2>Receiver Messages</h2>
-
     <table class="container">
-        <thead>
-            <tr>
-                <th><h1>#</h1></th>
-                <th><h1>Sender</h1></th>
-                <th><h1>Receiver</h1></th>
-                <th><h1>Message</h1></th>
-                <th><h1>Read</h1></th>
-                <th><h1>Timestamps</h1></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>goku</td>
-                <td>veggeta</td>
-                <td>xd</td>
-                <td>yes</td>
-                <td>01:32:50 AM</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>veggeta</td>
-                <td>goku</td>
-                <td>xd</td>
-                <td>yes</td>
-                <td>01:32:50 AM</td>
-            </tr>
-        </tbody>
-    </table>
+      <thead>
+          <tr>
+              <th><h1>#</h1></th>
+              <th><h1>Sender</h1></th>
+              <th><h1>Receiver</h1></th>
+              <th><h1>Message</h1></th>
+              <th><h1>Read</h1></th>
+              <th><h1>Timestamps</h1></th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td>1</td>
+              <td>goku</td>
+              <td>veggeta</td>
+              <td>xd</td>
+              <td>yes</td>
+              <td>01:32:50 AM</td>
+          </tr>
+          <tr>
+              <td>2</td>
+              <td>veggeta</td>
+              <td>goku</td>
+              <td>xd</td>
+              <td>yes</td>
+              <td>01:32:50 AM</td>
+          </tr>
+      </tbody>
+  </table>
+  </div>
 
-    <br><br>
-    <h2>Group Messages</h2>
-
-    <table class="container">
+    <div *ngIf="showGroup">
+      <h2>Group Messages</h2>
+      <table class="container">
         <thead>
             <tr>
                 <th><h1>#</h1></th>
@@ -82,6 +106,10 @@
             </tr>
         </tbody>
     </table>
+    </div>
+
+
+    <br>
 </body>
 </html>
 
