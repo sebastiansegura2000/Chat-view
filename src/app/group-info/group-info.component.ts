@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-group-info',
   templateUrl: './group-info.component.html',
@@ -11,4 +13,47 @@ export class GroupInfoComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  confirmDelete(): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Una vez eliminado, no podrás recuperar este grupo',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Aquí puedes agregar la lógica para eliminar el grupo
+        Swal.fire(
+          '¡Grupo eliminado!',
+          'El grupo ha sido eliminado correctamente.',
+          'success'
+        );
+      }
+    });
+  }
+
+  confirmUpdate(): void {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Quieres actualizar este grupo?',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Actualizar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Aquí puedes agregar la lógica para actualizar el grupo
+        Swal.fire(
+          '¡Grupo actualizado!',
+          'El grupo ha sido actualizado correctamente.',
+          'success'
+        );
+      }
+    });
+  }
 }

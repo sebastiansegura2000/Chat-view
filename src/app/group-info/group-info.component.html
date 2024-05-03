@@ -33,9 +33,7 @@
                     <li class="chip">PostgreSQL</li>
                 </ul>
                 <div class="action-buttons">
-                    <button type="button" title="Delete">
-                        Delete
-                    </button>
+                  <button type="button" (click)="confirmDelete()" title="Delete">Delete</button>
                     <button type="button" onclick="window.history.back()" class="secondary" title="Come back">
                         Come back
                     </button>
@@ -70,7 +68,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Update Group</button>
+                    <button type="button" (click)="confirmUpdate()" class="btn btn-primary">Update Group</button>
                 </div>
             </div>
         </div>
