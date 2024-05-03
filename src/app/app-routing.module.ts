@@ -10,6 +10,7 @@ import { ChatListComponent } from './chat-list/chat-list.component';
 import { GroupListComponent } from './group-list/group-list.component';
 import { ChatDefComponent } from './chat-def/chat-def.component';
 import { GroupDefComponent } from './group-def/group-def.component';
+import { MessageHistoryUserComponent } from './message-history-user/message-history-user.component';
 
 const routes: Routes = [
   { path: 'chat', component: ChatComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'group-list', component: GroupListComponent },
   { path: 'chat-def', component: ChatDefComponent },
   { path: 'group-def', component: GroupDefComponent },
+  { path: 'message-history-user', component: MessageHistoryUserComponent },
   { path: '', redirectTo: '/chat-def', pathMatch: 'full' }
 ];
 

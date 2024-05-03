@@ -16,6 +16,7 @@ import { ChatListComponent } from './chat-list/chat-list.component';
 import { GroupListComponent } from './group-list/group-list.component';
 import { ChatDefComponent } from './chat-def/chat-def.component';
 import { GroupDefComponent } from './group-def/group-def.component';
+import { MessageHistoryUserComponent } from './message-history-user/message-history-user.component';
 
 
 
@@ -32,7 +33,8 @@ import { GroupDefComponent } from './group-def/group-def.component';
     ChatListComponent,
     GroupListComponent,
     ChatDefComponent,
-    GroupDefComponent
+    GroupDefComponent,
+    MessageHistoryUserComponent
   ],
   imports: [
     BrowserModule,
