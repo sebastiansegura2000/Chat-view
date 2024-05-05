@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+</head>
+<body>
+
+				<div class="card mb-sm-3 mb-md-0 contacts_card">
+					 <div class="card-header">
+            <div class="input-group">
+                <input type="text" placeholder="Search..." [(ngModel)]="filterValue" (input)="applyFilter()" class="form-control search">
+                <div class="input-group-append">
+                    <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+                    
+                    <a routerLink="/message-history" routerLinkActive="active" class="btn btn-outline-light ml-1">
+                        <i class="fas fa-cog"></i> History
+                    </a>
+                </div>
+            </div>
+        </div>
+
+         
+
+      <div class="btn-group">
+        <a
+          routerLink="/chat-def"
+          routerLinkActive="active"
+          class="btn btn-secondary btn-lg"
+        >
+          <i class="fas fa-comment"></i> Chats
+        </a>
+        <a
+          routerLink="/group-def"
+          routerLinkActive="active"
+          class="btn btn-secondary btn-lg"
+        >
+          <i class="fas fa-users"></i> Group chats
+        </a>
+      </div>
+
+      <!-- content of chats normal -->
+
+      <div class="card-body contacts_body">
+        <ul class="contacts">
+          <a *ngFor="let user of filteredContacts" [routerLink]="['/chat', user.id]">
+            <li>
+              <div class="d-flex bd-highlight">
+                <div class="img_cont">
+                  <img
+                    src="https://i.pinimg.com/564x/b3/cd/fe/b3cdfe6f0a48e9b6e6c0ec1889e6e038.jpg"
+                    class="rounded-circle user_img"
+                  />
+
+                </div>
+                <div class="user_info">
+                  <span>{{ user.name }}</span>
+                  <p *ngIf="user.lastMessage">{{ (currentUser.userData.id == user.lastMessage.sender_id) ? 'Tu: ' : (user.name | slice:0:3) + ': ' }}{{ (user.lastMessage.content | slice: 0:10) + '... ' + (user.lastMessage.created_at | date: 'dd/MM/yyyy h:mm a') }}</p>
+                  <p *ngIf="!user.lastMessage">No hay mensajes</p>
+                  <div *ngIf="user.unreadMessages" class="unread_indicator">{{ user.unreadMessages }}</div>
+                </div>
+              </div>
+            </li>
+          </a>
+        </ul>
+      </div>
+
+      <div class="card-footer"></div>
+    </div>
+  </body>
+</html>
