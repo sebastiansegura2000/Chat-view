@@ -5,6 +5,8 @@ import { User } from 'src/app/Interfaces/User/user.interface';
 import { IUSerRepositoryService } from 'src/app/Abstract/User/repository/iuser-repository.service';
 import { Subscription } from 'rxjs';
 import { IMessageQueryForUserService } from 'src/app/Abstract/Message/User/imessage-query-for-user.service';
+import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-variables.service';
+import { Message } from 'src/app/Interfaces/Message/message.inteface';
 
 @Component({
   selector: 'app-chat',
@@ -13,17 +15,22 @@ import { IMessageQueryForUserService } from 'src/app/Abstract/Message/User/imess
 })
 export class ChatComponent implements OnInit {
   recipient: User;
+  sender:User;
+  messages:Message;
   private routeSub: Subscription;
   showActionMenu: boolean = false;
   constructor(
     private routerNavegation: Router,
     private route: ActivatedRoute,
     private userRepository: IUSerRepositoryService,
-    private messageService:IMessageQueryForUserService
+    private messageService:IMessageQueryForUserService,
+    private globalService: GlobalVariablesService
   ) {}
 
   ngOnInit(): void {
     this.routeSuscribe();
+    this.sender = this.globalService.userAuth.value.userData;
+    console.log(this.sender);
   }
 
   toggleActionMenu() {
@@ -58,7 +65,11 @@ export class ChatComponent implements OnInit {
 
   getRecipient(user_id) {
     this.userRepository.getUserForId(user_id).subscribe((response) => {
-      this.recipient = response.user
+      this.recipient = response.user;
+      this.messageService.getMessage(this.recipient.id).subscribe((response) => {
+        this.messages = response.messages;
+        console.log(response);
+      });
     });
   }
 
