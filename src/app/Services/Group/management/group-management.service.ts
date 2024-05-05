@@ -20,7 +20,21 @@ export class GroupManagementService implements IGroupManagementService {
       Authorization: 'Bearer ' + environment.token,
     });
 
-    return this.http.get<Group[]>(environment.apiUrl + 'group/get-groups-for-user', {
+    return this.http.get<Group[]>(
+      environment.apiUrl + 'group/get-groups-for-user',
+      {
+        headers,
+      }
+    );
+  }
+
+  createGroup(groupData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + environment.token,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post<any>(environment.apiUrl + 'group/create', groupData, {
       headers,
     });
   }

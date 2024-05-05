@@ -10,6 +10,7 @@ export abstract class IGroupManagementService {
 
   constructor(private http: HttpClient) {}
   public abstract getGroupForUser():Observable<Group[]>;
+  public abstract createGroup():Observable<any[]>
 }
 
 

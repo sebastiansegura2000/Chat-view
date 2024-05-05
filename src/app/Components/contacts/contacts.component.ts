@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserHttpService } from '../Services/User/user-http-service.service';
-import { User } from '../Interfaces/User/user.interface';
-import { GlobalVariablesService } from '../GlobalVariables/global-variables.service';
-import { MessageQueryForUserService } from '../Services/Message/message-query-for-user.service';
+import { User } from 'src/app/Interfaces/User/user.interface';
+import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-variables.service';
+import { UserService } from 'src/app/Abstract/User/service/user-service.service';
+import { IMessageQueryForUserService } from 'src/app/Abstract/Message/User/imessage-query-for-user.service';
 
 @Component({
   selector: 'app-contacts',
@@ -11,9 +11,9 @@ import { MessageQueryForUserService } from '../Services/Message/message-query-fo
 })
 export class ContactsComponent implements OnInit {
   constructor(
-    private userService: UserHttpService,
+    private userService: UserService,
     private globalService: GlobalVariablesService,
-    private messageService: MessageQueryForUserService
+    private messageService: IMessageQueryForUserService
   ) {}
 
 
