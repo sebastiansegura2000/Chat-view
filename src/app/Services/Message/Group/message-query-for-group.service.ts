@@ -1,25 +1,17 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IMessageQueryForGroupService } from 'src/app/Abstract/Message/imessage-query-for-group.service';
+import { IMessageQueryForGroupService } from 'src/app/Abstract/Message/Group/imessage-query-for-group.service';
 import { MessageNotReadForGroup } from 'src/app/Interfaces/Message/countMessageNotReadForGroup.interface';
-import { environment } from 'src/environments/environment';
+import { HttpHandlerService } from '../../Http/http-handler.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export  class MessageQueryForGroupService implements IMessageQueryForGroupService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private httpService:HttpHandlerService) {}
   
   public countMessageNotReadForGroup(): Observable<MessageNotReadForGroup[]> {
-    const headers = new HttpHeaders({
-      Authorization: 'Bearer ' + environment.token,
-    });
-
-    return this.http.get<MessageNotReadForGroup[]>(
-      environment.apiUrl + 'message/countMessagesNotReadOfGroup',
-      { headers }
-    );
+    return this.httpService.getData('message/countMessagesNotReadOfGroup');
   }
 }
