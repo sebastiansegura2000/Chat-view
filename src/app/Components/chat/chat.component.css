@@ -302,3 +302,8 @@ body {
         margin-bottom: 15px !important;
     }
 }
+
+
+.markAsrRead{
+    color: blue;
+}
