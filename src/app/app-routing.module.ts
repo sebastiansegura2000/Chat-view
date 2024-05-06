@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'group-info', component: GroupInfoComponent },
   { path: 'message-history', component: MessageHistoryComponent },
   { path: 'profile-info', component: ProfileInfoComponent },
-  { path: 'group-chat', component: GroupChatComponent },
+  { path: 'group-chat/:id', component: GroupChatComponent },
   { path: 'chat-list', component: ChatListComponent },
   { path: 'group-list', component: GroupListComponent },
   { path: 'chat-def', component: ChatDefComponent },
