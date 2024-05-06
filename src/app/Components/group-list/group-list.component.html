@@ -12,7 +12,8 @@
 				<div class="card mb-sm-3 mb-md-0 contacts_card">
 					<div class="card-header">
 						<div class="input-group">
-							<input type="text" placeholder="Search..." name="" class="form-control search">
+
+              <input type="text" placeholder="Search..." [(ngModel)]="filterValue" (input)="applyFilter()" class="form-control search">
 							<div class="input-group-append">
 								<span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
 								<!-- <button class="btn btn-outline-light ml-1" type="button"><i class="fas fa-plus"></i></button> -->
@@ -50,8 +51,7 @@
 
 					<div class="card-body contacts_body">
             <ul class="contacts">
-
-              <a *ngFor="let group of groups" href="/group-chat">
+              <a *ngFor="let group of filteredGroups" href="/group-chat">
               <li>
                 <div class="d-flex bd-highlight">
                   <div class="img_cont">

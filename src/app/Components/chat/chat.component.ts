@@ -51,11 +51,8 @@ export class ChatComponent implements OnInit {
       const currentTime = new Date().toLocaleTimeString();
       this.sentMessages.push({ text: message, time: currentTime });
       (document.querySelector('.type_msg') as HTMLInputElement).value = '';
-      // Desplazar el scroll hacia abajo para mostrar el último mensaje enviado
       setTimeout(() => {
-        const msgContainer = document.querySelector(
-          '.msg_card_body'
-        ) as HTMLElement;
+        const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
         msgContainer.scrollTop = msgContainer.scrollHeight;
       }, 0);
     }
@@ -77,6 +74,10 @@ export class ChatComponent implements OnInit {
   loadMessage() {
     this.messageService.getMessage(this.recipient.id).subscribe((response) => {
       this.messages = response.messages;
+      setTimeout(() => {
+        const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+      }, 0);
     });
   }
   /**
