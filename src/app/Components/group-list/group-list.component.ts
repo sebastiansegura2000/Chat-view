@@ -6,7 +6,7 @@ import {
   FormArray,
   Validators,
 } from '@angular/forms';
-import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-variables.service'; 
+import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-variables.service';
 import { CreateGroupFormService } from 'src/app/Services/Forms/Group/CreateGroup/create-group-form.service';
 import { User } from 'src/app/Interfaces/User/user.interface';
 import { map } from 'rxjs/operators';
@@ -52,6 +52,15 @@ export class GroupListComponent implements OnInit {
   }
   // ----------------------------------------------------------------------------------------------------------------------------
 
+  filteredGroups: any[] = [];
+  filterValue: string = '';
+
+  applyFilter(): void {
+    this.filteredGroups = this.groups.filter((group) =>
+      group.name.toLowerCase().includes(this.filterValue.toLowerCase())
+    );
+  }
+
   // propeties participants -----------------------------------------------------------------------------------------------------
   get participantsControls(): FormArray {
     return this.createGroupForm.get('participants') as FormArray;
@@ -73,11 +82,9 @@ export class GroupListComponent implements OnInit {
    * Loads the groups for the current user.
    */
   loadGroups(): void {
-    this.groupManagementService
-      .getGroupForUser()
-      .pipe(map((response) => this.sortGroups(response.groups)))
-      .subscribe((groups) => {
-        this.groups = groups;
+    this.groupManagementService.getGroupForUser().subscribe((response) => {
+      this.filteredGroups = this.sortGroups(response.groups);
+        this.groups = this.filteredGroups;
         this.updateUnreadMessagesCount();
       });
   }

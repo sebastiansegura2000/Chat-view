@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class GroupChatComponent implements OnInit {
   showActionMenu: boolean = false;
-
+  sentMessages: { text: string; time: string }[] = [];
 
   constructor(
     private routerNavegation: Router,
@@ -23,10 +23,27 @@ export class GroupChatComponent implements OnInit {
     });
   }
 
+  
 
   toggleActionMenu() {
     this.showActionMenu = !this.showActionMenu;
   }
+  sendMessage() {
+    const message = (
+      document.querySelector('.type_msg') as HTMLInputElement
+    ).value.trim();
+    if (message !== '') {
+      //console.log(message)
+      const currentTime = new Date().toLocaleTimeString();
+      this.sentMessages.push({ text: message, time: currentTime });
+      (document.querySelector('.type_msg') as HTMLInputElement).value = '';
+      setTimeout(() => {
+        const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+      }, 0);
+    }
+  }
+
   
   @HostListener('document:keydown.escape', ['$event'])
   handleEscapeKey(event: KeyboardEvent) {
