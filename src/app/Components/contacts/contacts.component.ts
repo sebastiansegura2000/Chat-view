@@ -47,7 +47,7 @@ export class ContactsComponent implements OnInit {
    */
   private fetchUsers(): void {
     this.userService.getUsers().subscribe((response) => {
-      this.filteredContacts = this.SortUsers(response.users);
+      this.filteredContacts = this.SortUsers(response['users']);
       this.users = this.filteredContacts;
     });
   }
@@ -56,7 +56,7 @@ export class ContactsComponent implements OnInit {
    */
   private fetchUnreadMessages(): void {
     this.messageService.countMessageNotReadForUser().subscribe((response) => {
-      this.updateUnreadMessages(response.unreadMessages);
+      this.updateUnreadMessages(response['unreadMessages']);
     });
   }
   /**

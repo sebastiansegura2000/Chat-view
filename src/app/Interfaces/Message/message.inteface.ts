@@ -4,7 +4,7 @@ export interface Message {
     content: string;
     created_at: string;
     updated_at: string;
-    recipient_type: string;
+    recipient_type?: string;
     recipient_entity_id: number;
     sender_name: string;
     read?: ReadInfo[];

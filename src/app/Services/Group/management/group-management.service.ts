@@ -22,4 +22,9 @@ export class GroupManagementService implements IGroupManagementService {
    
     return this.httpService.postData('group/create',groupData)
   }
+
+
+  updateGroup(groupData):Observable<any[]>{
+    return this.httpService.putData('group/update',groupData);
+  }
 }

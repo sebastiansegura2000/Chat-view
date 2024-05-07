@@ -15,7 +15,7 @@ import { MessageHistoryUserComponent } from './Components/message-history-user/m
 const routes: Routes = [
   { path: 'chat/:id', component: ChatComponent },
   { path: 'contacts', component: ContactsComponent },
-  { path: 'group-info', component: GroupInfoComponent },
+  { path: 'group-info/:id', component: GroupInfoComponent },
   { path: 'message-history', component: MessageHistoryComponent },
   { path: 'profile-info', component: ProfileInfoComponent },
   { path: 'group-chat/:id', component: GroupChatComponent },

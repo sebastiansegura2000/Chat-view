@@ -83,7 +83,7 @@ export class GroupListComponent implements OnInit {
    */
   loadGroups(): void {
     this.groupManagementService.getGroupForUser().subscribe((response) => {
-      this.filteredGroups = this.sortGroups(response.groups);
+      this.filteredGroups = this.sortGroups(response['groups']);
         this.groups = this.filteredGroups;
         this.updateUnreadMessagesCount();
       });
@@ -93,7 +93,7 @@ export class GroupListComponent implements OnInit {
    */
   loadParticipants(): void {
     this.userService.getUsers().subscribe((response) => {
-      this.participants = response.users;
+      this.participants = response['users'];
       this.participants.forEach(() => {
         this.participantsControls.push(new FormControl(false));
       });
@@ -124,12 +124,12 @@ export class GroupListComponent implements OnInit {
    */
   private updateUnreadMessagesCount(): void {
     this.messageService.countMessageNotReadForGroup().subscribe((response) => {
-      response.unreadMessages.forEach((message) => {
+      response['unreadMessages'].forEach((message) => {
         const group = this.groups.find(
           (group) => group.id === message.group_id
         );
         if (group) {
-          group.unreadMessages = message.unread_messages_count;
+          group['unreadMessages'] = message.unread_messages_count;
         }
       });
     });

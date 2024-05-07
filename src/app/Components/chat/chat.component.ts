@@ -64,7 +64,7 @@ export class ChatComponent implements OnInit {
    */
   getRecipient(user_id) {
     this.userRepository.getUserForId(user_id).subscribe((response) => {
-      this.recipient = response.user;
+      this.recipient = response['user'];
       this.loadMessage();
     });
   }
@@ -73,7 +73,7 @@ export class ChatComponent implements OnInit {
    */
   loadMessage() {
     this.messageService.getMessage(this.recipient.id).subscribe((response) => {
-      this.messages = response.messages;
+      this.messages = response['messages'];
       setTimeout(() => {
         const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
         msgContainer.scrollTop = msgContainer.scrollHeight;

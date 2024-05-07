@@ -30,6 +30,8 @@ import { ProfileInfoComponent } from './Components/profile-info/profile-info.com
 import { GroupListComponent } from './Components/group-list/group-list.component';
 import { ChatDefComponent } from './Components/chat-def/chat-def.component';
 import { GroupDefComponent } from './Components/group-def/group-def.component';
+import { IGroupAdvancedService } from './Abstract/Group/Advanced/igroup-advanced.service';
+import { GroupAdvancedService } from './Services/Group/Advanced/group-advanced.service';
 
 
 
@@ -63,7 +65,8 @@ import { GroupDefComponent } from './Components/group-def/group-def.component';
     {provide:IMessageQueryForUserService,useClass:MessageQueryForUserService},
     { provide: IGroupManagementService, useClass: GroupManagementService },
     {provide: IMessageQueryForGroupService, useClass: MessageQueryForGroupService},
-    {provide: IUSerRepositoryService,useClass: UserRepositoryService}
+    {provide: IUSerRepositoryService,useClass: UserRepositoryService},
+    {provide: IGroupAdvancedService,useClass: GroupAdvancedService}
 
   ],
   bootstrap: [AppComponent],

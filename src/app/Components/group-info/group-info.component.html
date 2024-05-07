@@ -17,23 +17,23 @@
             </div>
             <div class='content'>
                 <div class="title-with-button">
-                    <h2>Los mas capitos</h2>
+                    <h2 *ngIf="!group">Cargando datos de grupo</h2>
+                    <h2 *ngIf="group">{{ group.name }}</h2>
                     <button class="edit-button" title="Edit" data-toggle="modal" data-target="#createGroupModal">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
 
                 </div>
-                <p>
-                    Group: Members 1
+                <p *ngIf="participants">
+                    Group: Members {{ participants.length }}
                 </p>
+
                 <p>Members:</p>
                 <ul class="chips">
-                    <li class="chip">React.js</li>
-                    <li class="chip">Node.js</li>
-                    <li class="chip">PostgreSQL</li>
+                    <li class="chip" *ngFor="let participant of participants">{{ participant.name }}</li>
                 </ul>
                 <div class="action-buttons">
-                  <button type="button" (click)="confirmDelete()" title="Delete">Delete</button>
+                  <button type="button"  title="Delete">Delete</button>
                     <button type="button" onclick="window.history.back()" class="secondary" title="Come back">
                         Come back
                     </button>
@@ -48,27 +48,29 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createGroupModalLabel">Create Group</h5>
+                    <h5 class="modal-title" id="createGroupModalLabel">Update Group</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form [formGroup]="updateGroupForm">
                         <div class="form-group">
-                            <label for="groupName">Name</label>
-                            <input type="text" class="form-control" id="groupName" placeholder="">
+                            <label  for="groupName">Name</label>
+                            <input *ngIf="group" type="text" class="form-control" id="groupName" formControlName="groupName" value="{{ group.name}}">
                         </div>
-
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="privateGroup">
-                            <label class="form-check-label" for="privateGroup">Members</label>
+                        <h3>Participants</h3>
+                        <div formArrayName="participants">
+                            <div *ngFor="let user of users let i = index" class="form-check" style="display:inline-block; margin-left: 5%;">
+                            <input type="checkbox"  class="form-check-input" [id]="'participant-' + user.id" [formControlName]="i">
+                            <label class="form-check-label" [for]="'participant-' + user.id">{{ user.name }}</label>
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" (click)="updateGroup()" class="btn btn-primary" data-dismiss="modal">Update Group</button>
+                    <button type="button"  class="btn btn-primary" data-dismiss="modal" (click)="infoUpdateGroup()">Update Group</button>
                 </div>
             </div>
         </div>
