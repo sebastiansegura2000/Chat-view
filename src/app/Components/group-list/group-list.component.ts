@@ -9,12 +9,12 @@ import {
 import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-variables.service';
 import { CreateGroupFormService } from 'src/app/Services/Forms/Group/CreateGroup/create-group-form.service';
 import { User } from 'src/app/Interfaces/User/user.interface';
-import { map } from 'rxjs/operators';
 import { AlertService } from 'src/app/Services/Alert/alert.service';
 import { Group } from 'src/app/Interfaces/Group/groupManagement.interface';
 import { IGroupManagementService } from 'src/app/Abstract/Group/management/igroup-management.service';
 import { IMessageQueryForGroupService } from 'src/app/Abstract/Message/Group/imessage-query-for-group.service';
 import { UserService } from 'src/app/Abstract/User/service/user-service.service';
+import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
 
 @Component({
   selector: 'app-group-list',
@@ -34,7 +34,8 @@ export class GroupListComponent implements OnInit {
     private userService: UserService,
     private formHandlerService: CreateGroupFormService,
     private fb: FormBuilder,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private mqttService: MqttHandlerService
   ) {
     this.createGroupForm = this.fb.group({
       groupName: ['', Validators.required],
@@ -49,6 +50,7 @@ export class GroupListComponent implements OnInit {
     this.loadGroups();
     this.loadParticipants();
     this.currentUser = this.globalService.userAuth.value;
+    this.suscribeTopicGeneralGroup('groups');
   }
   // ----------------------------------------------------------------------------------------------------------------------------
 
@@ -84,9 +86,9 @@ export class GroupListComponent implements OnInit {
   loadGroups(): void {
     this.groupManagementService.getGroupForUser().subscribe((response) => {
       this.filteredGroups = this.sortGroups(response['groups']);
-        this.groups = this.filteredGroups;
-        this.updateUnreadMessagesCount();
-      });
+      this.groups = this.filteredGroups;
+      this.updateUnreadMessagesCount();
+    });
   }
   /**
    * Loads the participants for the current user.
@@ -160,6 +162,33 @@ export class GroupListComponent implements OnInit {
     }
   }
 
+  //suscribe to a topic--------------------------------------------------------------------------------------------------------------
+
+  /**
+   * Subscribes to a topic in the MQTT broker.
+   * @param topic The topic to subscribe to.
+   */
+  suscribeTopicGeneralGroup(topic: string): void {
+    this.mqttService.suscribeTopic(topic).subscribe((response) => {
+      const isParticipant = this.isInGroup(
+        JSON.parse(response.payload.toString()).recipient_entity_id
+      );
+      if (isParticipant) {
+        this.loadGroups();
+      }
+    });
+  }
+
+  /**
+   * Checks if the current user is a participant in the specified group.
+   * @param id_group The ID of the group to check.
+   * @returns A boolean value indicating whether the current user is a participant in the specified group.
+   */
+  isInGroup(id_group: number): boolean {
+    return this.groups.find((group) => group.id == id_group) ? true : false;
+  }
+
+  // --------------------------------------------------------------------------------------------------------------------------------
   // Show Information about the group
 
   /**
