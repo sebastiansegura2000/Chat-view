@@ -51,31 +51,35 @@ export class MessageHistoryComponent implements OnInit {
    *
    * @param filterValue The value to filter the message history by.
    */
+  selectedFilterField: string = 'sender';
+
   applyFilter() {
-    console.log('Filter value:', this.filterValue); // Agregar esta línea
+    console.log('Filter value:', this.filterValue);
     const filterValueLC = this.filterValue.toLowerCase();
     const tableRows = document.querySelectorAll('.container tbody tr');
 
     tableRows.forEach((row: any) => {
-      const senderCell = row.cells[1].innerText.toLowerCase();
-      const receiverOrGroupCell = this.showReceiver
-        ? row.cells[2].innerText.toLowerCase()
-        : row.cells[3].innerText.toLowerCase();
-      const messageCell = this.showReceiver
-        ? row.cells[4].innerText.toLowerCase()
-        : row.cells[3].innerText.toLowerCase();
+      let fieldValue: string;
+      if (this.selectedFilterField === 'sender') {
+        fieldValue = row.cells[1].innerText.toLowerCase();
+      } else if (this.selectedFilterField === 'receiverOrGroup') {
+        fieldValue = this.showGroup ? row.cells[2].innerText.toLowerCase() : row.cells[2].innerText.toLowerCase();
+      } else if (this.selectedFilterField === 'message') {
+        fieldValue = this.showGroup ? row.cells[3].innerText.toLowerCase() : row.cells[3].innerText.toLowerCase();
+      }
 
-      if (
-        senderCell.includes(filterValueLC) ||
-        receiverOrGroupCell.includes(filterValueLC) ||
-        messageCell.includes(filterValueLC)
-      ) {
+      if (fieldValue.includes(filterValueLC)) {
         row.style.display = '';
       } else {
         row.style.display = 'none';
       }
     });
   }
+
+
+
+
+
   /**
    * Fetches the message history for a specific user.
    *
