@@ -235,6 +235,8 @@ export class GroupInfoComponent implements OnInit {
                 'Group deleted successfully.'
               );
             });
+
+            this.routerNavegation.navigate(['/group-def']);
         }
       });
   }
