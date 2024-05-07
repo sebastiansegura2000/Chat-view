@@ -31,15 +31,33 @@ export class GroupAdvancedService implements IGroupAdvancedService {
     };
     return this.httpService.getData('group/get-participants-for-group', data);
   }
-
-  public addParticipants(group_id:number,participants: Array<number>): Observable<any[]> {
+  /**
+   * Adds participants to a specific group.
+   * @param group_id - The ID of the group to which participants will be added.
+   * @param participants - An array of participant IDs to be added to the specified group.
+   * @returns An Observable containing an array of any data returned by the server upon successful addition of participants.
+   */
+  public addParticipants(
+    group_id: number,
+    participants: Array<number>
+  ): Observable<any[]> {
     const data = {
       id: group_id,
       participants: participants,
     };
     return this.httpService.postData('group/add-participants', data);
   }
-  public removeParticipants(group_id:number,participants: Array<number>): Observable<any[]> {
+
+  /**
+   * Removes participants from a specific group.
+   * @param group_id - The ID of the group from which participants will be removed.
+   * @param participants - An array of participant IDs to be removed from the specified group.
+   * @returns An Observable containing an array of any data returned by the server upon successful removal of participants.
+   */
+  public removeParticipants(
+    group_id: number,
+    participants: Array<number>
+  ): Observable<any[]> {
     const data = {
       id: group_id,
       participants: participants,

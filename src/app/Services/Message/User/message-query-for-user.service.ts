@@ -9,7 +9,7 @@ import { HttpHandlerService } from '../../Http/http-handler.service';
   providedIn: 'root',
 })
 export class MessageQueryForUserService implements IMessageQueryForUserService {
-  constructor(private httpService:HttpHandlerService) {}
+  constructor(private httpService: HttpHandlerService) {}
   /**
    * Counts the number of unread messages for the current user.
    *
@@ -18,12 +18,17 @@ export class MessageQueryForUserService implements IMessageQueryForUserService {
   public countMessageNotReadForUser(): Observable<MessageNotRead[]> {
     return this.httpService.getData('message/countMessagesNotRead');
   }
-
+  /**
+   * Retrieves a list of messages for the specified user.
+   *
+   * @param {string} user_id - The ID of the user for whom the messages should be retrieved.
+   * @returns {Observable<Message[]>} - An Observable that emits an array of `Message` objects.
+   */
   public getMessage(user_id): Observable<Message[]> {
     const data = {
       recipient_entity_id: user_id,
       recipient_type: '1',
-    }
-    return this.httpService.getData('message/get',data);
+    };
+    return this.httpService.getData('message/get', data);
   }
 }

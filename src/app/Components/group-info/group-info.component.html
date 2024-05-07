@@ -33,7 +33,7 @@
                     <li class="chip" *ngFor="let participant of participants">{{ participant.name }}</li>
                 </ul>
                 <div class="action-buttons">
-                  <button type="button"  title="Delete">Delete</button>
+                  <button type="button" (click)="DeleteGroup()"  title="Delete">Delete</button>
                     <button type="button" onclick="window.history.back()" class="secondary" title="Come back">
                         Come back
                     </button>
