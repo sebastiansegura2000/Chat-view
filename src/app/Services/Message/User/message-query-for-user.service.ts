@@ -31,4 +31,17 @@ export class MessageQueryForUserService implements IMessageQueryForUserService {
     };
     return this.httpService.getData('message/get', data);
   }
+  /**
+   * Retrieves a list of message history for the specified user.
+   *
+   * @param {number} user_id - The ID of the user for whom the message history should be retrieved.
+   * @returns {Observable<Message[]>} - An Observable that emits an array of `Message` objects.
+   */
+  public getMessageHistory(user_id: number): Observable<Message[]> {
+    const data = {
+      id: user_id,
+    };
+
+    return this.httpService.getData('message/get-history', data);
+  }
 }
