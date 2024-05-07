@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://127.0.0.1:80/api/',
-  token: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xL2FwaS91c2VyL3Rva2VuIiwiaWF0IjoxNzE1MTA1OTk3LCJleHAiOjE3MTUxMDk1OTcsIm5iZiI6MTcxNTEwNTk5NywianRpIjoiRFMyam9MVW1rUWJoOWtwbyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.OsEJAahyTpOecXMYJo1glYb2JmlyZ8YfyZ6kqp1Y7Oc',
+  token: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xL2FwaS91c2VyL3Rva2VuIiwiaWF0IjoxNzE1MTEwNzM0LCJleHAiOjE3MTUxMTQzMzQsIm5iZiI6MTcxNTExMDczNCwianRpIjoialJUSFhlSzE0UTVQbk9abCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.PdV21iuxXJ5VdUK5Y5jnUwIP1Bu92Pfz_A3dRCqMoBg',
   mqtt:{
     server:'',
     port:0,
