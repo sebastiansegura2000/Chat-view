@@ -5,7 +5,12 @@
 export const environment = {
   production: false,
   apiUrl: 'http://127.0.0.1:80/api/',
-  token: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xL2FwaS91c2VyL3Rva2VuIiwiaWF0IjoxNzE1MDQ4NDc3LCJleHAiOjE3MTUwNTIwNzcsIm5iZiI6MTcxNTA0ODQ3NywianRpIjoiM2NlbXB0MW1MZ0JpWE5wcCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.SnRiko_hnLW9kDLbt4f1qUHE5khBSiDZVEPD-WHbL24'
+  token: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xL2FwaS91c2VyL3Rva2VuIiwiaWF0IjoxNzE1MDkzNzU1LCJleHAiOjE3MTUwOTczNTUsIm5iZiI6MTcxNTA5Mzc1NSwianRpIjoiNFFKRkJUbFFQZjd4bXJydiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.4OG6JP7mJN0XolTX7qFJJEVB0wi9hCBr2XN5IkdHTgs',
+  mqtt:{
+    server:'',
+    port:0,
+    protocol:''
+  }
 };
 
 /*

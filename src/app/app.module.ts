@@ -32,7 +32,15 @@ import { ChatDefComponent } from './Components/chat-def/chat-def.component';
 import { GroupDefComponent } from './Components/group-def/group-def.component';
 import { IGroupAdvancedService } from './Abstract/Group/Advanced/igroup-advanced.service';
 import { GroupAdvancedService } from './Services/Group/Advanced/group-advanced.service';
+import { IMqttServiceOptions, MqttModule } from "ngx-mqtt";
+import { environment } from 'src/environments/environment';
 
+  const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
+    hostname: environment.mqtt.server,
+    port: environment.mqtt.port,
+    protocol: (environment.mqtt.protocol === "wss") ? "wss" : "ws",
+    path: '/mqtt'
+  };
 
 
 
@@ -57,7 +65,8 @@ import { GroupAdvancedService } from './Services/Group/Advanced/group-advanced.s
     NgbModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MqttModule.forRoot(MQTT_SERVICE_OPTIONS)
   ],
 
   providers: [
