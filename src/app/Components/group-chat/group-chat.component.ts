@@ -91,6 +91,10 @@ export class GroupChatComponent implements OnInit {
   loadMessage() {
     this.messageService.getMessage(this.group.id).subscribe((response) => {
       this.messages = response['messages'];
+      setTimeout(() => {
+        const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+      }, 0);
     });
   }
   /**
