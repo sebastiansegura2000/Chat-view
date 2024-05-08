@@ -196,6 +196,11 @@ display: block;
 .user_info span {
   font-size: 20px;
   color: white;
+  display: inline-block;
+  width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user_info p {

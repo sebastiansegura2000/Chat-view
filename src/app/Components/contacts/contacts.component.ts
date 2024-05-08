@@ -27,7 +27,7 @@ export class ContactsComponent implements OnInit {
       contact.name.toLowerCase().includes(this.filterValue.toLowerCase())
     );
   }
-  
+
   users: User[];
   showChat: boolean = true;
 
