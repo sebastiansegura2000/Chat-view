@@ -5,6 +5,7 @@ import { UserService } from 'src/app/Abstract/User/service/user-service.service'
 import { IMessageQueryForUserService } from 'src/app/Abstract/Message/User/imessage-query-for-user.service';
 import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
 import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
+import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
 
 @Component({
   selector: 'app-contacts',
@@ -22,6 +23,7 @@ export class ContactsComponent implements OnInit {
     private globalService: GlobalVariablesService,
     private messageService: IMessageQueryForUserService,
     private mqttService: MqttHandlerService,
+    private messageQueryService: IMessageQueryService,
   ) {}
   /**
    * Applies a filter to the 'filteredContacts' array based on the 'filterValue' property.
@@ -114,5 +116,15 @@ export class ContactsComponent implements OnInit {
       this.fetchUsers();
       this.fetchUnreadMessages();
     });
+  }
+
+
+  markAllMessagesAsRead(id:number){
+    const data = {
+      id_sender:id,
+      type: 1,
+    }
+    this.messageQueryService.markAllMessgesAsRead(data).subscribe((response)=>{
+    })
   }
 }

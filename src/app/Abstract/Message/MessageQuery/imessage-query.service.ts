@@ -9,5 +9,7 @@ export abstract class IMessageQueryService {
 
   constructor(private httpService: HttpHandlerService) { }
 
-  abstract sendMessage(MessageData:object): Observable<any>; 
+  abstract sendMessage(MessageData:object): Observable<any>;
+  abstract markAsRead(data:object):Observable<any>;
+  abstract markAllMessgesAsRead(data:object):Observable<any>;
 }

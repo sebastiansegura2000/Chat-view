@@ -9,6 +9,7 @@ import { Message } from 'src/app/Interfaces/Message/message.inteface';
 import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
 import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
 import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
@@ -19,9 +20,13 @@ export class ChatComponent implements OnInit {
   recipient: User;
   sender: User;
   messages: Message[];
-  private routeSub: Subscription;
   showActionMenu: boolean = false;
-  managmentMessages: { id_user: number; text: string; time: string }[] = [];
+  managmentMessages: {
+    id_user: number;
+    text: string;
+    time: string;
+    read?: object[];
+  }[] = [];
   constructor(
     private routerNavegation: Router,
     private route: ActivatedRoute,
@@ -30,22 +35,24 @@ export class ChatComponent implements OnInit {
     private globalService: GlobalVariablesService,
     private mqttService: MqttHandlerService,
     private authService: UserAuthServiceService,
-    private messageQueryService: IMessageQueryService
+    private messageQueryService: IMessageQueryService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const userId = params['id'];
       this.managmentMessages = [];
+      this.messages = [];
       this.getRecipient(userId);
     });
     this.authService.UserAuth().subscribe((userData) => {
       this.globalService.userAuth.value.userData = userData.user;
       this.sender = this.globalService.userAuth.value.userData;
-    });
-    setTimeout(() => {
       this.suscribeTopic(this.sender.id);
-    }, 100);
+      this.suscribeTopicForReadMessage(this.sender.id);
+    });
+
   }
   /**
    * Toggles the visibility of the action menu.
@@ -162,7 +169,8 @@ export class ChatComponent implements OnInit {
   suscribeTopic(id) {
     const topic = 'user/' + id;
     this.mqttService.suscribeTopic(topic).subscribe((response) => {
-      this.showRecipientMessage(JSON.parse(response.payload.toString()));
+      const message = JSON.parse(response.payload.toString());
+      this.showRecipientMessage(message);
     });
   }
   /**
@@ -173,7 +181,8 @@ export class ChatComponent implements OnInit {
   showRecipientMessage(message: object) {
     if (
       message['recipient_type'] == 1 &&
-      message['sender_id'] == this.recipient.id
+      message['sender_id'] == this.recipient.id &&
+      this.location.path() == '/chat/'+this.recipient.id
     ) {
       this.managmentMessages.push({
         id_user: this.recipient.id,
@@ -186,7 +195,43 @@ export class ChatComponent implements OnInit {
         ) as HTMLElement;
         msgContainer.scrollTop = msgContainer.scrollHeight;
       }, 0);
+      this.markAsRead(message['id']);
     }
+  }
+
+  /**
+   * Marks the specified message as read.
+   *
+   * @param {number} message_id - The unique identifier of the message to be marked as read.
+   * @returns {void} - No return value.
+   */
+  markAsRead(message_id: number) {
+    const data = {
+      id: message_id,
+    };
+    this.messageQueryService.markAsRead(data).subscribe((response) => {});
+  }
+
+  suscribeTopicForReadMessage(id) {
+    const topic = 'markAsRead/user/' + id;
+    this.mqttService.suscribeTopic(topic).subscribe((response) => {
+      const message = JSON.parse(response.payload.toString());
+      const data = {
+        user_id: message.reader_id,
+        name: message.reader_name,
+        read_at: message.read_at,
+      };
+
+      if (this.managmentMessages.length > 0) {
+        this.managmentMessages[this.managmentMessages.length - 1].read =
+          this.managmentMessages[this.managmentMessages.length - 1].read || [];
+        this.managmentMessages[this.managmentMessages.length - 1].read.push(
+          data
+        );
+      } else {
+        console.error('No hay mensajes para marcar como leídos.');
+      }
+    });
   }
 
   /**
