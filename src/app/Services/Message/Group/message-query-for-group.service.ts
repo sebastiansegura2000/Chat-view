@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IMessageQueryForGroupService } from 'src/app/Abstract/Message/Group/imessage-query-for-group.service';
 import { MessageNotReadForGroup } from 'src/app/Interfaces/Message/countMessageNotReadForGroup.interface';
 import { HttpHandlerService } from '../../Http/http-handler.service';
@@ -11,7 +11,18 @@ import { Message } from 'src/app/Interfaces/Message/message.inteface';
 export class MessageQueryForGroupService
   implements IMessageQueryForGroupService
 {
-  constructor(private httpService: HttpHandlerService) {}
+  private activeChat:Subject<Message>
+  constructor(private httpService: HttpHandlerService) {
+
+  }
+
+  get $getActiveChat():Observable{return this.activeChat}
+
+  set setActiveChat(message:Message) {
+    this.activeChat.next(message)
+  }
+
+
   /**
    * Counts the number of unread messages for a specific group.
    *

@@ -203,8 +203,8 @@ export class GroupInfoComponent implements OnInit {
     if (groupName && participants.length > 0) {
       this.alertService
         .confirmAlert(
-          'Create Group',
-          'Are you sure you want to create this group?'
+          'Update Group',
+          'Are you sure you want to update this group?'
         )
         .then((confirmed) => {
           if (confirmed) {

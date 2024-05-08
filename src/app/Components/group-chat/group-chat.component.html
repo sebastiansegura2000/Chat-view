@@ -18,14 +18,7 @@
     />
   </head>
   <body>
-    <div class="container-fluid h-100">
-      <div class="row justify-content-center h-100">
-        <div class="col-md-4 col-xl-3 chat">
-          <app-group-list></app-group-list>
-        </div>
 
-        <div class="col-md-8 col-xl-6 chat">
-          <div class="card">
             <div class="card-header msg_head">
               <div class="d-flex bd-highlight">
                 <div class="img_cont">
@@ -33,7 +26,6 @@
                     src="https://e1.pngegg.com/pngimages/670/695/png-clipart-goku-ssj-blue-v3-son-guko-character.png"
                     class="rounded-circle user_img"
                   />
-                  <span class="online_icon"></span>
                 </div>
                 <div class="user_info">
                   <span *ngIf="group">{{ group.name }}</span>
@@ -142,9 +134,6 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
   </body>
 </html>
