@@ -34,6 +34,8 @@ import { IGroupAdvancedService } from './Abstract/Group/Advanced/igroup-advanced
 import { GroupAdvancedService } from './Services/Group/Advanced/group-advanced.service';
 import { IMqttServiceOptions, MqttModule } from "ngx-mqtt";
 import { environment } from 'src/environments/environment';
+import { IMessageQueryService } from './Abstract/Message/MessageQuery/imessage-query.service';
+import { MessageQueryService } from './Services/Message/MessageQuery/message-query.service';
 
   const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     hostname: environment.mqtt.server,
@@ -75,7 +77,8 @@ import { environment } from 'src/environments/environment';
     { provide: IGroupManagementService, useClass: GroupManagementService },
     {provide: IMessageQueryForGroupService, useClass: MessageQueryForGroupService},
     {provide: IUSerRepositoryService,useClass: UserRepositoryService},
-    {provide: IGroupAdvancedService,useClass: GroupAdvancedService}
+    {provide: IGroupAdvancedService,useClass: GroupAdvancedService},
+    {provide: IMessageQueryService,useClass: MessageQueryService}
 
   ],
   bootstrap: [AppComponent],

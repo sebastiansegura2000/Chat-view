@@ -3,6 +3,9 @@ import { User } from 'src/app/Interfaces/User/user.interface';
 import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-variables.service';
 import { UserService } from 'src/app/Abstract/User/service/user-service.service';
 import { IMessageQueryForUserService } from 'src/app/Abstract/Message/User/imessage-query-for-user.service';
+import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
+import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
+import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
 
 @Component({
   selector: 'app-contacts',
@@ -10,37 +13,45 @@ import { IMessageQueryForUserService } from 'src/app/Abstract/Message/User/imess
   styleUrls: ['./contacts.component.css'],
 })
 export class ContactsComponent implements OnInit {
+  currentUser: any;
+  filteredContacts: any[] = [];
+  filterValue: string = '';
+  users: User[];
+  showChat: boolean = true;
   constructor(
     private userService: UserService,
     private globalService: GlobalVariablesService,
-    private messageService: IMessageQueryForUserService
+    private messageService: IMessageQueryForUserService,
+    private mqttService: MqttHandlerService,
+    private messageQueryService: IMessageQueryService,
   ) {}
-
-
-
-  filteredContacts: any[] = [];
-  filterValue: string = '';
-
-
+  /**
+   * Applies a filter to the 'filteredContacts' array based on the 'filterValue' property.
+   * The 'filteredContacts' array is filtered to include only those contacts whose 'name' property contains the 'filterValue' (case-insensitive).
+   */
   applyFilter() {
-    this.filteredContacts = this.users.filter(contact =>
+    this.filteredContacts = this.users.filter((contact) =>
       contact.name.toLowerCase().includes(this.filterValue.toLowerCase())
     );
   }
 
-  users: User[];
-  showChat: boolean = true;
-
+  /**
+   * Toggles the visibility of the chat view.
+   */
   toggleChatView(): void {
     this.showChat = !this.showChat;
   }
 
-  currentUser: any;
-
+  /**
+   * Initializes the component and fetches the list of users, unread messages, and subscribes to the MQTT topic for the current user.
+   */
   ngOnInit(): void {
     this.fetchUsers();
     this.fetchUnreadMessages();
     this.currentUser = this.globalService.userAuth.value;
+    setTimeout(() => {
+      this.suscribeTopic(this.currentUser.userData.id);
+    }, 100);
   }
   /**
    * Fetches the list of users from the server.
@@ -66,7 +77,9 @@ export class ContactsComponent implements OnInit {
    */
   private updateUnreadMessages(unreadMessages: any[]): void {
     unreadMessages.forEach((message) => {
-      const user = this.filteredContacts.find((user) => user.id === message.sender_id);
+      const user = this.filteredContacts.find(
+        (user) => user.id === message.sender_id
+      );
       if (user) {
         user.unreadMessages = message.unread_messages_count;
       }
@@ -91,5 +104,27 @@ export class ContactsComponent implements OnInit {
     });
     const usersWithoutLastMessage = users.filter((user) => !user.lastMessage);
     return [...usersWithLastMessage, ...usersWithoutLastMessage];
+  }
+  /**
+   * Subscribes to a topic for the given user ID.
+   *
+   * @param id - The ID of the user to subscribe to.
+   */
+  suscribeTopic(id) {
+    const topic = 'user/' + id;
+    this.mqttService.suscribeTopic(topic).subscribe((response) => {
+      this.fetchUsers();
+      this.fetchUnreadMessages();
+    });
+  }
+
+
+  markAllMessagesAsRead(id:number){
+    const data = {
+      id_sender:id,
+      type: 1,
+    }
+    this.messageQueryService.markAllMessgesAsRead(data).subscribe((response)=>{
+    })
   }
 }
