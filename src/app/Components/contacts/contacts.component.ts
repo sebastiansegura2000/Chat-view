@@ -23,7 +23,7 @@ export class ContactsComponent implements OnInit {
     private globalService: GlobalVariablesService,
     private messageService: IMessageQueryForUserService,
     private mqttService: MqttHandlerService,
-    private messageQueryService: IMessageQueryService,
+    private messageQueryService: IMessageQueryService
   ) {}
   /**
    * Applies a filter to the 'filteredContacts' array based on the 'filterValue' property.
@@ -117,14 +117,27 @@ export class ContactsComponent implements OnInit {
       this.fetchUnreadMessages();
     });
   }
+  /**
+   * Marks all messages as read for the specified user.
+   *
+   * @param id - The ID of the user to mark all messages as read.
+   */
+  markAllMessagesAsRead(id: number) {
+    const userIndex = this.users.findIndex((user) => user.id === id);
+    if (this.users[userIndex]['unreadMessages'] > 0) {
+      const data = {
+        id_sender: id,
+        type: 1,
+      };
+      this.messageQueryService
+        .markAllMessgesAsRead(data)
+        .subscribe((response) => {});
 
-
-  markAllMessagesAsRead(id:number){
-    const data = {
-      id_sender:id,
-      type: 1,
+      if (userIndex !== -1) {
+        this.users[userIndex]['unreadMessages'] = 0;
+      } else {
+        console.error('Usuario no encontrado.');
+      }
     }
-    this.messageQueryService.markAllMessgesAsRead(data).subscribe((response)=>{
-    })
   }
 }

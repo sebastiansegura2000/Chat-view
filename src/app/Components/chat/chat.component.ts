@@ -51,8 +51,8 @@ export class ChatComponent implements OnInit {
       this.sender = this.globalService.userAuth.value.userData;
       this.suscribeTopic(this.sender.id);
       this.suscribeTopicForReadMessage(this.sender.id);
+      this.suscribeTopicForMarkAllMessageAsRead(this.sender.id);
     });
-
   }
   /**
    * Toggles the visibility of the action menu.
@@ -182,7 +182,7 @@ export class ChatComponent implements OnInit {
     if (
       message['recipient_type'] == 1 &&
       message['sender_id'] == this.recipient.id &&
-      this.location.path() == '/chat/'+this.recipient.id
+      this.location.path() == '/chat/' + this.recipient.id
     ) {
       this.managmentMessages.push({
         id_user: this.recipient.id,
@@ -211,7 +211,11 @@ export class ChatComponent implements OnInit {
     };
     this.messageQueryService.markAsRead(data).subscribe((response) => {});
   }
-
+  /**
+   * Subscribes to a topic for the given user ID to receive read receipts.
+   *
+   * @param {number} id - The ID of the user to subscribe to.
+   */
   suscribeTopicForReadMessage(id) {
     const topic = 'markAsRead/user/' + id;
     this.mqttService.suscribeTopic(topic).subscribe((response) => {
@@ -230,6 +234,25 @@ export class ChatComponent implements OnInit {
         );
       } else {
         console.error('No hay mensajes para marcar como leídos.');
+      }
+    });
+  }
+  /**
+   * Subscribes to a topic for the given user ID to receive mark all message as read notifications.
+   *
+   * @param {number} id - The ID of the user to subscribe to.
+   * @returns {void} - No return value.
+   */
+  suscribeTopicForMarkAllMessageAsRead(id) {
+    const topic = 'markAllMessageAsRead/user/' + id;
+    this.mqttService.suscribeTopic(topic).subscribe((response) => {
+      const message = JSON.parse(response.payload.toString());
+      if (
+        this.location.path() == '/chat/' + message.recipient &&
+        id == message.sender
+      ) {
+        this.managmentMessages = [];
+        this.loadMessage();
       }
     });
   }

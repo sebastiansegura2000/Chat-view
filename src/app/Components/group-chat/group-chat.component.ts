@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IGroupAdvancedService } from 'src/app/Abstract/Group/Advanced/igroup-advanced.service';
@@ -35,7 +36,8 @@ export class GroupChatComponent implements OnInit {
     private globalService: GlobalVariablesService,
     private authService: UserAuthServiceService,
     private mqttService: MqttHandlerService,
-    private messageQueryService: IMessageQueryService
+    private messageQueryService: IMessageQueryService,
+    private location: Location
   ) {}
   /**
    * Initializes the component when it is created.
@@ -44,6 +46,8 @@ export class GroupChatComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const groupId = params['id'];
+      this.managmentMessages = [];
+      this.messages = [];
       this.getGroupForId(groupId);
     });
     this.authService.UserAuth().subscribe((userData) => {
@@ -188,7 +192,8 @@ export class GroupChatComponent implements OnInit {
     if (
       this.userAuth.id != message['sender_id'] &&
       this.group.id == message['recipient_entity_id'] &&
-      message['recipient_type'] == 2
+      message['recipient_type'] == 2 && 
+      this.location.path() == '/group-chat/' + this.group.id
     ) {
       this.managmentMessages.push({
         sender_id: message['sender_id'],
