@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { User } from 'src/app/Interfaces/User/user.interface';
 import { IUSerRepositoryService } from 'src/app/Abstract/User/repository/iuser-repository.service';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
 import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
 import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
 import { Location } from '@angular/common';
+import { ChatService } from 'src/app/Services/Chat/chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -21,6 +22,7 @@ export class ChatComponent implements OnInit {
   sender: User;
   messages: Message[];
   showActionMenu: boolean = false;
+  recipientId: number = 0;
   managmentMessages: {
     id_user: number;
     text: string;
@@ -28,31 +30,27 @@ export class ChatComponent implements OnInit {
     read?: object[];
   }[] = [];
   constructor(
-    private routerNavegation: Router,
-    private route: ActivatedRoute,
     private userRepository: IUSerRepositoryService,
     private messageService: IMessageQueryForUserService,
     private globalService: GlobalVariablesService,
     private mqttService: MqttHandlerService,
     private authService: UserAuthServiceService,
     private messageQueryService: IMessageQueryService,
-    private location: Location
+    private location: Location,
+    private chatService: ChatService
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      const userId = params['id'];
-      this.managmentMessages = [];
-      this.messages = [];
-      this.getRecipient(userId);
-    });
+    this.getChatId();
+
     this.authService.UserAuth().subscribe((userData) => {
-      this.globalService.userAuth.value.userData = userData.user;
-      this.sender = this.globalService.userAuth.value.userData;
-      this.suscribeTopic(this.sender.id);
-      this.suscribeTopicForReadMessage(this.sender.id);
-      this.suscribeTopicForMarkAllMessageAsRead(this.sender.id);
-    });
+        this.globalService.userAuth.value.userData = userData.user;
+        this.sender = this.globalService.userAuth.value.userData;
+        this.suscribeTopic(this.sender.id);
+        this.suscribeTopicForReadMessage(this.sender.id);
+        this.suscribeTopicForMarkAllMessageAsRead(this.sender.id);
+      });
+
   }
   /**
    * Toggles the visibility of the action menu.
@@ -98,6 +96,7 @@ export class ChatComponent implements OnInit {
         msgContainer.scrollTop = msgContainer.scrollHeight;
       }, 0);
       this.storeMessage(message);
+      this.chatService.setSendMessage = {typeChat: 1, send:true};
     }
   }
   /**
@@ -180,9 +179,10 @@ export class ChatComponent implements OnInit {
    */
   showRecipientMessage(message: object) {
     if (
+      this.recipient &&
       message['recipient_type'] == 1 &&
       message['sender_id'] == this.recipient.id &&
-      this.location.path() == '/chat/' + this.recipient.id
+      this.recipientId != 0
     ) {
       this.managmentMessages.push({
         id_user: this.recipient.id,
@@ -248,7 +248,8 @@ export class ChatComponent implements OnInit {
     this.mqttService.suscribeTopic(topic).subscribe((response) => {
       const message = JSON.parse(response.payload.toString());
       if (
-        this.location.path() == '/chat/' + message.recipient &&
+        this.recipient &&
+        this.recipient.id == message.recipient &&
         id == message.sender
       ) {
         this.managmentMessages = [];
@@ -256,7 +257,21 @@ export class ChatComponent implements OnInit {
       }
     });
   }
-
+  /**
+   * Subscribes to the chatId from the chatService and logs it to the console.
+   */
+  getChatId() {
+    this.chatService.$getChatId.subscribe((id) => {
+      this.recipient = undefined;
+      const userId = id;
+      this.recipientId = id;
+      if (userId != 0) {
+        this.managmentMessages = [];
+        this.messages = [];
+        this.getRecipient(userId);
+      }
+    });
+  }
   /**
    * Listens for the Escape key press event and navigates back to the default chat page.
    *
@@ -264,6 +279,6 @@ export class ChatComponent implements OnInit {
    */
   @HostListener('document:keydown.escape', ['$event'])
   handleEscapeKey(event: KeyboardEvent) {
-    this.routerNavegation.navigate(['/chat-def']);
+    this.chatService.setChatId = 0;
   }
 }

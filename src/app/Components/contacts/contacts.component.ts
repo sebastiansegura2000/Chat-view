@@ -4,8 +4,8 @@ import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-
 import { UserService } from 'src/app/Abstract/User/service/user-service.service';
 import { IMessageQueryForUserService } from 'src/app/Abstract/Message/User/imessage-query-for-user.service';
 import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
-import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
 import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
+import { ChatService } from 'src/app/Services/Chat/chat.service';
 
 @Component({
   selector: 'app-contacts',
@@ -18,12 +18,14 @@ export class ContactsComponent implements OnInit {
   filterValue: string = '';
   users: User[];
   showChat: boolean = true;
+  contactId: number = 0;
   constructor(
     private userService: UserService,
     private globalService: GlobalVariablesService,
     private messageService: IMessageQueryForUserService,
     private mqttService: MqttHandlerService,
-    private messageQueryService: IMessageQueryService
+    private messageQueryService: IMessageQueryService,
+    private chatService: ChatService
   ) {}
   /**
    * Applies a filter to the 'filteredContacts' array based on the 'filterValue' property.
@@ -52,6 +54,13 @@ export class ContactsComponent implements OnInit {
     setTimeout(() => {
       this.suscribeTopic(this.currentUser.userData.id);
     }, 100);
+    this.chatService.$getChatId.subscribe((id) => (this.contactId = id));
+    this.chatService.$getSendMessage.subscribe((message)=>{
+      if (message['typeChat'] == 1 && message['send']) {
+        this.fetchUsers();
+        this.fetchUnreadMessages();
+      }
+    })
   }
   /**
    * Fetches the list of users from the server.
@@ -113,8 +122,10 @@ export class ContactsComponent implements OnInit {
   suscribeTopic(id) {
     const topic = 'user/' + id;
     this.mqttService.suscribeTopic(topic).subscribe((response) => {
-      this.fetchUsers();
-      this.fetchUnreadMessages();
+      setTimeout(() => {
+        this.fetchUsers();
+        this.fetchUnreadMessages();
+      }, 15);
     });
   }
   /**
@@ -138,6 +149,20 @@ export class ContactsComponent implements OnInit {
       } else {
         console.error('Usuario no encontrado.');
       }
+    }
+  }
+
+  /**
+   * Sets the ID of the chat to be displayed.
+   *
+   * @param id - The ID of the chat to be displayed.
+   * @returns {void}
+   *
+   */
+  setIdOfChat(id) {
+    if (id != this.contactId) {
+      this.chatService.setChatId = id;
+      this.markAllMessagesAsRead(id);
     }
   }
 }

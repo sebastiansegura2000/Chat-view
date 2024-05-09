@@ -36,6 +36,7 @@ import { IMqttServiceOptions, MqttModule } from "ngx-mqtt";
 import { environment } from 'src/environments/environment';
 import { IMessageQueryService } from './Abstract/Message/MessageQuery/imessage-query.service';
 import { MessageQueryService } from './Services/Message/MessageQuery/message-query.service';
+import { ChatService } from './Services/Chat/chat.service';
 
   const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     hostname: environment.mqtt.server,
@@ -72,6 +73,7 @@ import { MessageQueryService } from './Services/Message/MessageQuery/message-que
   ],
 
   providers: [
+    ChatService,
     { provide:UserService,useClass:UserHttpService},
     {provide:IMessageQueryForUserService,useClass:MessageQueryForUserService},
     { provide: IGroupManagementService, useClass: GroupManagementService },
