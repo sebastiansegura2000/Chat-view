@@ -18,12 +18,7 @@
     />
   </head>
   <body>
-    <div class="container-fluid h-100">
-      <div class="row justify-content-center h-100">
-        <div class="col-md-4 col-xl-3 chat">
-          <app-contacts></app-contacts>
-        </div>
-        <div class="col-md-8 col-xl-6 chat">
+        <div class="col-md-12 col-xl-12 chat">
           <div class="card">
             <div class="card-header msg_head">
               <div class="d-flex bd-highlight">
@@ -108,7 +103,7 @@
                     <span class="msg_time_send">{{ msg.time }}</span>
                     <span class="msg_status"
                       ><i *ngIf="!msg.read" class="fas fa-check-double"></i>
-                      
+
                       <i *ngIf="msg.read"
                         class="fas fa-check-double {{
                           msg.read.length === 0 ? '' : 'markAsrRead'
@@ -154,7 +149,5 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
   </body>
 </html>
