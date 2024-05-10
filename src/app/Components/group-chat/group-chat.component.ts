@@ -192,7 +192,7 @@ export class GroupChatComponent implements OnInit {
     if (
       this.userAuth.id != message['sender_id'] &&
       this.group.id == message['recipient_entity_id'] &&
-      message['recipient_type'] == 2 && 
+      message['recipient_type'] == 2 &&
       this.location.path() == '/group-chat/' + this.group.id
     ) {
       this.managmentMessages.push({

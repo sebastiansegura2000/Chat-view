@@ -45,9 +45,12 @@
               <div class="action_menu" [ngClass]="{ show: showActionMenu }">
                 <ul>
                   <li *ngIf="group">
-                    <a [routerLink]="['/group-info', group.id]"
-                      ><i class="fas fa-user-circle"></i> View Info</a
-                    >
+                    <a [routerLink]="['/group-info', group.id]">
+                      <i class="fas fa-user-circle"></i> View Info
+                    </a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                      Launch demo modal
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -139,5 +142,22 @@
             </div>
           </div>
         </div>
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <app-group-info></app-group-info>
+    </div>
+  </div>
+</div>
+
+
+
+
+
   </body>
 </html>
