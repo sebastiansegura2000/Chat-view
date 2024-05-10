@@ -32,7 +32,9 @@
 
       <div class="card-body contacts_body">
         <ul class="contacts">
-          <a *ngFor="let group of filteredGroups">
+          <a
+            *ngFor="let group of filteredGroups" (click) = "setGroupId(group.id)"
+          >
             <li>
               <div class="d-flex bd-highlight">
                 <div class="img_cont">

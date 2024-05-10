@@ -9,7 +9,6 @@ import { Message } from 'src/app/Interfaces/Message/message.inteface';
 import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
 import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
 import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
-import { Location } from '@angular/common';
 import { ChatService } from 'src/app/Services/Chat/chat.service';
 
 @Component({
@@ -36,7 +35,6 @@ export class ChatComponent implements OnInit {
     private mqttService: MqttHandlerService,
     private authService: UserAuthServiceService,
     private messageQueryService: IMessageQueryService,
-    private location: Location,
     private chatService: ChatService
   ) {}
 
@@ -44,13 +42,12 @@ export class ChatComponent implements OnInit {
     this.getChatId();
 
     this.authService.UserAuth().subscribe((userData) => {
-        this.globalService.userAuth.value.userData = userData.user;
-        this.sender = this.globalService.userAuth.value.userData;
-        this.suscribeTopic(this.sender.id);
-        this.suscribeTopicForReadMessage(this.sender.id);
-        this.suscribeTopicForMarkAllMessageAsRead(this.sender.id);
-      });
-
+      this.globalService.userAuth.value.userData = userData.user;
+      this.sender = this.globalService.userAuth.value.userData;
+      this.suscribeTopic(this.sender.id);
+      this.suscribeTopicForReadMessage(this.sender.id);
+      this.suscribeTopicForMarkAllMessageAsRead(this.sender.id);
+    });
   }
   /**
    * Toggles the visibility of the action menu.
@@ -96,7 +93,7 @@ export class ChatComponent implements OnInit {
         msgContainer.scrollTop = msgContainer.scrollHeight;
       }, 0);
       this.storeMessage(message);
-      this.chatService.setSendMessage = {typeChat: 1, send:true};
+      this.chatService.setSendMessage = { typeChat: 1, send: true };
     }
   }
   /**
@@ -127,6 +124,53 @@ export class ChatComponent implements OnInit {
         ) as HTMLElement;
         msgContainer.scrollTop = msgContainer.scrollHeight;
       }, 0);
+    });
+  }
+  /**
+   * Loads the messages for the current recipient and marks them as read.
+   */
+  loadMessageRead() {
+    const messageWitoutRead = this.messages.filter(
+      (message) => !message.read || message.read.length === 0
+    );
+    const messageManagementWitoutRead = this.managmentMessages.filter(
+      (message) => !message.read || message.read.length === 0
+    );
+
+    messageWitoutRead.forEach((message) => {
+      if (!message.read) {
+        message.read = [
+          {
+            user_id: 0,
+            name: '',
+            read_at: '',
+          },
+        ];
+      } else if (message.read.length === 0) {
+        message.read.push({
+          user_id: 0,
+          name: '',
+          read_at: '',
+        });
+      }
+    });
+
+    messageManagementWitoutRead.forEach((message) => {
+      if (!message.read) {
+        message.read = [
+          {
+            user_id: 0,
+            name: '',
+            read_at: '',
+          },
+        ];
+      } else if (message.read.length === 0) {
+        message.read.push({
+          user_id: 0,
+          name: '',
+          read_at: '',
+        });
+      }
     });
   }
   /**
@@ -252,8 +296,7 @@ export class ChatComponent implements OnInit {
         this.recipient.id == message.recipient &&
         id == message.sender
       ) {
-        this.managmentMessages = [];
-        this.loadMessage();
+        this.loadMessageRead();
       }
     });
   }
@@ -272,6 +315,7 @@ export class ChatComponent implements OnInit {
       }
     });
   }
+
   /**
    * Listens for the Escape key press event and navigates back to the default chat page.
    *

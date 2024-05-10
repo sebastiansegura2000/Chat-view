@@ -15,6 +15,8 @@ import { IGroupManagementService } from 'src/app/Abstract/Group/management/igrou
 import { IMessageQueryForGroupService } from 'src/app/Abstract/Message/Group/imessage-query-for-group.service';
 import { UserService } from 'src/app/Abstract/User/service/user-service.service';
 import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
+import { ChatService } from 'src/app/Services/Chat/chat.service';
+import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
 
 @Component({
   selector: 'app-group-list',
@@ -26,7 +28,7 @@ export class GroupListComponent implements OnInit {
   groups: Group[];
   participants: User[];
   currentUser: any;
-
+  groupId: number = 0;
   constructor(
     private globalService: GlobalVariablesService,
     private groupManagementService: IGroupManagementService,
@@ -35,7 +37,9 @@ export class GroupListComponent implements OnInit {
     private formHandlerService: CreateGroupFormService,
     private fb: FormBuilder,
     private alertService: AlertService,
-    private mqttService: MqttHandlerService
+    private mqttService: MqttHandlerService,
+    private chatService: ChatService,
+    private messageQueryService: IMessageQueryService
   ) {
     this.createGroupForm = this.fb.group({
       groupName: ['', Validators.required],
@@ -51,6 +55,9 @@ export class GroupListComponent implements OnInit {
     this.loadParticipants();
     this.currentUser = this.globalService.userAuth.value;
     this.suscribeTopicGeneralGroup('groups');
+    this.chatService.$getChatGroupId.subscribe((id)=>{
+      this.groupId = id;
+    })
   }
   // ----------------------------------------------------------------------------------------------------------------------------
 
@@ -187,10 +194,34 @@ export class GroupListComponent implements OnInit {
   isInGroup(id_group: number): boolean {
     return this.groups.find((group) => group.id == id_group) ? true : false;
   }
-
+  /**
+   * Marks all messages in the specified group as read.
+   * @param group_id The ID of the group to mark messages as read.
+   */
+  markAllMessageAsRead(group_id: number): void {
+    const data = {
+      id_sender: group_id,
+      type: 2,
+    };
+    const group = this.groups.find((group) => group.id == group_id);
+    if (group['unreadMessages'] && group['unreadMessages'] > 0) {
+      this.messageQueryService.markAllMessgesAsRead(data).subscribe(() => {});
+      group['unreadMessages'] = 0;
+    }
+  }
   // --------------------------------------------------------------------------------------------------------------------------------
-  // Show Information about the group
 
+  /**
+   * Sets the chat group ID.
+   * @param id_group The ID of the group to set.
+   */
+  setGroupId(id_group: number): void {
+    if (id_group != this.groupId) {
+      this.chatService.setChatGroupId = id_group;
+      this.markAllMessageAsRead(id_group);
+    }
+  }
+  // ----------------------------------------------------------------------------------------------------------------------------------
   /**
    * Creates a new group.
    */
