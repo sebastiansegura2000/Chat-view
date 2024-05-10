@@ -26,4 +26,17 @@ export class ChatService {
   set setSendMessage(message) {
     this.sendMessage.next(message);
   }
+
+
+  private ChatGroupId:  BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
+  
+  get $getChatGroupId(): Observable<number> {
+    return this.ChatGroupId.asObservable();
+  }
+
+  set setChatGroupId(chatId) {
+    this.ChatGroupId.next(chatId);
+  }
+  
 }

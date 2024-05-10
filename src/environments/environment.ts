@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://127.0.0.1:80/api/',
-  token: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xL2FwaS91c2VyL3Rva2VuIiwiaWF0IjoxNzE1MjkxOTk1LCJleHAiOjE3MTUyOTU1OTUsIm5iZiI6MTcxNTI5MTk5NSwianRpIjoiOGRrd1VnWm5oQ091UWVkWiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wDbfItnXQThdau-1f5itVsCUJ5dgLhfr8zNt3lT9Egk',
+  token: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xL2FwaS91c2VyL3Rva2VuIiwiaWF0IjoxNzE1MzcwMjk3LCJleHAiOjE3MTUzNzM4OTcsIm5iZiI6MTcxNTM3MDI5NywianRpIjoiaWtqV2hwdE1rQk5EVEhIRSIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.fi27FYQx3lwfKF-lu68fOMB8J5c0zpLpmHd8QVyq4NA',
   mqtt:{
     server:'test.mosquitto.org',
     port:8081 ,

@@ -13,4 +13,5 @@ export class MqttHandlerService {
   suscribeTopic(topic: string): Observable<IMqttMessage> {
     return this.mqttService.observe(topic);
   }
+
 }
