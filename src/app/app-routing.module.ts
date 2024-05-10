@@ -13,12 +13,11 @@ import { GroupDefComponent } from './Components/group-def/group-def.component';
 import { MessageHistoryUserComponent } from './Components/message-history-user/message-history-user.component';
 
 const routes: Routes = [
-  { path: 'chat/:id', component: ChatComponent },
+
   { path: 'contacts', component: ContactsComponent },
   { path: 'group-info/:id', component: GroupInfoComponent },
   { path: 'message-history/:id', component: MessageHistoryComponent },
   { path: 'profile-info', component: ProfileInfoComponent },
-  { path: 'group-chat/:id', component: GroupChatComponent },
   { path: 'chat-list', component: ChatListComponent },
   { path: 'group-list', component: GroupListComponent },
   { path: 'chat-def', component: ChatDefComponent },
