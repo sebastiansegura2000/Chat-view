@@ -48,19 +48,22 @@
             </div>
           </div>
 
-          <div class="d-flex justify-content-end mb-4" *ngIf="message.sender_id == userAuth.id">
-            <div class="msg_cotainer_send">
-              {{ message.content }}
-              <span class="msg_time_send">{{
-                getMessageTime(message.created_at)
-              }}</span>
-              <span class="msg_status"
-              ><i class="fas fa-check-double {{ (message.read && message.read.length == groupParticipants.length) ? 'markAsrRead' : '' }}"></i
-            ></span>
+              <div
+                class="d-flex justify-content-end mb-4"
+                *ngIf="message.sender_id == userAuth.id"
+              >
+                <div class="msg_cotainer_send">
+                  {{ message.content }}
+                  <span class="msg_time_send">{{
+                    getMessageTime(message.created_at)
+                  }}</span>
+                  <span class="msg_status"
+                    ><i class="fas fa-check-double {{ (message.read && message.read.length == groupParticipants.length - 1) ? 'markAsrRead' : '' }}"></i
+                  ></span>
+                </div>
+                <div class="img_cont_msg"></div>
+              </div>
             </div>
-            <div class="img_cont_msg"></div>
-          </div>
-        </div>
 
         <ng-container *ngFor="let msg of managmentMessages">
           <div class="d-flex justify-content-start mb-4" *ngIf="msg.sender_id != userAuth.id">
@@ -75,47 +78,40 @@
             </div>
           </div>
 
-          <div class="d-flex justify-content-end mb-4" *ngIf="msg.sender_id == userAuth.id">
-            <div class="msg_cotainer_send">
-              {{ msg.text }}
-              <span class="msg_time_send">{{ msg.time }}</span>
-              <span class="msg_status">
-                <i class="fas fa-check-double"></i>
-              </span>
+              <div
+                class="d-flex justify-content-end mb-4"
+                *ngIf="msg.sender_id == userAuth.id"
+              >
+                <div class="msg_cotainer_send">
+                  {{ msg.text }}
+                  <span class="msg_time_send">{{ msg.time }}</span>
+                  <span class="msg_status"
+                    ><i class="fas fa-check-double {{ (msg.read && msg.read.length == groupParticipants.length - 1) ? 'markAsrRead' : '' }}"></i
+                  ></span>
+                </div>
+                <div class="img_cont_msg"></div>
+              </div>
+            </ng-container>
+          </div>
+          <div class="card-footer">
+            <div class="input-group">
+              <div class="input-group-append">
+                <!-- <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span> -->
+              </div>
+              <textarea
+                name=""
+                class="form-control type_msg"
+                placeholder="Type your message..."
+                (keyup.enter)="sendMessage()"
+              ></textarea>
+              <div class="input-group-append">
+                <span class="input-group-text send_btn" (click)="sendMessage()"
+                  ><i class="fas fa-location-arrow"></i
+                ></span>
+              </div>
             </div>
-            <div class="img_cont_msg"></div>
           </div>
         </ng-container>
       </div>
-      <div class="card-footer">
-        <div class="input-group">
-          <div class="input-group-append">
-            <!-- <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span> -->
-          </div>
-          <textarea name="" class="form-control type_msg" placeholder="Type your message..." (keyup.enter)="sendMessage()"></textarea>
-          <div class="input-group-append">
-            <span class="input-group-text send_btn" (click)="sendMessage()">
-              <i class="fas fa-location-arrow"></i>
-            </span>
-          </div>
-        </div>
-      </div>
-      </ng-container>
     </div>
-  </div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <app-group-info></app-group-info>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-</body>
+  </body>

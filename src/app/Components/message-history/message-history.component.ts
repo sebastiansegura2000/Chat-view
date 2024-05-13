@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IMessageQueryForUserService } from 'src/app/Abstract/Message/User/imessage-query-for-user.service';
 import { Message } from 'src/app/Interfaces/Message/message.inteface';
+import { ChatService } from 'src/app/Services/Chat/chat.service';
 
 @Component({
   selector: 'app-message-history',
@@ -17,7 +18,8 @@ export class MessageHistoryComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private messageService: IMessageQueryForUserService
+    private messageService: IMessageQueryForUserService,
+    private chatService: ChatService
   ) {}
   /**
    * Initializes the component when it is created.
@@ -27,10 +29,7 @@ export class MessageHistoryComponent implements OnInit {
    * @returns {void} No return value.
    */
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      const user_id = params['id'];
-      this.getMessageHistory(user_id);
-    });
+    this.getUserId();
   }
   /**
    * Changes the view to show receiver messages.
@@ -63,9 +62,13 @@ export class MessageHistoryComponent implements OnInit {
       if (this.selectedFilterField === 'sender') {
         fieldValue = row.cells[1].innerText.toLowerCase();
       } else if (this.selectedFilterField === 'receiverOrGroup') {
-        fieldValue = this.showGroup ? row.cells[2].innerText.toLowerCase() : row.cells[2].innerText.toLowerCase();
+        fieldValue = this.showGroup
+          ? row.cells[2].innerText.toLowerCase()
+          : row.cells[2].innerText.toLowerCase();
       } else if (this.selectedFilterField === 'message') {
-        fieldValue = this.showGroup ? row.cells[3].innerText.toLowerCase() : row.cells[3].innerText.toLowerCase();
+        fieldValue = this.showGroup
+          ? row.cells[3].innerText.toLowerCase()
+          : row.cells[3].innerText.toLowerCase();
       }
 
       if (fieldValue.includes(filterValueLC)) {
@@ -76,10 +79,6 @@ export class MessageHistoryComponent implements OnInit {
     });
   }
 
-
-
-
-
   /**
    * Fetches the message history for a specific user.
    *
@@ -89,6 +88,23 @@ export class MessageHistoryComponent implements OnInit {
     this.messageService.getMessageHistory(user_id).subscribe((response) => {
       this.userMessages = response['messages']['users'];
       this.groupMessages = response['messages']['groups'];
+    });
+  }
+
+  /**
+   * Retrieves the unique identifier of the current user from the chat service.
+   *
+   * This method subscribes to the chat service's `$getChatId` observable to obtain the user ID.
+   * Once the user ID is obtained, it calls the `getMessageHistory` method with the retrieved user ID.
+   *
+   * @returns {void} No return value.
+   */
+  getUserId() {
+    this.chatService.$getChatId.subscribe((id) => {
+      if (id != 0) {
+        const user_id = id;
+        this.getMessageHistory(user_id);
+      }
     });
   }
 }

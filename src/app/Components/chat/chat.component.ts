@@ -23,10 +23,10 @@ export class ChatComponent implements OnInit {
   showActionMenu: boolean = false;
   recipientId: number = 0;
   managmentMessages: {
-    id_user: number;
-    text: string;
-    time: string;
-    read?: object[];
+    id_user: number,
+    text: string,
+    time: string,
+    read?: object[],
   }[] = [];
   constructor(
     private userRepository: IUSerRepositoryService,
@@ -269,15 +269,16 @@ export class ChatComponent implements OnInit {
         name: message.reader_name,
         read_at: message.read_at,
       };
-
-      if (this.managmentMessages.length > 0) {
-        this.managmentMessages[this.managmentMessages.length - 1].read =
-          this.managmentMessages[this.managmentMessages.length - 1].read || [];
-        this.managmentMessages[this.managmentMessages.length - 1].read.push(
-          data
-        );
-      } else {
-        console.error('No hay mensajes para marcar como leídos.');
+      if (message.recipient_entity_id == this.recipientId &&message.recipient_type == "user") {
+        if (this.managmentMessages.length > 0) {
+          this.managmentMessages[this.managmentMessages.length - 1].read =
+            this.managmentMessages[this.managmentMessages.length - 1].read || [];
+          this.managmentMessages[this.managmentMessages.length - 1].read.push(
+            data
+          );
+        } else {
+          console.error('No hay mensajes para marcar como leídos.');
+        }
       }
     });
   }
