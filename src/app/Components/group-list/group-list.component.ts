@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,HostListener,ViewChild, ElementRef } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -45,6 +45,26 @@ export class GroupListComponent implements OnInit {
       groupName: ['', Validators.required],
       participants: new FormArray([], Validators.minLength(1)),
     });
+  }
+
+  private secuenciaTeclas: string[] = ['w', 'a', 's'];
+  private indiceSecuencia = 0;
+
+  @ViewChild('historyButton') historyButton: ElementRef;
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    const teclaPresionada = event.key.toLowerCase();
+
+    if (teclaPresionada === this.secuenciaTeclas[this.indiceSecuencia]) {
+      this.indiceSecuencia++;
+
+      if (this.indiceSecuencia === this.secuenciaTeclas.length) {
+        this.historyButton.nativeElement.style.display = (this.historyButton.nativeElement.style.display === 'none') ? 'block' : 'none';
+        this.indiceSecuencia = 0;
+      }
+    } else {
+      this.indiceSecuencia = 0;
+    }
   }
   // ----------------------------------------------------------------------------------------------------------------------------
   /**
