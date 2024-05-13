@@ -322,8 +322,28 @@ export class ChatComponent implements OnInit {
    *
    * @param {KeyboardEvent} event - The keyboard event object.
    */
+
+  private secuenciaTeclas: string[] = ['w', 'a', 's', 'd'];
+  private indiceSecuencia = 0;
+
   @HostListener('document:keydown.escape', ['$event'])
   handleEscapeKey(event: KeyboardEvent) {
     this.chatService.setChatId = 0;
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    const teclaPresionada = event.key.toLowerCase();
+
+    if (teclaPresionada === this.secuenciaTeclas[this.indiceSecuencia]) {
+      this.indiceSecuencia++;
+
+      if (this.indiceSecuencia === this.secuenciaTeclas.length) {
+        console.log('xd');
+        this.indiceSecuencia = 0;
+      }
+    } else {
+      this.indiceSecuencia = 0;
+    }
   }
 }
