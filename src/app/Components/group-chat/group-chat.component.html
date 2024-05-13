@@ -78,7 +78,7 @@
                     getMessageTime(message.created_at)
                   }}</span>
                   <span class="msg_status"
-                    ><i class="fas fa-check-double"></i
+                    ><i class="fas fa-check-double {{ (message.read && message.read.length == groupParticipants.length - 1) ? 'markAsrRead' : '' }}"></i
                   ></span>
                 </div>
                 <div class="img_cont_msg"></div>
@@ -107,7 +107,7 @@
                   {{ msg.text }}
                   <span class="msg_time_send">{{ msg.time }}</span>
                   <span class="msg_status"
-                    ><i class="fas fa-check-double"></i
+                    ><i class="fas fa-check-double {{ (msg.read && msg.read.length == groupParticipants.length - 1) ? 'markAsrRead' : '' }}"></i
                   ></span>
                 </div>
                 <div class="img_cont_msg"></div>

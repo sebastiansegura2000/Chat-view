@@ -26,11 +26,14 @@ export class GroupChatComponent implements OnInit {
     text: string;
     time: string;
     sender_name?: string;
+    read?: object[];
   }[] = [];
   userAuth: User;
   messages: Message[];
   groupId: number;
   subscription: Subscription;
+  subscriptionForMarkAllMessageAsRead: Subscription;
+  groupParticipants: participant[];
   constructor(
     private groupService: IGroupAdvancedService,
     private messageService: IMessageQueryForGroupService,
@@ -38,7 +41,6 @@ export class GroupChatComponent implements OnInit {
     private authService: UserAuthServiceService,
     private mqttService: MqttHandlerService,
     private messageQueryService: IMessageQueryService,
-    private location: Location,
     private chatService: ChatService
   ) {}
   /**
@@ -50,6 +52,7 @@ export class GroupChatComponent implements OnInit {
     this.authService.UserAuth().subscribe((userData) => {
       this.globalService.userAuth.value.userData = userData.user;
       this.userAuth = this.globalService.userAuth.value.userData;
+      this.suscribeForMarkMessageAsRead(this.userAuth.id);
     });
   }
 
@@ -114,6 +117,19 @@ export class GroupChatComponent implements OnInit {
       this.group = response['group'];
       this.loadMessage();
     });
+  }
+  /**
+   * Retrieves the list of participants for the given group.
+   *
+   * @param {number} group_id - The ID of the group for which to retrieve participants.
+   * @returns {void} - No return value. The participants are stored in the `groupParticipants` property.
+   */
+  getParticipants(group_id: number) {
+    this.groupService
+      .getParticipantsForGroup(group_id)
+      .subscribe((response) => {
+        this.groupParticipants = response['participants'];
+      });
   }
   /**
    * Loads the messages for the current group chat.
@@ -209,12 +225,119 @@ export class GroupChatComponent implements OnInit {
       this.markAsRead(message['id']);
     }
   }
-
-  markAsRead(id){
+  /**
+   * Marks a message as read.
+   *
+   * @param {number} id - The ID of the message to be marked as read.
+   * @returns {void} - No return value.
+   */
+  markAsRead(id) {
     const data = {
       id: id,
     };
-    this.messageQueryService.markAsRead(data).subscribe(()=>{});
+    this.messageQueryService.markAsRead(data).subscribe(() => {});
+  }
+  /**
+   * Subscribes to the MQTT topic for marking messages as read for the current user.
+   *
+   * @param id - The ID of the user for which to subscribe to the MQTT topic.
+   * @returns {void} - No return value.
+   */
+  suscribeForMarkMessageAsRead(id) {
+    const topic = 'markAsRead/user/' + id;
+    this.mqttService.suscribeTopic(topic).subscribe((response) => {
+      const message = JSON.parse(response.payload.toString());
+      if (
+        this.group &&
+        this.group.id == message.recipient_entity_id &&
+        message.recipient_type == 'group'
+      ) {
+        const data = {
+          user_id: message.reader_id,
+          name: message.reader_name,
+          read_at: message.read_at,
+        };
+        const lastMessage =
+          this.managmentMessages[this.managmentMessages.length - 1];
+        if (lastMessage && lastMessage.read) {
+          const alreadyRead = lastMessage.read.some(
+            (item) => item['user_id'] === data.user_id
+          );
+          if (!alreadyRead) {
+            lastMessage.read.push(data);
+          }
+        } else if (lastMessage && !lastMessage.read) {
+          lastMessage.read = [];
+          lastMessage.read.push(data);
+        } else {
+          console.error('No hay mensajes para marcar como leídos.');
+        }
+      }
+    });
+  }
+  /**
+   * Subscribes to the MQTT topic for marking all messages as read for the current group chat.
+   *
+   * @param id - The ID of the group for which to subscribe to the MQTT topic.
+   * @returns {void} - No return value.
+   */
+  suscribeForMarkAllMessageAsRead(id) {
+    const topic = 'markAllMessageAsRead/group/' + id;
+    this.subscriptionForMarkAllMessageAsRead = this.mqttService
+      .suscribeTopic(topic)
+      .subscribe((response) => {
+        const message = JSON.parse(response.payload.toString());
+        if (this.group && this.group.id == message.sender) {
+          this.markallMessageAsRead(message);
+        }
+      });
+  }
+  /**
+   * Marks all messages as read for the current user in the chat.
+   *
+   * @param {object} message_info - An object containing information about the message to be marked as read.
+   * @returns {void} - No return value.
+   */
+  markallMessageAsRead(message_info: object) {
+    const filteredManagmentMessages = this.managmentMessages.filter(
+      (message) =>
+        message.sender_id === this.userAuth.id &&
+        (!message.read ||
+          !message.read.some(
+            (info) => info['user_id'] === message_info['recipient']
+          ))
+    );
+    const data = {
+      user_id: message_info['recipient'],
+      name: message_info['recipient_name'],
+      read_at: message_info['created_at'],
+    };
+    filteredManagmentMessages.forEach((message) => {
+      if (message.read) {
+        message.read.push(data);
+      } else {
+        message.read = [];
+        message.read.push(data);
+      }
+    });
+
+    const filteredMessages = this.messages.filter(
+      (message) =>
+        message.sender_id === this.userAuth.id &&
+        (!message.read ||
+          !message.read.some(
+            (info) => info.user_id === message_info['recipient']
+          ))
+    );
+
+    filteredMessages.forEach((message) => {
+      if (message.read) {
+        message.read.push(data);
+      } else {
+        message.read = [];
+        message.read.push(data);
+      }
+    });
   }
 
   /**
@@ -227,14 +350,19 @@ export class GroupChatComponent implements OnInit {
       this.group = undefined;
       this.groupId = id;
       if (id != 0) {
+        this.getParticipants(id);
         this.managmentMessages = [];
         this.messages = [];
         this.getGroupForId(id);
         if (this.subscription) {
           this.subscription.unsubscribe();
         }
+        if (this.subscriptionForMarkAllMessageAsRead) {
+          this.subscriptionForMarkAllMessageAsRead.unsubscribe();
+        }
         setTimeout(() => {
           this.suscribeTopic(id);
+          this.suscribeForMarkAllMessageAsRead(id);
         }, 500);
       }
     });

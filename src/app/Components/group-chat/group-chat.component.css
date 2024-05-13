@@ -301,6 +301,11 @@ display: block;
   background-color: rgba(0, 0, 0, 0.2);
 }
 
+
+.markAsrRead{
+  color: blue;
+}
+
 @media(max-width: 576px) {
   .contacts_card {
       margin-bottom: 15px !important;

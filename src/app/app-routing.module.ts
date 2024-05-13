@@ -16,7 +16,7 @@ const routes: Routes = [
 
   { path: 'contacts', component: ContactsComponent },
   { path: 'group-info/:id', component: GroupInfoComponent },
-  { path: 'message-history/:id', component: MessageHistoryComponent },
+  { path: 'message-history', component: MessageHistoryComponent },
   { path: 'profile-info', component: ProfileInfoComponent },
   { path: 'chat-list', component: ChatListComponent },
   { path: 'group-list', component: GroupListComponent },
