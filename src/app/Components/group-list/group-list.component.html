@@ -2,14 +2,14 @@
 
     <div class="card mb-sm-3 mb-md-0 contacts_card">
 
-      <div class="card-header">
+      <div class="card-header"  >
         <div class="input-group">
           <input type="text" placeholder="Search..." [(ngModel)]="filterValue" (input)="applyFilter()" class="form-control search"/>
           <div class="input-group-append">
             <span class="input-group-text search_btn">
               <i class="fas fa-search"></i>
             </span>
-            <button class="btn btn-outline-light ml-1" type="button" data-toggle="modal" data-target="#createGroupModal">
+            <button *ngIf="canCreateGroup()" class="btn btn-outline-light ml-1" type="button" data-toggle="modal" data-target="#createGroupModal">
               <i class="fas fa-plus"></i>
             </button>
             <!-- <a class="btn btn-outline-light ml-1">
@@ -82,8 +82,9 @@
       role="dialog"
       aria-labelledby="createGroupModalLabel"
       aria-hidden="true"
+      *ngIf="canCreateGroup()"
     >
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog" role="document" *ngIf="canCreateGroup()">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="createGroupModalLabel">Create Group</h5>

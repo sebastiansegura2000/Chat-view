@@ -241,9 +241,26 @@ export class GroupInfoComponent implements OnInit {
                 'Group deleted successfully.'
               );
             });
-          this.chatService.setChatGroupId=0;
+          this.chatService.setChatGroupId = 0;
           this.routerNavegation.navigate(['/group-def']);
         }
       });
+  }
+
+  // Permissions
+  /**
+   * Checks if the user has the necessary permissions to manage the group.
+   * @returns A boolean value indicating whether the user has the required permissions.
+   */
+  canManagementGroup() {
+    const role = this.authService.getChatInterno();
+    if (
+      role[0] == 'administrador' ||
+      role[0] == 'coordinador' ||
+      role[0] == 'supervisor'
+    ) {
+      return true;
+    }
+    return false;
   }
 }

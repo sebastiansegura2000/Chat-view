@@ -20,8 +20,8 @@
                     <span><i class="fas fa-phone"></i></span> -->
               </div>
             </div>
-            <span id="action_menu_btn" (click)="toggleActionMenu()"><i class="fas fa-ellipsis-v"></i></span>
-            <div class="action_menu" [ngClass]="{ show: showActionMenu }">
+            <span *ngIf="canViewChatHistory()" id="action_menu_btn" (click)="toggleActionMenu()"><i class="fas fa-ellipsis-v"></i></span>
+            <div *ngIf="canViewChatHistory()" class="action_menu" [ngClass]="{ show: showActionMenu }">
               <ul>
                 <li *ngIf="recipient">
                   <a [routerLink]="['/message-history']" class="btn btn-outline-light ml-1">
