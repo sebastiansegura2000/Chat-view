@@ -23,13 +23,10 @@
             <span id="action_menu_btn" (click)="toggleActionMenu()"><i class="fas fa-ellipsis-v"></i></span>
             <div class="action_menu" [ngClass]="{ show: showActionMenu }">
               <ul>
-                <li>
-                  <a href="/profile-info"><i class="fas fa-user-circle"></i> View profile</a>
-                </li>
                 <li *ngIf="recipient">
-                  <a [routerLink]="['/message-history']"
-                    ><i class="fas fa-inbox"></i> History of chats</a
-                  >
+                  <a [routerLink]="['/message-history']" class="btn btn-outline-light ml-1">
+                    <i class="fas fa-inbox"></i> History of chats
+                  </a>
                 </li>
               </ul>
             </div>
