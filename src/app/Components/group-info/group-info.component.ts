@@ -6,7 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { IGroupAdvancedService } from 'src/app/Abstract/Group/Advanced/igroup-advanced.service';
 import { IGroupManagementService } from 'src/app/Abstract/Group/management/igroup-management.service';
 import { UserService } from 'src/app/Abstract/User/service/user-service.service';
@@ -14,6 +14,7 @@ import { Group } from 'src/app/Interfaces/Group/group.interface';
 import { User } from 'src/app/Interfaces/User/user.interface';
 import { AlertService } from 'src/app/Services/Alert/alert.service';
 import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
+import { ChatService } from 'src/app/Services/Chat/chat.service';
 import { CreateGroupFormService } from 'src/app/Services/Forms/Group/CreateGroup/create-group-form.service';
 import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-variables.service';
 
@@ -29,7 +30,6 @@ export class GroupInfoComponent implements OnInit {
   updateGroupForm: FormGroup;
   userAuth: User;
   constructor(
-    private route: ActivatedRoute,
     private groupService: IGroupAdvancedService,
     private userService: UserService,
     private formHandlerService: CreateGroupFormService,
@@ -38,7 +38,8 @@ export class GroupInfoComponent implements OnInit {
     private groupManagerService: IGroupManagementService,
     private globalService: GlobalVariablesService,
     private authService: UserAuthServiceService,
-    private routerNavegation: Router
+    private routerNavegation: Router,
+    private chatService: ChatService
   ) {
     this.updateGroupForm = this.fb.group({
       groupName: ['', Validators.required],
@@ -50,19 +51,24 @@ export class GroupInfoComponent implements OnInit {
    * Initializes the component and subscribes to route parameters, users, and user authentication.
    */
   ngOnInit(): void {
-    this.subscribeToRouteParams();
+    this.getGroupId();
     this.getUsers();
     this.subscribeToUserAuth();
   }
 
   /**
-   * Subscribes to route parameters and retrieves the group for the specified id.
+   * Retrieves the group id from the chat service and fetches the group and its participants.
+   * If the id is 0, it navigates to the group-def route.
    */
-  private subscribeToRouteParams(): void {
-    this.route.params.subscribe((params) => {
-      const groupId = params['id'];
-      this.getGroupForId(groupId);
-      this.getParticipants(groupId);
+  getGroupId() {
+    this.chatService.$getChatGroupId.subscribe((id) => {
+      if (id != 0) {
+        const groupId = id;
+        this.getGroupForId(groupId);
+        this.getParticipants(groupId);
+      } else {
+        this.routerNavegation.navigate(['/group-def']);
+      }
     });
   }
 
@@ -235,8 +241,8 @@ export class GroupInfoComponent implements OnInit {
                 'Group deleted successfully.'
               );
             });
-
-            this.routerNavegation.navigate(['/group-def']);
+          this.chatService.setChatGroupId=0;
+          this.routerNavegation.navigate(['/group-def']);
         }
       });
   }
