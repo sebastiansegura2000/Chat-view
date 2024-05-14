@@ -1,4 +1,10 @@
-import { Component, OnInit,HostListener,ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -17,6 +23,7 @@ import { UserService } from 'src/app/Abstract/User/service/user-service.service'
 import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
 import { ChatService } from 'src/app/Services/Chat/chat.service';
 import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
+import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
 
 @Component({
   selector: 'app-group-list',
@@ -39,7 +46,8 @@ export class GroupListComponent implements OnInit {
     private alertService: AlertService,
     private mqttService: MqttHandlerService,
     private chatService: ChatService,
-    private messageQueryService: IMessageQueryService
+    private messageQueryService: IMessageQueryService,
+    private authService: UserAuthServiceService
   ) {
     this.createGroupForm = this.fb.group({
       groupName: ['', Validators.required],
@@ -59,7 +67,10 @@ export class GroupListComponent implements OnInit {
       this.indiceSecuencia++;
 
       if (this.indiceSecuencia === this.secuenciaTeclas.length) {
-        this.historyButton.nativeElement.style.display = (this.historyButton.nativeElement.style.display === 'none') ? 'block' : 'none';
+        this.historyButton.nativeElement.style.display =
+          this.historyButton.nativeElement.style.display === 'none'
+            ? 'block'
+            : 'none';
         this.indiceSecuencia = 0;
       }
     } else {
@@ -75,9 +86,9 @@ export class GroupListComponent implements OnInit {
     this.loadParticipants();
     this.currentUser = this.globalService.userAuth.value;
     this.suscribeTopicGeneralGroup('groups');
-    this.chatService.$getChatGroupId.subscribe((id)=>{
+    this.chatService.$getChatGroupId.subscribe((id) => {
       this.groupId = id;
-    })
+    });
   }
   // ----------------------------------------------------------------------------------------------------------------------------
 
@@ -291,5 +302,21 @@ export class GroupListComponent implements OnInit {
         'Please fill out all required fields.'
       );
     }
+  }
+  // Permissions --------------------------------------------------------------------------------------------------------------------------
+  /**
+   * Checks if the current user has the necessary permissions to create a group.
+   * @returns A boolean value indicating whether the current user has the necessary permissions.
+   */
+  canCreateGroup() {
+    const role = this.authService.getChatInterno();
+    if (
+      role[0] == 'administrador' ||
+      role[0] == 'coordinador' ||
+      role[0] == 'supervisor'
+    ) {
+      return true;
+    }
+    return false;
   }
 }

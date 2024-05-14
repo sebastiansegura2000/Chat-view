@@ -367,6 +367,25 @@ export class GroupChatComponent implements OnInit {
       }
     });
   }
+  /**
+   * Checks if the user has the necessary permissions to view the group information.
+   *
+   * @returns {boolean} - True if the user has the necessary permissions, false otherwise.
+   */
+  canViewGroupInfo() {
+    if (this.groupId != 0) {
+      const role = this.authService.getChatInterno();
+      if (
+        role[0] == 'administrador' ||
+        role[0] == 'coordinador' ||
+        role[0] == 'supervisor' ||
+        (this.group && this.userAuth.id == this.group.onwer_id)
+      ) {
+        return true;
+      }
+      return false;
+    }
+  }
 
   /**
    * Listens for the Escape key press event on the document.

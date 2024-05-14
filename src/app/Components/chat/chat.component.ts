@@ -318,6 +318,19 @@ export class ChatComponent implements OnInit {
   }
 
   /**
+   * Checks if the user has the necessary role to view the chat history.
+   *
+   * @returns {boolean} - True if the user has the 'administrador' or 'coordinador' role, otherwise false.
+   */
+  canViewChatHistory(): boolean {
+    const role = this.authService.getChatInterno();
+    if (role[0] == 'administrador' || role[0] == 'coordinador') {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Listens for the Escape key press event and navigates back to the default chat page.
    *
    * @param {KeyboardEvent} event - The keyboard event object.

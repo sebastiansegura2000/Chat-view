@@ -18,15 +18,12 @@
             <span><i class="fas fa-phone"></i></span> -->
           </div>
         </div>
-        <span id="action_menu_btn" (click)="toggleActionMenu()">
+        <span *ngIf="canViewGroupInfo()"  id="action_menu_btn" (click)="toggleActionMenu()">
           <i class="fas fa-ellipsis-v"></i>
         </span>
-        <div class="action_menu" [ngClass]="{ show: showActionMenu }">
+        <div *ngIf="canViewGroupInfo()" class="action_menu" [ngClass]="{ show: showActionMenu }">
           <ul>
             <li *ngIf="group">
-              <!-- <a [routerLink]="['/group-info', group.id]">
-                <i class="fas fa-user-circle"></i> View Info
-              </a> -->
               <a routerLink="/group-info" routerLinkActive="active" class="btn btn-outline-light ml-1">
                 <i class="fas fa-user-circle"></i> View Info
               </a>
