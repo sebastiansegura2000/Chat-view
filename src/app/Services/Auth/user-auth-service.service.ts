@@ -1198,7 +1198,7 @@ export class UserAuthServiceService {
     });
     return this.http.get(environment.apiUrl + 'user/get-user', { headers });
   }
-  
+
 
   /**
    * Checks if the user has the required roles to access the chat-interno feature.
