@@ -16,7 +16,7 @@ Este proyecto es una aplicación de chat desarrollada en Angular que se conecta 
 
 - *Angular*: Framework principal para el desarrollo del frontend.
 - *Angular Material*: Para el diseño de la interfaz de usuario.
-- *MQTT*: Protocolo utilizado para la comunicación en tiempo real.
+- *MQTT*: Protocolo utilizado para la comunicación en tiempo real. Se recomienda la configuración de WebSockets seguros (WSS) para entornos de producción para garantizar una comunicación segura.
 - *RxJS*: Para el manejo de programación reactiva en Angular.
 - *JWT*: Para la autenticación y autorización de usuarios.
 - *TypeScript*: Lenguaje de programación utilizado en Angular.
