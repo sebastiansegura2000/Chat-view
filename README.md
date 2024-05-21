@@ -1,31 +1,58 @@
-# ChatApp
+# Proyecto Angular de Chat con MQTT
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.3.
+## Descripción del Proyecto
 
-## Development server
+Este proyecto es una aplicación de chat desarrollada en Angular que se conecta a un servidor MQTT para la comunicación en tiempo real. El objetivo principal es proporcionar una interfaz intuitiva para el usuario, donde pueda enviar y recibir mensajes instantáneamente, y los mensajes se marquen como leídos una vez que el destinatario los haya visto.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Características
 
-## Code scaffolding
+- *Autenticación de Usuarios*: Integración con JWT para la autenticación y gestión de sesiones.
+- *Manejo de Roles y Permisos*: Uso de Guards para restringir el acceso a ciertas rutas basándose en los roles de los usuarios.
+- *Comunicación en Tiempo Real*: Utilización de MQTT para la transmisión y recepción de mensajes instantáneos.
+- *Interfaz de Usuario Intuitiva*: Diseño de UI responsivo y fácil de usar con Angular Material.
+- *Gestión de Mensajes Leídos*: Funcionalidad para marcar mensajes como leídos y almacenar el estado de lectura.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Tecnologías Utilizadas
 
-## Build
+- *Angular*: Framework principal para el desarrollo del frontend.
+- *Angular Material*: Para el diseño de la interfaz de usuario.
+- *MQTT*: Protocolo utilizado para la comunicación en tiempo real. Se recomienda la configuración de WebSockets seguros (WSS) para entornos de producción para garantizar una comunicación segura.
+- *RxJS*: Para el manejo de programación reactiva en Angular.
+- *JWT*: Para la autenticación y autorización de usuarios.
+- *TypeScript*: Lenguaje de programación utilizado en Angular.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Requisitos Previos
 
-## Running unit tests
+Antes de ejecutar este proyecto, asegúrate de tener instalado lo siguiente:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Node.js (v12 o superior)
+- Angular CLI (v11 o superior)
+- Un broker MQTT (ej. Mosquitto)
 
-## Running end-to-end tests
+## Instalación
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Sigue estos pasos para clonar y configurar el proyecto en tu máquina local:
 
-## Further help
+1. Clona el repositorio:
+    bash
+    git clone https://github.com/sebastiansegura2000/Chat-view.git
+    
 
-<<<<<<< HEAD
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-=======
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
->>>>>>> origin/master
+2. Navega al directorio del proyecto:
+    bash
+    cd tu-repositorio
+    
+
+3. Instala las dependencias del proyecto:
+    bash
+    npm install
+    
+
+4. Configura el archivo environment.ts con los detalles de conexión a tu broker MQTT y otros parámetros necesarios.
+
+## Ejecución del Proyecto
+
+Para ejecutar el proyecto en modo de desarrollo, usa el siguiente comando:
+
+```bash
+ng serve
