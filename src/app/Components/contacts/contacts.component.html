@@ -10,6 +10,9 @@
                 <!-- <a  class="btn btn-outline-light ml-1">
                     <i class="fas fa-cog"></i> History
                 </a> -->
+                <button type="button" class="btn btn-outline-light ml-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  <i class="fas fa-plus"></i>
+                </button>
             </div>
         </div>
       </div>
@@ -49,4 +52,49 @@
       <div class="card-footer"></div>
 
     </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <div class="input-group">
+          <input type="text" placeholder="Search..." [(ngModel)]="filterValueModal" (input)="applyFilterModal()" class="form-control search">
+          <div class="input-group-append">
+              <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+          </div>
+
+      </div>
+        <!-- <h1 class="modal-title fs-5" id="exampleModalLabel">Add contacts</h1> -->
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body">
+
+        <div class="card-body contacts_body">
+          <ul class="contacts">
+            <a *ngFor="let user of filteredContactsModal" (click) = "setIdOfChat(user.id)" data-bs-dismiss="modal">
+              <li>
+                <div class="d-flex bd-highlight">
+                  <div class="img_cont">
+                    <!-- <img src="https://i.pinimg.com/564x/b3/cd/fe/b3cdfe6f0a48e9b6e6c0ec1889e6e038.jpg" class="rounded-circle user_img"/> -->
+                    <img src="https://i.pinimg.com/564x/cd/d7/78/cdd7782c22c97ff226a0c23e8c002092.jpg" class="rounded-circle user_img"/>
+                  </div>
+                  <div class="user_info">
+                    <span>{{ user.name }}</span>
+                  </div>
+                </div>
+              </li>
+            </a>
+          </ul>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>

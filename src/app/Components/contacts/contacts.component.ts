@@ -15,7 +15,9 @@ import { ChatService } from 'src/app/Services/Chat/chat.service';
 export class ContactsComponent implements OnInit {
   currentUser: any;
   filteredContacts: any[] = [];
+  filteredContactsModal: any[] = [];
   filterValue: string = '';
+  filterValueModal: string = '';
   users: User[];
   showChat: boolean = true;
   contactId: number = 0;
@@ -34,6 +36,12 @@ export class ContactsComponent implements OnInit {
   applyFilter() {
     this.filteredContacts = this.users.filter((contact) =>
       contact.name.toLowerCase().includes(this.filterValue.toLowerCase())
+    );
+  }
+
+  applyFilterModal() {
+    this.filteredContactsModal  = this.users.filter((contact) =>
+      contact.name.toLowerCase().includes(this.filterValueModal.toLowerCase())
     );
   }
 
@@ -68,6 +76,7 @@ export class ContactsComponent implements OnInit {
   private fetchUsers(): void {
     this.userService.getUsers().subscribe((response) => {
       this.filteredContacts = this.SortUsers(response['users']);
+      this.filteredContactsModal = this.filteredContacts;
       this.users = this.filteredContacts;
     });
   }

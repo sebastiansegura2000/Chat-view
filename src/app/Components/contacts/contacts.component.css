@@ -6,6 +6,26 @@ body {
   place-items: center;
 }
 
+.modal-content {
+  background-color: #636e84;
+  color: #000000;
+}
+
+
+.modal-header,
+.modal-footer {
+  background-color: #636e84;
+}
+
+.modal-header .form-control.search {
+  background-color: #636e84;
+  color: #000000;
+}
+
+.modal-header .btn-close {
+  filter: invert(1);
+}
+
 .btn-group {
   display: flex;
   justify-content: center;
