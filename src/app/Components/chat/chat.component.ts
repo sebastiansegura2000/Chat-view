@@ -276,8 +276,6 @@ export class ChatComponent implements OnInit {
           this.managmentMessages[this.managmentMessages.length - 1].read.push(
             data
           );
-        } else {
-          console.error('No hay mensajes para marcar como leídos.');
         }
       }
     });
