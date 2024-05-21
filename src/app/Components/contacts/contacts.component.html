@@ -31,7 +31,7 @@
       <div class="card-body contacts_body">
         <ul class="contacts">
           <a *ngFor="let user of filteredContacts" (click) = "setIdOfChat(user.id)">
-            <li>
+            <li *ngIf="user.lastMessage">
               <div class="d-flex bd-highlight">
                 <div class="img_cont">
                   <!-- <img src="https://i.pinimg.com/564x/b3/cd/fe/b3cdfe6f0a48e9b6e6c0ec1889e6e038.jpg" class="rounded-circle user_img"/> -->
