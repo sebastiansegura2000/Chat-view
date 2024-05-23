@@ -269,8 +269,6 @@ export class GroupChatComponent implements OnInit {
         } else if (lastMessage && !lastMessage.read) {
           lastMessage.read = [];
           lastMessage.read.push(data);
-        } else {
-          console.error('No hay mensajes para marcar como leídos.');
         }
       }
     });
