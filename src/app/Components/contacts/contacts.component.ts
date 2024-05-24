@@ -24,7 +24,6 @@ export class ContactsComponent implements OnInit {
   visibleContacts: number = 3;
   visibleContactsModal: number = 5;
   loadingMoreContacts: boolean = false;
-  noContactsAvailable: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -108,12 +107,6 @@ export class ContactsComponent implements OnInit {
       this.users = sortedUsers;
       this.filteredContacts = sortedUsers.slice(0, this.visibleContacts);
       this.filteredContactsModal = sortedUsers.slice(0, this.visibleContactsModal);
-      this.noContactsAvailable = sortedUsers.length === 0;
-      // if (sortedUsers.length === 0) {
-      //   this.noContactsAvailable = true;
-      // } else {
-      //   this.noContactsAvailable = false;
-      // }
     });
   }
   /**

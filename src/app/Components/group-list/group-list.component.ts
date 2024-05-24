@@ -138,9 +138,10 @@ export class GroupListComponent implements OnInit {
    */
   loadGroups(): void {
     this.groupManagementService.getGroupForUser().subscribe((response) => {
-      this.groups = response['groups'];
-      this.applyFilter(); // Aplica el filtro inicial después de cargar los grupos
-      this.updateUnreadMessagesCount(); // Si es necesario
+      this.filteredGroups = this.sortGroups(response['groups']);
+      this.groups = this.filteredGroups;
+      this.applyFilter();
+      this.updateUnreadMessagesCount();
     });
   }
   /**
