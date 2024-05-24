@@ -322,3 +322,14 @@ ul a {
 .contacts li:hover {
   background-color: #0000003d;
 }
+
+.btn-link {
+  text-decoration: none;
+  color: white;
+}
+
+.no-contacts-message {
+  text-align: center;
+  margin-top: 20px;
+  color: white;
+}

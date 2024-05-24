@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener} from '@angular/core';
 import { User } from 'src/app/Interfaces/User/user.interface';
 import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-variables.service';
 import { UserService } from 'src/app/Abstract/User/service/user-service.service';
@@ -21,6 +21,11 @@ export class ContactsComponent implements OnInit {
   users: User[];
   showChat: boolean = true;
   contactId: number = 0;
+  visibleContacts: number = 3;
+  visibleContactsModal: number = 5;
+  loadingMoreContacts: boolean = false;
+  noContactsAvailable: boolean = false;
+
   constructor(
     private userService: UserService,
     private globalService: GlobalVariablesService,
@@ -29,20 +34,44 @@ export class ContactsComponent implements OnInit {
     private messageQueryService: IMessageQueryService,
     private chatService: ChatService
   ) {}
+
+  @HostListener('document:keydown.end', ['$event'])
+  onEndKeyPress(event: KeyboardEvent) {
+    if (event.key === 'End' || event.key === 'Fin') {
+      this.loadMoreContacts();
+      this.loadMoreContactsModal();
+    }
+  }
+
   /**
    * Applies a filter to the 'filteredContacts' array based on the 'filterValue' property.
    * The 'filteredContacts' array is filtered to include only those contacts whose 'name' property contains the 'filterValue' (case-insensitive).
    */
   applyFilter() {
-    this.filteredContacts = this.users.filter((contact) =>
-      contact.name.toLowerCase().includes(this.filterValue.toLowerCase())
-    );
+    if (this.users) {
+      this.filteredContacts = this.users.filter((contact) =>
+        contact.name.toLowerCase().includes(this.filterValue.toLowerCase())
+      ).slice(0, this.visibleContacts);
+    }
   }
 
   applyFilterModal() {
-    this.filteredContactsModal  = this.users.filter((contact) =>
-      contact.name.toLowerCase().includes(this.filterValueModal.toLowerCase())
-    );
+    if (this.users) {
+      this.filteredContactsModal = this.users.filter((contact) =>
+        contact.name.toLowerCase().includes(this.filterValueModal.toLowerCase())
+      ).slice(0, this.visibleContactsModal);
+    }
+  }
+
+  loadMoreContacts() {
+    this.visibleContacts += 2;
+    this.applyFilter();
+    this.loadingMoreContacts = false;
+  }
+
+  loadMoreContactsModal() {
+    this.visibleContactsModal += 5;
+    this.applyFilterModal();
   }
 
   /**
@@ -75,9 +104,16 @@ export class ContactsComponent implements OnInit {
    */
   private fetchUsers(): void {
     this.userService.getUsers().subscribe((response) => {
-      this.filteredContacts = this.SortUsers(response['users']);
-      this.filteredContactsModal = this.filteredContacts;
-      this.users = this.filteredContacts;
+      const sortedUsers = this.SortUsers(response['users']);
+      this.users = sortedUsers;
+      this.filteredContacts = sortedUsers.slice(0, this.visibleContacts);
+      this.filteredContactsModal = sortedUsers.slice(0, this.visibleContactsModal);
+      this.noContactsAvailable = sortedUsers.length === 0;
+      // if (sortedUsers.length === 0) {
+      //   this.noContactsAvailable = true;
+      // } else {
+      //   this.noContactsAvailable = false;
+      // }
     });
   }
   /**

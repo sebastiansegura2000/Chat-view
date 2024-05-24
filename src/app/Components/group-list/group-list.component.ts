@@ -36,6 +36,8 @@ export class GroupListComponent implements OnInit {
   participants: User[];
   currentUser: any;
   groupId: number = 0;
+  visibleGroups: number = 2;
+  loadingMoreGroups: boolean = false;
   constructor(
     private globalService: GlobalVariablesService,
     private groupManagementService: IGroupManagementService,
@@ -77,6 +79,13 @@ export class GroupListComponent implements OnInit {
       this.indiceSecuencia = 0;
     }
   }
+
+  @HostListener('document:keydown.end', ['$event'])
+  onEndKeyPress(event: KeyboardEvent) {
+    if (event.key === 'End' || event.key === 'Fin') {
+      this.loadMoreGroups();
+    }
+  }
   // ----------------------------------------------------------------------------------------------------------------------------
   /**
    * Initializes the component and loads the groups and participants for the current user.
@@ -98,7 +107,13 @@ export class GroupListComponent implements OnInit {
   applyFilter(): void {
     this.filteredGroups = this.groups.filter((group) =>
       group.name.toLowerCase().includes(this.filterValue.toLowerCase())
-    );
+    ).slice(0, this.visibleGroups);
+  }
+
+  loadMoreGroups(): void {
+    this.visibleGroups += 2;
+    this.applyFilter();
+    this.loadingMoreGroups = false;
   }
 
   // propeties participants -----------------------------------------------------------------------------------------------------
@@ -123,9 +138,9 @@ export class GroupListComponent implements OnInit {
    */
   loadGroups(): void {
     this.groupManagementService.getGroupForUser().subscribe((response) => {
-      this.filteredGroups = this.sortGroups(response['groups']);
-      this.groups = this.filteredGroups;
-      this.updateUnreadMessagesCount();
+      this.groups = response['groups'];
+      this.applyFilter(); // Aplica el filtro inicial después de cargar los grupos
+      this.updateUnreadMessagesCount(); // Si es necesario
     });
   }
   /**

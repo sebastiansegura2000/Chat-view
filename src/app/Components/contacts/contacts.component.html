@@ -47,6 +47,12 @@
             </li>
           </a>
         </ul>
+        <!-- <div *ngIf="noContactsAvailable" class="no-contacts-message">
+          No hay contactos disponibles. Por favor, añade uno.
+        </div> -->
+        <div class="d-flex justify-content-center">
+          <button *ngIf="filteredContacts.length < users.length" (click)="loadMoreContacts()" class="btn btn-link">Ver más</button>
+        </div>
       </div>
 
       <div class="card-footer"></div>
@@ -87,6 +93,9 @@
               </li>
             </a>
           </ul>
+          <div class="d-flex justify-content-center">
+            <button *ngIf="filteredContactsModal.length < users.length" (click)="loadMoreContactsModal()" class="btn btn-link">Ver más</button>
+          </div>
         </div>
 
       </div>
