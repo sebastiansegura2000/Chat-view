@@ -39,7 +39,14 @@
                 </div>
                 <div class="user_info">
                   <span>{{ user.name }}</span>
-                  <p *ngIf="user.lastMessage">{{ (currentUser.userData.id == user.lastMessage.sender_id) ? 'Tu: ' : (user.name | slice:0:3) + ': ' }}{{ (user.lastMessage.content | slice: 0:25) + '... ' + (user.lastMessage.created_at | date: 'dd/MM/yyyy h:mm a') }}</p>
+                  <!-- <p *ngIf="user.lastMessage">
+                    {{ (currentUser.userData.id == user.lastMessage.sender_id) ? 'Tu: ' : (user.name | slice:0:3) + ': ' }}
+                    {{ (user.lastMessage.content | slice: 0:25) + '... ' + (user.lastMessage.created_at | date: 'dd/MM/yyyy h:mm a') }}
+                  </p> -->
+                  <p *ngIf="user.lastMessage">
+                    {{ currentUser.userData.id == user.lastMessage.sender_id ? 'Tu: ' : (user.name | slice:0:3) + ': ' }}
+                    {{ user.lastMessage.content | slice: 0:25 }}... {{ formatMessageDate(user.lastMessage.created_at) }}
+                  </p>
                   <p *ngIf="!user.lastMessage">No hay mensajes</p>
                   <div *ngIf="user.unreadMessages" class="unread_indicator">{{ user.unreadMessages }}</div>
                 </div>

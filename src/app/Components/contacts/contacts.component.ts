@@ -144,7 +144,7 @@ export class ContactsComponent implements OnInit {
       this.users = sortedUsers;
       this.filteredContacts = sortedUsers.slice(0, this.visibleContacts);
       this.filteredContactsModal = sortedUsers.slice(0, this.visibleContactsModal);
-  
+
       this.thereAreChats = false;
       this.cdRef.detectChanges();
     });
@@ -191,6 +191,22 @@ export class ContactsComponent implements OnInit {
     });
     const usersWithoutLastMessage = users.filter((user) => !user.lastMessage);
     return [...usersWithLastMessage, ...usersWithoutLastMessage];
+  }
+
+
+  formatMessageDate(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    const isToday = date.getDate() === now.getDate() &&
+                    date.getMonth() === now.getMonth() &&
+                    date.getFullYear() === now.getFullYear();
+
+    if (isToday) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else {
+      return date.toLocaleDateString();
+    }
   }
   /**
    * Subscribes to a topic for the given user ID.
