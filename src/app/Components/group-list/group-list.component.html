@@ -72,7 +72,7 @@
         <div *ngIf="filteredGroups.length === 0" class="no-contacts-message">
           Actualmente no tienes ni estas en ningun grupo
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center" *ngIf="filteredGroups && groups">
           <button *ngIf="filteredGroups.length < groups.length" (click)="loadMoreGroups()" class="btn btn-link">Ver más</button>
         </div>
       </div>

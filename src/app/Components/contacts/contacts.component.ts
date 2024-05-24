@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener} from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef} from '@angular/core';
 import { User } from 'src/app/Interfaces/User/user.interface';
 import { GlobalVariablesService } from 'src/app/Services/GlobalVariables/global-variables.service';
 import { UserService } from 'src/app/Abstract/User/service/user-service.service';
@@ -6,6 +6,7 @@ import { IMessageQueryForUserService } from 'src/app/Abstract/Message/User/imess
 import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
 import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
 import { ChatService } from 'src/app/Services/Chat/chat.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-contacts',
@@ -21,9 +22,10 @@ export class ContactsComponent implements OnInit {
   users: User[];
   showChat: boolean = true;
   contactId: number = 0;
-  visibleContacts: number = 3;
-  visibleContactsModal: number = 5;
+  visibleContacts: number = environment.visibleContacts;
+  visibleContactsModal: number = environment.visibleContactsModal;
   loadingMoreContacts: boolean = false;
+  thereAreChats: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -31,9 +33,15 @@ export class ContactsComponent implements OnInit {
     private messageService: IMessageQueryForUserService,
     private mqttService: MqttHandlerService,
     private messageQueryService: IMessageQueryService,
+    private cdRef: ChangeDetectorRef,
     private chatService: ChatService
   ) {}
-
+  /**
+   * Listens for the 'End' or 'Fin' key press event on the document.
+   * When the event is triggered, it calls the `loadMoreContacts` and `loadMoreContactsModal` methods.
+   *
+   * @param {KeyboardEvent} event - The keyboard event object.
+   */
   @HostListener('document:keydown.end', ['$event'])
   onEndKeyPress(event: KeyboardEvent) {
     if (event.key === 'End' || event.key === 'Fin') {
@@ -41,35 +49,64 @@ export class ContactsComponent implements OnInit {
       this.loadMoreContactsModal();
     }
   }
-
+  /**
+   * Checks if there are any chats to display.
+   * If there are, sets the `thereAreChats` property to `true`.
+   */
+  checkIfThereAreChats() {
+    this.thereAreChats = true;
+    return true;
+  }
   /**
    * Applies a filter to the 'filteredContacts' array based on the 'filterValue' property.
    * The 'filteredContacts' array is filtered to include only those contacts whose 'name' property contains the 'filterValue' (case-insensitive).
    */
   applyFilter() {
     if (this.users) {
-      this.filteredContacts = this.users.filter((contact) =>
-        contact.name.toLowerCase().includes(this.filterValue.toLowerCase())
-      ).slice(0, this.visibleContacts);
+      this.filteredContacts = this.users
+        .filter((contact) =>
+          contact.name.toLowerCase().includes(this.filterValue.toLowerCase())
+        )
+        .slice(0, this.visibleContacts);
     }
   }
-
+  /**
+   * Applies a filter to the 'filteredContactsModal' array based on the 'filterValueModal' property.
+   * The 'filteredContactsModal' array is filtered to include only those contacts whose 'name' property contains the 'filterValueModal' (case-insensitive).
+   *
+   * @param {User[]} users - An array of User objects.
+   */
   applyFilterModal() {
     if (this.users) {
-      this.filteredContactsModal = this.users.filter((contact) =>
-        contact.name.toLowerCase().includes(this.filterValueModal.toLowerCase())
-      ).slice(0, this.visibleContactsModal);
+      this.filteredContactsModal = this.users
+        .filter((contact) =>
+          contact.name
+            .toLowerCase()
+            .includes(this.filterValueModal.toLowerCase())
+        )
+        .slice(0, this.visibleContactsModal);
     }
   }
-
+  /**
+   * Increases the number of visible contacts in the main view by the specified amount.
+   * Then, it applies the filter to the 'filteredContacts' array to show only the relevant contacts.
+   *
+   * @returns {void}
+   */
   loadMoreContacts() {
-    this.visibleContacts += 2;
+    this.visibleContacts += environment.loadMoreContacts;
     this.applyFilter();
     this.loadingMoreContacts = false;
   }
+  /**
+   * Increases the number of visible contacts in the modal view by the specified amount.
+   * Then, it applies the filter to the 'filteredContactsModal' array to show only the relevant contacts.
+   *
+   * @returns {void}
+   */
 
   loadMoreContactsModal() {
-    this.visibleContactsModal += 5;
+    this.visibleContactsModal += environment.loadMoreContactsModal;
     this.applyFilterModal();
   }
 
@@ -91,12 +128,12 @@ export class ContactsComponent implements OnInit {
       this.suscribeTopic(this.currentUser.userData.id);
     }, 100);
     this.chatService.$getChatId.subscribe((id) => (this.contactId = id));
-    this.chatService.$getSendMessage.subscribe((message)=>{
+    this.chatService.$getSendMessage.subscribe((message) => {
       if (message['typeChat'] == 1 && message['send']) {
         this.fetchUsers();
         this.fetchUnreadMessages();
       }
-    })
+    });
   }
   /**
    * Fetches the list of users from the server.
@@ -107,6 +144,9 @@ export class ContactsComponent implements OnInit {
       this.users = sortedUsers;
       this.filteredContacts = sortedUsers.slice(0, this.visibleContacts);
       this.filteredContactsModal = sortedUsers.slice(0, this.visibleContactsModal);
+  
+      this.thereAreChats = false;
+      this.cdRef.detectChanges();
     });
   }
   /**

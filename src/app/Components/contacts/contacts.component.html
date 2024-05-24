@@ -32,7 +32,7 @@
         <ul class="contacts">
           <a *ngFor="let user of filteredContacts" (click) = "setIdOfChat(user.id)">
             <li *ngIf="user.lastMessage">
-              <div class="d-flex bd-highlight">
+              <div class="d-flex bd-highlight" *ngIf="checkIfThereAreChats(true)">
                 <div class="img_cont">
                   <!-- <img src="https://i.pinimg.com/564x/b3/cd/fe/b3cdfe6f0a48e9b6e6c0ec1889e6e038.jpg" class="rounded-circle user_img"/> -->
                   <img src="https://i.pinimg.com/564x/cd/d7/78/cdd7782c22c97ff226a0c23e8c002092.jpg" class="rounded-circle user_img"/>
@@ -47,10 +47,10 @@
             </li>
           </a>
         </ul>
-        <!-- <div *ngIf="filteredContacts.length === 0" class="no-contacts-message">
-          No hay contactos disponibles. Por favor, añade uno.
-        </div> -->
-        <div class="d-flex justify-content-center">
+        <div *ngIf="!thereAreChats" class="no-contacts-message">
+          No hay contactos disponibles. <br>Añade uno pulsando el botón "+".
+        </div>        
+        <div class="d-flex justify-content-center" *ngIf="filteredContacts && users && thereAreChats">
           <button *ngIf="filteredContacts.length < users.length" (click)="loadMoreContacts()" class="btn btn-link">Ver más</button>
         </div>
       </div>
@@ -72,8 +72,6 @@
           </div>
 
       </div>
-        <!-- <h1 class="modal-title fs-5" id="exampleModalLabel">Add contacts</h1> -->
-        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
       </div>
       <div class="modal-body">
 
@@ -93,7 +91,7 @@
               </li>
             </a>
           </ul>
-          <div class="d-flex justify-content-center">
+          <div class="d-flex justify-content-center" *ngIf="filteredContactsModal && users">
             <button *ngIf="filteredContactsModal.length < users.length" (click)="loadMoreContactsModal()" class="btn btn-link">Ver más</button>
           </div>
         </div>
