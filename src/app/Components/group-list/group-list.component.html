@@ -54,7 +54,7 @@
                         : (group.lastMessage.sender_name | slice : 0 : 5) + ": "
                     }}
                     {{
-                      (group.lastMessage.content | slice : 0 : 15) +
+                      (group.lastMessage.content | slice : 0 : 25) +
                         "... " +
                         (group.lastMessage.created_at
                           | date : "dd/MM/yyyy h:mm a")
