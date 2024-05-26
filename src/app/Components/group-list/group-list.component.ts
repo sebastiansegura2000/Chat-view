@@ -239,6 +239,9 @@ export class GroupListComponent implements OnInit {
    * @returns A boolean value indicating whether the current user is a participant in the specified group.
    */
   isInGroup(id_group: number): boolean {
+    if (this.groups.length === 0) {
+      return true;
+    }
     return this.groups.find((group) => group.id == id_group) ? true : false;
   }
   /**
