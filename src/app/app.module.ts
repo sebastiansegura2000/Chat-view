@@ -37,6 +37,9 @@ import { environment } from 'src/environments/environment';
 import { IMessageQueryService } from './Abstract/Message/MessageQuery/imessage-query.service';
 import { MessageQueryService } from './Services/Message/MessageQuery/message-query.service';
 import { ChatService } from './Services/Chat/chat.service';
+import { InformsComponent } from './Components/informs/informs.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
   const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     hostname: environment.mqtt.server,
@@ -60,7 +63,8 @@ import { ChatService } from './Services/Chat/chat.service';
     GroupListComponent,
     ChatDefComponent,
     GroupDefComponent,
-    MessageHistoryUserComponent
+    MessageHistoryUserComponent,
+    InformsComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +73,9 @@ import { ChatService } from './Services/Chat/chat.service';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    MqttModule.forRoot(MQTT_SERVICE_OPTIONS)
+    MqttModule.forRoot(MQTT_SERVICE_OPTIONS),
+    NgxChartsModule,
+    BrowserAnimationsModule,
   ],
 
   providers: [

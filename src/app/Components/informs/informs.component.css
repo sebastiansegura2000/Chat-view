@@ -1,0 +1,49 @@
+/* body {
+  height: 100vh;
+  margin: 0;
+  background-color: #D8E3FA;
+  display: grid;
+  place-items: center;
+} */
+
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+
+body {
+  background-color: #D8E3FA;
+  /* place-items: center; */
+  /* height: 100vh; */
+  padding: 24px;
+  font-size: 16px;
+  font-family: Poppins, sans-serif;
+  justify-content: center;
+  min-height: 100vh;
+  display: grid;
+  flex-direction: column;
+}
+
+h1 {
+  font-size:3em;
+  font-weight: 300;
+  line-height:1em;
+  text-align: center;
+  color: #000000;
+}
+
+h2 {
+  font-size:1em;
+  font-weight: 300;
+  text-align: center;
+  display: block;
+  line-height:1em;
+  padding-bottom: 2em;
+  color: #191717;
+}
+
+.center-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+

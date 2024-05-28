@@ -18,6 +18,10 @@
             <a href="/message-history-user" #historyButton class="btn btn-outline-light ml-1" style="display: none">
               <i class="fas fa-cog"></i> History
             </a>
+            <button type="button" class="btn btn-outline-light ml-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <i class="fa-solid fa-box-archive"></i>
+              <!-- <i class="fa-solid fa-folder"></i> -->
+            </button>
           </div>
         </div>
       </div>
@@ -81,25 +85,12 @@
     </div>
 
     <!-- Modal -->
-    <div
-      class="modal fade"
-      id="createGroupModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="createGroupModalLabel"
-      aria-hidden="true"
-      *ngIf="canCreateGroup()"
-    >
+    <div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog" aria-labelledby="createGroupModalLabel" aria-hidden="true" *ngIf="canCreateGroup()">
       <div class="modal-dialog" role="document" *ngIf="canCreateGroup()">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="createGroupModalLabel">Create Group</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -107,52 +98,42 @@
             <form [formGroup]="createGroupForm">
               <div class="form-group">
                 <label for="groupName">Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="groupName"
-                  formControlName="groupName"
-                  placeholder="Enter group name"
-                />
+                <input type="text" class="form-control" id="groupName" formControlName="groupName" placeholder="Enter group name"/>
               </div>
               <h3>Participants</h3>
               <div formArrayName="participants">
-                <div
-                  *ngFor="let participant of participants; let i = index"
-                  class="form-check"
-                  style="display: inline-block; margin-left: 5%"
-                >
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    [id]="'participant-' + participant.id"
-                    [formControlName]="i"
-                  />
-                  <label
-                    class="form-check-label"
-                    [for]="'participant-' + participant.id"
-                    >{{ participant.name }}</label
-                  >
+                <div *ngFor="let participant of participants; let i = index" class="form-check" style="display: inline-block; margin-left: 5%" >
+                  <input type="checkbox" class="form-check-input" [id]="'participant-' + participant.id" [formControlName]="i" />
+                  <label class="form-check-label" [for]="'participant-' + participant.id" >{{ participant.name }}</label >
                 </div>
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" >
               Close
             </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              (click)="createGroup()"
-              data-dismiss="modal"
-            >
+            <button type="button" class="btn btn-primary" (click)="createGroup()" data-dismiss="modal" >
               Create Group
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal archive groups -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="input-group">
+            </div>
+          </div>
+          <div class="modal-body">
+            <p>Archived Groups</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
