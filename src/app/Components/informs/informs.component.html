@@ -1,165 +1,248 @@
 <body>
   <h1>
     <div class="btn-group" role="group" aria-label="Basic example">
-      <a routerLink="/chat-def" routerLinkActive="active" class="btn btn-secondary">
-        <i class="fa-solid fa-backward"></i> <br>Come back
+      <a
+        routerLink="/chat-def"
+        routerLinkActive="active"
+        class="btn btn-secondary"
+      >
+        <i class="fa-solid fa-backward"></i> <br />Come back
       </a>
-      <button (click)="showMensajesPorDiaSection()" class="btn btn-secondary">Mensajes por Día</button>
-      <button (click)="showUsuariosPorGrupoSection()" class="btn btn-secondary">Usuarios por Grupo</button>
-      <button (click)="showUsuariosInactivosSection()" class="btn btn-secondary">Usuarios Activos e <br> Inactivos</button>
-      <button (click)="showGruposInactivosSection()" class="btn btn-secondary">Grupos Activos e <br>Inactivos</button>
+      <button (click)="showMessagesPerDaySection()" class="btn btn-secondary">
+        Mensajes por dia
+      </button>
+      <button (click)="showUsersPerGroupSection()" class="btn btn-secondary">
+        Usuarios por grupo
+      </button>
+      <button (click)="showInactiveUsersSection()" class="btn btn-secondary">
+        Usuarios Activos <br />e inactivos
+      </button>
+      <button (click)="showInactiveGroupsSection()" class="btn btn-secondary">
+        Grupos Activos <br />e inactivos
+      </button>
     </div>
   </h1>
 
-  <div *ngIf="showMensajesPorDia">
-    <h2>Mensajes Por Dia</h2>
+  <div *ngIf="showMessagesPerDay">
+    <h2>Mensajes por día</h2>
     <div class="mb-3 d-flex justify-content-center">
-      <div style="max-width: 700px;">
-        <label for="mensajesPorDiaFilter" class="form-label">Filtrar por:</label>
+      <div style="max-width: 700px">
+        <label for="messagesPerDayFilter" class="form-label">Filter by:</label>
         <div class="input-group input-group-sm">
-          <select id="mensajesPorDiaFilter" class="form-select" [(ngModel)]="selectedMensajesPorDiaFilter" (change)="filterMensajesPorDia()">
-            <option value="name">Nombre</option>
-            <option value="date">Fecha</option>
-            <option value="date-range">Rango de Fechas</option>
-            <option value="value">Cantidad de mensajes</option>
-            <option value="rrhh_id">ID RRHH</option>
+          <select
+            id="messagesPerDayFilter"
+            class="form-select"
+            [(ngModel)]="selectedMessagesPerDayFilter"
+            (change)="filterMessagesPerDay()"
+          >
+            <option value="name">Name</option>
+            <option value="date">Date</option>
+            <option value="date-range">Date Range</option>
+            <option value="value">Number of Messages</option>
+            <option value="rrhh_id">RRHH ID</option>
           </select>
 
-        <div *ngIf="selectedMensajesPorDiaFilter === 'name' || selectedMensajesPorDiaFilter === 'value' || selectedMensajesPorDiaFilter === 'rrhh_id'">
-          <input type="text" class="form-control" [(ngModel)]="mensajesPorDiaFilterValue" (input)="filterMensajesPorDia()" placeholder="Ingrese valor de filtro">
-        </div>
+          <div
+            *ngIf="
+              selectedMessagesPerDayFilter === 'name' ||
+              selectedMessagesPerDayFilter === 'value' ||
+              selectedMessagesPerDayFilter === 'rrhh_id'
+            "
+          >
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="messagesPerDayFilterValue"
+              (input)="filterMessagesPerDay()"
+              placeholder="Enter filter value"
+            />
+          </div>
 
-        <div *ngIf="selectedMensajesPorDiaFilter === 'date'">
-          <input type="text" class="form-control" [(ngModel)]="selectedDate" (input)="filterMensajesPorDia()" placeholder="Ingrese fecha (YYYY-MM-DD)">
-        </div>
+          <div *ngIf="selectedMessagesPerDayFilter === 'date'">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedDate"
+              (input)="filterMessagesPerDay()"
+              placeholder="Enter date (YYYY-MM-DD)"
+            />
+          </div>
 
-        <div *ngIf="selectedMensajesPorDiaFilter === 'date-range'">
-          <input type="text" id="startDate" class="form-control" [(ngModel)]="startDate" (input)="filterMensajesPorDia()" placeholder="Start time (YYYY-MM-DD)">
-          <input type="text" id="endDate" class="form-control" [(ngModel)]="endDate" (input)="filterMensajesPorDia()" placeholder="End time (YYYY-MM-DD)">
-        </div>
-        </div>
-      </div>
-    </div>
-    <br><br>
-    <ngx-charts-line-chart
-      [view]="[800, 400]"
-      [results]="filteredMensajesPorDiaData"
-      [scheme]="colorScheme"
-      [xAxis]="true"
-      [yAxis]="true"
-      [legend]="true"
-      [legendTitle]="'Mensajes por Día'"
-      [showXAxisLabel]="true"
-      [showYAxisLabel]="true"
-      [xAxisLabel]="'Fechas'"
-      [yAxisLabel]="'Mensajes por días'">
-    </ngx-charts-line-chart>
-  </div>
-
-  <div *ngIf="showUsuariosPorGrupo">
-    <h2>Usuarios Por Grupo</h2>
-    <div class="mb-3 d-flex justify-content-center">
-      <div style="max-width: 700px;">
-        <label for="usuariosPorGrupoFilter" class="form-label">Filtrar por:</label>
-        <div class="input-group input-group-sm">
-          <select id="usuariosPorGrupoFilter" class="form-select" [(ngModel)]="selectedUsuariosPorGrupoFilter" (change)="filterUsuariosPorGrupo()">
-            <option value="name">Nombre</option>
-            <option value="value">Valor</option>
-          </select>
-          <div *ngIf="selectedUsuariosPorGrupoFilter === 'name' || selectedUsuariosPorGrupoFilter === 'value'">
-            <input type="text" class="form-control" [(ngModel)]="usuariosPorGrupoFilterValue" (input)="filterUsuariosPorGrupo()" placeholder="Ingrese valor de filtro">
+          <div *ngIf="selectedMessagesPerDayFilter === 'date-range'">
+            <input
+              type="text"
+              id="startDate"
+              class="form-control"
+              [(ngModel)]="startDate"
+              (input)="filterMessagesPerDay()"
+              placeholder="Start date (YYYY-MM-DD)"
+            />
+            <input
+              type="text"
+              id="endDate"
+              class="form-control"
+              [(ngModel)]="endDate"
+              (input)="filterMessagesPerDay()"
+              placeholder="End date (YYYY-MM-DD)"
+            />
           </div>
         </div>
       </div>
     </div>
-    <br><br>
-    <ngx-charts-bar-vertical
-      [view]="[900, 450]"
-      [results]="filteredUsuariosPorGrupoData"
+    <br /><br />
+    <ngx-charts-line-chart
+      [view]="[800, 400]"
+      [results]="filteredMessagesPerDayData"
       [scheme]="colorScheme"
       [xAxis]="true"
       [yAxis]="true"
       [legend]="true"
-      [legendTitle]="'Usuarios por Grupo'"
+      [legendTitle]="'Messages per Day'"
       [showXAxisLabel]="true"
       [showYAxisLabel]="true"
-      [xAxisLabel]="'Grupos'"
-      [yAxisLabel]="'Cantidad de Usuarios Por grupo'">
+      [xAxisLabel]="'Dates'"
+      [yAxisLabel]="'Messages per Day'"
+    >
+    </ngx-charts-line-chart>
+  </div>
+
+  <div *ngIf="showUsersPerGroup">
+    <h2>Users Per Group</h2>
+    <div class="mb-3 d-flex justify-content-center">
+      <div style="max-width: 700px">
+        <label for="usersPerGroupFilter" class="form-label">Filter by:</label>
+        <div class="input-group input-group-sm">
+          <select
+            id="usersPerGroupFilter"
+            class="form-select"
+            [(ngModel)]="selectedUsersPerGroupFilter"
+            (change)="filterUsersPerGroup()"
+          >
+            <option value="name">Name</option>
+            <option value="value">Value</option>
+          </select>
+          <div
+            *ngIf="
+              selectedUsersPerGroupFilter === 'name' ||
+              selectedUsersPerGroupFilter === 'value'
+            "
+          >
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="usersPerGroupFilterValue"
+              (input)="filterUsersPerGroup()"
+              placeholder="Enter filter value"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <br /><br />
+    <ngx-charts-bar-vertical
+      [view]="[900, 450]"
+      [results]="filteredUsersPerGroupData"
+      [scheme]="colorScheme"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="true"
+      [legendTitle]="'Users per Group'"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="'Groups'"
+      [yAxisLabel]="'Number of Users per Group'"
+    >
     </ngx-charts-bar-vertical>
   </div>
 
-  <div *ngIf="showUsuariosInactivos">
-    <h2>Usuarios Activos e Inactivos</h2>
-    <label for="usuariosInactivosChartType" class="form-label">Tipo de Gráfico:</label>
+  <div *ngIf="showInactiveUsers">
+    <h2>Active and Inactive Users</h2>
+    <label for="inactiveUsersChartType" class="form-label">Chart Type:</label>
     <div class="input-group input-group-sm mb-3 d-flex justify-content-right">
-      <div style="max-width: 700px;">
-        <select id="usuariosInactivosChartType" class="form-select" [(ngModel)]="usuariosInactivosChartType" (change)="updateUsuariosInactivosChart()">
+      <div style="max-width: 700px">
+        <select
+          id="inactiveUsersChartType"
+          class="form-select"
+          [(ngModel)]="inactiveUsersChartType"
+          (change)="updateInactiveUsersChart()"
+        >
           <option value="normal">Normal</option>
-          <option value="avanzado">Avanzado</option>
+          <option value="advanced">Advanced</option>
         </select>
       </div>
     </div>
     <div class="center-chart">
-      <ngx-charts-pie-chart *ngIf="usuariosInactivosChartType === 'normal'"
+      <ngx-charts-pie-chart
+        *ngIf="inactiveUsersChartType === 'normal'"
         [view]="[1200, 500]"
-        [results]="usuariosInactivosData"
+        [results]="inactiveUsersData"
         [scheme]="colorScheme"
         [legend]="true"
-        [legendTitle]="'Usuarios Activos e Inactivos'"
+        [legendTitle]="'Active and Inactive Users'"
         [explodeSlices]="false"
         [labels]="true"
-        [doughnut]="false">
+        [doughnut]="false"
+      >
       </ngx-charts-pie-chart>
-      <ngx-charts-advanced-pie-chart *ngIf="usuariosInactivosChartType === 'avanzado'"
+      <ngx-charts-advanced-pie-chart
+        *ngIf="inactiveUsersChartType === 'advanced'"
         [view]="[1200, 500]"
-        [results]="usuariosInactivosData"
+        [results]="inactiveUsersData"
         [legend]="true"
-        [legendTitle]="'Usuarios Activos e Inactivos'"
+        [legendTitle]="'Active and Inactive Users'"
         [labels]="true"
-        [doughnut]="false">
+        [doughnut]="false"
+      >
       </ngx-charts-advanced-pie-chart>
     </div>
   </div>
 
-  <div *ngIf="showGruposInactivos">
-    <h2>Grupos Activos e Inactivos</h2>
-    <label for="gruposInactivosChartType" class="form-label">Tipo de Gráfico:</label>
+  <div *ngIf="showInactiveGroups">
+    <h2>Active and Inactive Groups</h2>
+    <label for="inactiveGroupsChartType" class="form-label">Chart Type:</label>
     <div class="input-group input-group-sm mb-3 d-flex justify-content-right">
-      <div style="max-width: 700px;">
-        <select id="gruposInactivosChartType" class="form-select" [(ngModel)]="gruposInactivosChartType" (change)="updateGruposInactivosChart()">
+      <div style="max-width: 700px">
+        <select
+          id="inactiveGroupsChartType"
+          class="form-select"
+          [(ngModel)]="inactiveGroupsChartType"
+          (change)="updateInactiveGroupsChart()"
+        >
           <option value="normal">Normal</option>
-          <option value="avanzado">Avanzado</option>
+          <option value="advanced">Advanced</option>
         </select>
       </div>
     </div>
     <div class="center-chart">
-      <ngx-charts-pie-chart *ngIf="gruposInactivosChartType === 'normal'"
+      <ngx-charts-pie-chart
+        *ngIf="inactiveGroupsChartType === 'normal'"
         [view]="[1200, 500]"
-        [results]="gruposInactivosData"
+        [results]="inactiveGroupsData"
         [scheme]="colorScheme"
         [legend]="true"
-        [legendTitle]="'Grupos Activos e Inactivos'"
+        [legendTitle]="'Active and Inactive Groups'"
         [explodeSlices]="false"
         [labels]="true"
-        [doughnut]="true">
+        [doughnut]="true"
+      >
       </ngx-charts-pie-chart>
-      <ngx-charts-advanced-pie-chart *ngIf="gruposInactivosChartType === 'avanzado'"
+      <ngx-charts-advanced-pie-chart
+        *ngIf="inactiveGroupsChartType === 'advanced'"
         [view]="[1200, 500]"
-        [results]="gruposInactivosData"
+        [results]="inactiveGroupsData"
         [legend]="true"
-        [legendTitle]="'Grupos Activos e Inactivos'"
+        [legendTitle]="'Active and Inactive Groups'"
         [labels]="true"
-        [doughnut]="true">
+        [doughnut]="true"
+      >
       </ngx-charts-advanced-pie-chart>
     </div>
   </div>
-
-
 </body>
 
 <!-- pie chart to show the users active and inactive -->
 
-  <!-- <div *ngIf="showUsuariosInactivos">
+<!-- <div *ngIf="showUsuariosInactivos">
     <h2>Usuarios Activos e Inactivos</h2>
     <ngx-charts-pie-chart
       [view]="[1200, 500]"
@@ -175,7 +258,7 @@
 
 <!-- pie chart to show the groups active and inactive -->
 
-  <!--
+<!--
   <div *ngIf="showGruposInactivos">
     <h2>Grupos Activos e Inactivos </h2>
     <ngx-charts-pie-chart

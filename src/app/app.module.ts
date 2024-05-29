@@ -40,6 +40,8 @@ import { ChatService } from './Services/Chat/chat.service';
 import { InformsComponent } from './Components/informs/informs.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { IGroupUserReportService } from './Abtract/Report/igroup-user-report.service';
+import { GroupUserReportService } from './Services/Report/Group/group-user-report.service';
 
   const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     hostname: environment.mqtt.server,
@@ -86,7 +88,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     {provide: IMessageQueryForGroupService, useClass: MessageQueryForGroupService},
     {provide: IUSerRepositoryService,useClass: UserRepositoryService},
     {provide: IGroupAdvancedService,useClass: GroupAdvancedService},
-    {provide: IMessageQueryService,useClass: MessageQueryService}
+    {provide: IMessageQueryService,useClass: MessageQueryService},
+    {provide: IGroupUserReportService,useClass: GroupUserReportService}
 
   ],
   bootstrap: [AppComponent],
