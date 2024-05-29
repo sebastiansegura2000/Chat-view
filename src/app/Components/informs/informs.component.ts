@@ -65,27 +65,26 @@ export class InformsComponent implements OnInit {
         });
       });
     });
-
-    this.activeGroupService.getActiveGroups(1, 5).subscribe((data) => {
-      this.inactiveGroupsData.push({
-        name: 'Active',
-        value: data['groups'].length,
-      });
-    });
-
-    this.inactiveGroupService.getInactiveGroups(1, 5).subscribe((data) => {
-      this.inactiveGroupsData.push({
-        name: 'Inactive',
-        value: data['groups'].length,
-      });
-    });
-
-    this.setUserActivity(1,5,0);
+    
+    this.setGroupActivity(1,5);
+    this.setUserActivity(1, 5, 0);
 
     this.filteredMessagesPerDayData = this.messagesPerDayData;
     this.filteredUsersPerGroupData = this.usersPerGroupData;
   }
-
+  /**
+   * Sets the user activity data for the inactive users chart.
+   *
+   * @remarks
+   * This function retrieves the user activity data based on the provided parameters and updates the `inactiveUsersData` array.
+   * It uses the `IUserReportService` to make HTTP requests to the backend API.
+   *
+   * @param {number} amount - The amount of users to retrieve.
+   * @param {number} conversion_type - The type of conversion to apply.
+   * @param {number} type_activity - The type of user activity to retrieve.
+   *
+   * @returns {void} - This function does not return any value. It updates the `inactiveUsersData` array.
+   */
   setUserActivity(
     amount: number,
     conversion_type: number,
@@ -107,22 +106,53 @@ export class InformsComponent implements OnInit {
             name: 'Inactive',
             value: data['users'].length,
           });
-      });
+        });
+    } else {
+      this.userReportService
+        .getSpecificActiveUsers(amount, conversion_type, type_activity)
+        .subscribe((data) => {
+          this.inactiveUsersData.push({
+            name: 'Active',
+            value: data['users'].length,
+          });
+        });
+      this.userReportService
+        .getSpecificInactiveUsers(amount, conversion_type, type_activity)
+        .subscribe((data) => {
+          this.inactiveUsersData.push({
+            name: 'Inactive',
+            value: data['users'].length,
+          });
+        });
     }
-    else{
-      this.userReportService.getSpecificActiveUsers(amount, conversion_type,type_activity).subscribe((data)=>{
-        this.inactiveUsersData.push({
+  }
+  /**
+   * Sets the group activity data for the inactive groups chart.
+   *
+   * @remarks
+   * This function retrieves the group activity data based on the provided parameters and updates the `inactiveGroupsData` array.
+   * It uses the `IActiveGroupReportService` and `IInactiveGroupReportService` to make HTTP requests to the backend API.
+   *
+   * @param {number} amount - The amount of groups to retrieve.
+   * @param {number} conversion_type - The type of conversion to apply.
+   *
+   * @returns {void} - This function does not return any value. It updates the `inactiveGroupsData` array.
+   */
+  setGroupActivity(amount: number, conversion_type: number) {
+    this.activeGroupService
+      .getActiveGroups(amount, conversion_type)
+      .subscribe((data) => {
+        this.inactiveGroupsData.push({
           name: 'Active',
-          value: data['users'].length,
+          value: data['groups'].length,
         });
-      })
-      this.userReportService.getSpecificInactiveUsers(amount, conversion_type,type_activity).subscribe((data)=>{
-        this.inactiveUsersData.push({
-          name: 'Inactive',
-          value: data['users'].length,
-        });
-      })
-    }
+      });
+    this.inactiveGroupService.getInactiveGroups(1, 5).subscribe((data) => {
+      this.inactiveGroupsData.push({
+        name: 'Inactive',
+        value: data['groups'].length,
+      });
+    });
   }
   /**
    * Shows the messages per day section in the component.
