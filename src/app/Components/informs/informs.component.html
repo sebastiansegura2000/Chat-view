@@ -8,6 +8,10 @@
       <button (click)="showUsuariosPorGrupoSection()" class="btn btn-secondary">Usuarios por Grupo</button>
       <button (click)="showUsuariosInactivosSection()" class="btn btn-secondary">Usuarios Activos e <br> Inactivos</button>
       <button (click)="showGruposInactivosSection()" class="btn btn-secondary">Grupos Activos e <br>Inactivos</button>
+      <button class="btn btn-secondary">
+        <i class="fa-solid fa-download"></i> <br>Download PDF
+      </button>
+
     </div>
   </h1>
 
@@ -37,6 +41,19 @@
           <input type="text" id="startDate" class="form-control" [(ngModel)]="startDate" (input)="filterMensajesPorDia()" placeholder="Start time (YYYY-MM-DD)">
           <input type="text" id="endDate" class="form-control" [(ngModel)]="endDate" (input)="filterMensajesPorDia()" placeholder="End time (YYYY-MM-DD)">
         </div>
+
+        <!-- inputs tipo date -->
+
+        <!-- <div *ngIf="selectedMensajesPorDiaFilter === 'date'">
+          <input type="date" class="form-control" [(ngModel)]="selectedDate" (input)="filterMensajesPorDia()">
+        </div>
+
+        <div *ngIf="selectedMensajesPorDiaFilter === 'date-range'">
+          <input type="date" id="startDate" class="form-control" [(ngModel)]="startDate" (input)="filterMensajesPorDia()">
+          <input type="date" id="endDate" class="form-control" [(ngModel)]="endDate" (input)="filterMensajesPorDia()">
+        </div> -->
+
+
         </div>
       </div>
     </div>
@@ -71,6 +88,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="export-button-container">
+      <button class="btn btn-primary export-button" (click)="exportPDF()">Exportar Excel</button>
     </div>
     <br><br>
     <ngx-charts-bar-vertical
@@ -154,6 +174,29 @@
     </div>
   </div>
 
+  <!-- <div class="p-6">
+    <div class="flex justify-center">
+      <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="h-5 w-5 mr-2"
+        >
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" x2="12" y1="15" y2="3"></line>
+        </svg>
+        Descargar Informe PDF
+      </button>
+    </div>
+  </div> -->
 
 </body>
 

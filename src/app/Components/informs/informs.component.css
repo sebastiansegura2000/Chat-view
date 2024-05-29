@@ -46,4 +46,17 @@ h2 {
   align-items: center;
 }
 
+.p-6 {
+  padding: 1.5rem;
+}
+
+.export-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.export-button {
+  margin-left: 10px;
+}
 
