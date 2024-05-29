@@ -210,7 +210,7 @@ export class InformsComponent implements OnInit {
             .toLowerCase()
             .includes(this.usersPerGroupFilterValue.toLowerCase());
         } else if (this.selectedUsersPerGroupFilter === 'value') {
-          return item['name']
+          return item['value']
             .toString()
             .includes(this.usersPerGroupFilterValue);
         }
