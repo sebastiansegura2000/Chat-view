@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { mensajesPorDiaData } from './data';
-import { IGroupUserReportService } from 'src/app/Abtract/Report/igroup-user-report.service';
+import { IGroupUserReportService } from 'src/app/Abstract/Report/igroup-user-report.service';
+import { IActiveGroupReportService } from 'src/app/Abstract/Report/Group/iactive-group-report.service';
+import { IInactiveGroupReportService } from 'src/app/Abstract/Report/Group/iinactive-group-report.service';
+import { IUserReportService } from 'src/app/Abstract/Report/User/iuser-report.service';
 
 @Component({
   selector: 'app-informs',
@@ -40,23 +43,21 @@ export class InformsComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA', '#1EDFCE'],
   };
 
-  inactiveUsersData = [
-    { name: 'Active', value: 60 },
-    { name: 'Inactive', value: 40 },
-  ];
+  inactiveUsersData: object[] = [];
 
-  inactiveGroupsData = [
-    { name: 'Active', value: 120 },
-    { name: 'Inactive', value: 30 },
-  ];
+  inactiveGroupsData: object[] = [];
 
   messagesPerDayData = mensajesPorDiaData;
 
-  constructor(private groupService: IGroupUserReportService) {}
+  constructor(
+    private groupService: IGroupUserReportService,
+    private activeGroupService: IActiveGroupReportService,
+    private inactiveGroupService: IInactiveGroupReportService,
+    private userReportService: IUserReportService
+  ) {}
 
   ngOnInit(): void {
     this.groupService.getNumberOfUsersPerGroup().subscribe((data) => {
-      console.log(data);
       data['groups'].forEach((group) => {
         this.usersPerGroupData.push({
           name: group.name,
@@ -64,8 +65,64 @@ export class InformsComponent implements OnInit {
         });
       });
     });
+
+    this.activeGroupService.getActiveGroups(1, 5).subscribe((data) => {
+      this.inactiveGroupsData.push({
+        name: 'Active',
+        value: data['groups'].length,
+      });
+    });
+
+    this.inactiveGroupService.getInactiveGroups(1, 5).subscribe((data) => {
+      this.inactiveGroupsData.push({
+        name: 'Inactive',
+        value: data['groups'].length,
+      });
+    });
+
+    this.setUserActivity(1,5,0);
+
     this.filteredMessagesPerDayData = this.messagesPerDayData;
     this.filteredUsersPerGroupData = this.usersPerGroupData;
+  }
+
+  setUserActivity(
+    amount: number,
+    conversion_type: number,
+    type_activity: number
+  ) {
+    if (type_activity == 0) {
+      this.userReportService
+        .getGeneralActiveUsers(amount, conversion_type)
+        .subscribe((data) => {
+          this.inactiveUsersData.push({
+            name: 'Active',
+            value: data['users'].length,
+          });
+        });
+      this.userReportService
+        .getGeneralInactiveUsers(amount, conversion_type)
+        .subscribe((data) => {
+          this.inactiveUsersData.push({
+            name: 'Inactive',
+            value: data['users'].length,
+          });
+      });
+    }
+    else{
+      this.userReportService.getSpecificActiveUsers(amount, conversion_type,type_activity).subscribe((data)=>{
+        this.inactiveUsersData.push({
+          name: 'Active',
+          value: data['users'].length,
+        });
+      })
+      this.userReportService.getSpecificInactiveUsers(amount, conversion_type,type_activity).subscribe((data)=>{
+        this.inactiveUsersData.push({
+          name: 'Inactive',
+          value: data['users'].length,
+        });
+      })
+    }
   }
   /**
    * Shows the messages per day section in the component.

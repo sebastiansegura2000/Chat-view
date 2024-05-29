@@ -40,8 +40,14 @@ import { ChatService } from './Services/Chat/chat.service';
 import { InformsComponent } from './Components/informs/informs.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { IGroupUserReportService } from './Abtract/Report/igroup-user-report.service';
+import { IGroupUserReportService } from './Abstract/Report/igroup-user-report.service';
 import { GroupUserReportService } from './Services/Report/Group/group-user-report.service';
+import { IActiveGroupReportService } from './Abstract/Report/Group/iactive-group-report.service';
+import { ActiveGroupReportService } from './Services/Report/Group/active-group-report.service';
+import { IInactiveGroupReportService } from './Abstract/Report/Group/iinactive-group-report.service';
+import { InactiveGroupReportService } from './Services/Report/Group/inactive-group-report.service';
+import { IUserReportService } from './Abstract/Report/User/iuser-report.service';
+import { UserReportService } from './Services/Report/User/user-report.service';
 
   const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     hostname: environment.mqtt.server,
@@ -89,7 +95,10 @@ import { GroupUserReportService } from './Services/Report/Group/group-user-repor
     {provide: IUSerRepositoryService,useClass: UserRepositoryService},
     {provide: IGroupAdvancedService,useClass: GroupAdvancedService},
     {provide: IMessageQueryService,useClass: MessageQueryService},
-    {provide: IGroupUserReportService,useClass: GroupUserReportService}
+    {provide: IGroupUserReportService,useClass: GroupUserReportService},
+    {provide: IActiveGroupReportService,useClass: ActiveGroupReportService},
+    {provide: IInactiveGroupReportService,useClass: InactiveGroupReportService},
+    {provide: IUserReportService,useClass: UserReportService}
 
   ],
   bootstrap: [AppComponent],
