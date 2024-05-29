@@ -178,6 +178,20 @@
       </div>
 
       <div>
+        <label for="inactiveUsersTypeFilter" class="form-label">Type Filter:</label>
+        <select
+          id="inactiveUsersTypeFilter"
+          class="form-select"
+          [(ngModel)]="inactiveUsersTypeFilter"
+          (change)="updateInactiveUsersChart()"
+        >
+          <option value="general">General</option>
+          <option value="users">Users</option>
+          <option value="groups">Groups</option>
+        </select>
+      </div>
+
+      <div>
         <label for="inactiveUsersTimeFilter" class="form-label">Time Filter:</label>
         <div class="d-flex">
           <select
@@ -201,6 +215,7 @@
           />
         </div>
       </div>
+
     </div>
 
     <div class="center-chart">
@@ -229,6 +244,7 @@
     </div>
   </div>
 
+
   <div *ngIf="showInactiveGroups">
     <h2>Active and Inactive Groups</h2>
     <div class="input-group input-group-sm mb-3 d-flex justify-content-between">
@@ -242,6 +258,20 @@
         >
           <option value="normal">Normal</option>
           <option value="advanced">Advanced</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="inactiveGroupsTypeFilter" class="form-label">Type Filter:</label>
+        <select
+          id="inactiveGroupsTypeFilter"
+          class="form-select"
+          [(ngModel)]="inactiveGroupsTypeFilter"
+          (change)="updateInactiveGroupsChart()"
+        >
+          <option value="general">General</option>
+          <option value="users">Users</option>
+          <option value="groups">Groups</option>
         </select>
       </div>
 
@@ -296,6 +326,7 @@
       </ngx-charts-advanced-pie-chart>
     </div>
   </div>
+
 
 </body>
 

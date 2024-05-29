@@ -35,6 +35,10 @@ export class InformsComponent implements OnInit {
 
   selectedUsersPerGroupFilter: string = 'name';
   usersPerGroupFilterValue: string = '';
+
+  inactiveUsersTypeFilter: string = 'general';
+  inactiveGroupsTypeFilter: string = 'general';
+
   filteredUsersPerGroupData: any[] = [];
   usersPerGroupData: object[] = [];
 
@@ -93,11 +97,11 @@ export class InformsComponent implements OnInit {
   }
 
   updateInactiveUsersChart() {
-    console.log(`Filter: ${this.inactiveUsersTimeFilter}, Value: ${this.inactiveUsersTimeValue}`);
+    console.log(`Filter: ${this.inactiveUsersTimeFilter}, Value: ${this.inactiveUsersTimeValue}, type: ${this.inactiveUsersTypeFilter}`);
   }
 
   updateInactiveGroupsChart() {
-    console.log(`Filter: ${this.inactiveGroupsTimeFilter}, Value: ${this.inactiveGroupsTimeValue}`);
+    console.log(`Filter: ${this.inactiveGroupsTimeFilter}, Value: ${this.inactiveGroupsTimeValue}, type: ${this.inactiveGroupsTypeFilter}`);
   }
 
   setUserActivity(
