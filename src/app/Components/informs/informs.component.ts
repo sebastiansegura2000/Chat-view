@@ -1,68 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { mensajesPorDiaData } from './data';
+import { IGroupUserReportService } from 'src/app/Abtract/Report/igroup-user-report.service';
 
 @Component({
   selector: 'app-informs',
   templateUrl: './informs.component.html',
-  styleUrls: ['./informs.component.css']
+  styleUrls: ['./informs.component.css'],
 })
 export class InformsComponent implements OnInit {
+  showMessagesPerDay: boolean = true;
+  showUsersPerGroup: boolean = false;
+  showInactiveUsers: boolean = false;
+  showInactiveGroups: boolean = false;
 
-  showMensajesPorDia: boolean = true;
-  showUsuariosPorGrupo: boolean = false;
-  showUsuariosInactivos: boolean = false;
-  showGruposInactivos: boolean = false;
-
-  selectedMensajesPorDiaFilter: string = 'name';
-  mensajesPorDiaFilterValue: string = '';
-  filteredMensajesPorDiaData: any[] = [];
+  selectedMessagesPerDayFilter: string = 'name';
+  messagesPerDayFilterValue: string = '';
+  filteredMessagesPerDayData: any[] = [];
 
   selectedDate: string = '';
   startDate: string = '';
   endDate: string = '';
 
-  usuariosInactivosChartType: string = 'normal';
-  gruposInactivosChartType: string = 'normal';
+  inactiveUsersChartType: string = 'normal';
+  inactiveGroupsChartType: string = 'normal';
 
+  selectedUsersPerGroupFilter: string = 'name';
+  usersPerGroupFilterValue: string = '';
+  filteredUsersPerGroupData: any[] = [];
+  usersPerGroupData: object[] = [];
 
-  selectedUsuariosPorGrupoFilter: string = 'name';
-  usuariosPorGrupoFilterValue: string = '';
-  filteredUsuariosPorGrupoData: any[] = [];
-
-  ngOnInit(): void {
-    this.filteredMensajesPorDiaData = this.mensajesPorDiaData;
-    this.filteredUsuariosPorGrupoData = this.usuariosPorGrupoData;
-  }
-
-  showMensajesPorDiaSection() {
-    this.showMensajesPorDia = true;
-    this.showUsuariosPorGrupo = false;
-    this.showUsuariosInactivos = false;
-    this.showGruposInactivos = false;
-  }
-
-  showUsuariosPorGrupoSection() {
-    this.showMensajesPorDia = false;
-    this.showUsuariosPorGrupo = true;
-    this.showUsuariosInactivos = false;
-    this.showGruposInactivos = false;
-  }
-
-  showUsuariosInactivosSection() {
-    this.showMensajesPorDia = false;
-    this.showUsuariosPorGrupo = false;
-    this.showUsuariosInactivos = true;
-    this.showGruposInactivos = false;
-  }
-
-  showGruposInactivosSection() {
-    this.showMensajesPorDia = false;
-    this.showUsuariosPorGrupo = false;
-    this.showUsuariosInactivos = false;
-    this.showGruposInactivos = true;
-  }
-
-  // view: any[] = [700, 400];
   showXAxis = true;
   showYAxis = true;
   gradient = false;
@@ -71,109 +37,182 @@ export class InformsComponent implements OnInit {
   showYAxisLabel = true;
 
   colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA', '#1EDFCE']
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA', '#1EDFCE'],
   };
 
-  constructor() {}
-
-  usuariosPorGrupoData = [
-    { "name": "Los mas capitos", "value": 10 },
-    { "name": "Cinematrografia", "value": 15 },
-    { "name": "Roscancio", "value": 5 },
-    { "name": "xd", "value": 4 },
-    { "name": "Rossdcancio", "value": 7 },
-    { "name": "Roscsdancio", "value": 12 },
-    { "name": "Rosaaacancio", "value": 9 },
-    { "name": "qwe", "value": 50 },
-    { "name": "asd", "value": 23 },
-    { "name": "edc", "value": 23 },
-    { "name": "rfv", "value": 29 },
-    { "name": "rgb", "value": 15 },
-    { "name": "thj", "value": 25 },
-    { "name": "yui", "value": 15 },
-    { "name": "op", "value": 2 },
-    { "name": "plk", "value": 0 },
-    { "name": "kjh", "value": 0 },
-    { "name": "mht", "value": 9 },
+  inactiveUsersData = [
+    { name: 'Active', value: 60 },
+    { name: 'Inactive', value: 40 },
   ];
 
-  usuariosInactivosData = [
-    { "name": "Activos", "value": 60 },
-    { "name": "Inactivos", "value": 40 }
+  inactiveGroupsData = [
+    { name: 'Active', value: 120 },
+    { name: 'Inactive', value: 30 },
   ];
 
-  gruposInactivosData = [
-    { "name": "Activos", "value": 120 },
-    { "name": "Inactivos", "value": 30 }
-  ];
+  messagesPerDayData = mensajesPorDiaData;
 
-  mensajesPorDiaData = mensajesPorDiaData;
+  constructor(private groupService: IGroupUserReportService) {}
 
-  // mensajesPorDiaData = [
-  //   {
-  //     "name": "Seb god",
-  //     "rrhh_id": 101,
-  //     "series": [
-  //       { "name": "2023-05-20", "value": 5 },
-  //       { "name": "2023-05-21", "value": 3 },
-  //       { "name": "2023-05-22", "value": 4 }
-  //     ]
-  //   },
-  //   {
-  //     "name": "juani gay",
-  //     "rrhh_id": 102,
-  //     "series": [
-  //       { "name": "2023-05-20", "value": 2 },
-  //       { "name": "2023-05-21", "value": 6 },
-  //       { "name": "2023-05-22", "value": 1 }
-  //     ]
-  //   }
-  // ];
-
-
-  filterMensajesPorDia() {
-    if (!this.mensajesPorDiaFilterValue && !this.selectedDate && !this.startDate && !this.endDate) {
-      this.filteredMensajesPorDiaData = this.mensajesPorDiaData;
-    } else {
-      this.filteredMensajesPorDiaData = this.mensajesPorDiaData.map(series => {
-        return {
-          ...series,
-          series: series.series.filter(item => {
-            if (this.selectedMensajesPorDiaFilter === 'name') {
-              return series.name.toLowerCase().includes(this.mensajesPorDiaFilterValue.toLowerCase());
-            }
-            if (this.selectedMensajesPorDiaFilter === 'value') {
-              return item.value.toString().includes(this.mensajesPorDiaFilterValue);
-            }
-            if (this.selectedMensajesPorDiaFilter === 'date') {
-              return item.name === this.selectedDate;
-            }
-            if (this.selectedMensajesPorDiaFilter === 'date-range') {
-              const itemDate = new Date(item.name).getTime();
-              const start = new Date(this.startDate).getTime();
-              const end = new Date(this.endDate).getTime();
-              return itemDate >= start && itemDate <= end;
-            }
-            if (this.selectedMensajesPorDiaFilter === 'rrhh_id') {
-              return series.rrhh_id.toString().includes(this.mensajesPorDiaFilterValue);
-            }
-            return true;
-          })
-        };
-      }).filter(series => series.series.length > 0);
-    }
+  ngOnInit(): void {
+    this.groupService.getNumberOfUsersPerGroup().subscribe((data) => {
+      console.log(data);
+      data['groups'].forEach((group) => {
+        this.usersPerGroupData.push({
+          name: group.name,
+          value: group.users_quantity,
+        });
+      });
+    });
+    this.filteredMessagesPerDayData = this.messagesPerDayData;
+    this.filteredUsersPerGroupData = this.usersPerGroupData;
+  }
+  /**
+   * Shows the messages per day section in the component.
+   *
+   * @remarks
+   * This function is called when the user clicks on the "Mensajes por día" tab.
+   * It sets the flags for the visibility of each section to false and only shows the "Mensajes por día" section.
+   *
+   * @returns {void}
+   */
+  showMessagesPerDaySection() {
+    this.showMessagesPerDay = true;
+    this.showUsersPerGroup = false;
+    this.showInactiveUsers = false;
+    this.showInactiveGroups = false;
   }
 
-
-  filterUsuariosPorGrupo() {
-    if (!this.usuariosPorGrupoFilterValue) {
-      this.filteredUsuariosPorGrupoData = this.usuariosPorGrupoData;
+  /**
+   * Shows the users per group section in the component.
+   *
+   * @remarks
+   * This function is called when the user clicks on the "Usuarios por grupo" tab.
+   * It sets the flags for the visibility of each section to false and only shows the "Usuarios por grupo" section.
+   *
+   * @returns {void}
+   */
+  showUsersPerGroupSection() {
+    this.showMessagesPerDay = false;
+    this.showUsersPerGroup = true;
+    this.showInactiveUsers = false;
+    this.showInactiveGroups = false;
+  }
+  /**
+   * Shows the inactive users section in the component.
+   *
+   * @remarks
+   * This function is called when the user clicks on the "Inactivos" tab.
+   * It sets the flags for the visibility of each section to false and only shows the "Inactivos" section.
+   *
+   * @returns {void}
+   */
+  showInactiveUsersSection() {
+    this.showMessagesPerDay = false;
+    this.showUsersPerGroup = false;
+    this.showInactiveUsers = true;
+    this.showInactiveGroups = false;
+  }
+  /**
+   * Shows the inactive groups section in the component.
+   *
+   * @remarks
+   * This function is called when the user clicks on the "Inactivos" tab.
+   * It sets the flags for the visibility of each section to false and only shows the "Inactivos" section.
+   *
+   * @returns {void}
+   */
+  showInactiveGroupsSection() {
+    this.showMessagesPerDay = false;
+    this.showUsersPerGroup = false;
+    this.showInactiveUsers = false;
+    this.showInactiveGroups = true;
+  }
+  /**
+   * Filters the messages per day data based on the selected filter and filter value.
+   *
+   * @remarks
+   * This function filters the messages per day data based on the selected filter and filter value.
+   * It maps through the series data and filters the series based on the selected filter and filter value.
+   *
+   * @param {string} [selectedMessagesPerDayFilter] - The selected filter for messages per day data.
+   * @param {string} [messagesPerDayFilterValue] - The filter value for messages per day data.
+   * @param {string} [selectedDate] - The selected date for messages per day data.
+   * @param {string} [startDate] - The start date for messages per day data.
+   * @param {string} [endDate] - The end date for messages per day data.
+   *
+   * @returns {void} - This function does not return any value. It updates the filteredMessagesPerDayData property.
+   */
+  filterMessagesPerDay() {
+    if (
+      !this.messagesPerDayFilterValue &&
+      !this.selectedDate &&
+      !this.startDate &&
+      !this.endDate
+    ) {
+      this.filteredMessagesPerDayData = this.messagesPerDayData;
     } else {
-      this.filteredUsuariosPorGrupoData = this.usuariosPorGrupoData.filter(item => {
-        if (this.selectedUsuariosPorGrupoFilter === 'name') {
-          return item.name.toLowerCase().includes(this.usuariosPorGrupoFilterValue.toLowerCase());
-        } else if (this.selectedUsuariosPorGrupoFilter === 'value') {
-          return item.value.toString().includes(this.usuariosPorGrupoFilterValue);
+      this.filteredMessagesPerDayData = this.messagesPerDayData
+        .map((series) => {
+          return {
+            ...series,
+            series: series.series.filter((item) => {
+              if (this.selectedMessagesPerDayFilter === 'name') {
+                return series.name
+                  .toLowerCase()
+                  .includes(this.messagesPerDayFilterValue.toLowerCase());
+              }
+              if (this.selectedMessagesPerDayFilter === 'value') {
+                return item.value
+                  .toString()
+                  .includes(this.messagesPerDayFilterValue);
+              }
+              if (this.selectedMessagesPerDayFilter === 'date') {
+                return item.name === this.selectedDate;
+              }
+              if (this.selectedMessagesPerDayFilter === 'date-range') {
+                const itemDate = new Date(item.name).getTime();
+                const start = new Date(this.startDate).getTime();
+                const end = new Date(this.endDate).getTime();
+                return itemDate >= start && itemDate <= end;
+              }
+              if (this.selectedMessagesPerDayFilter === 'rrhh_id') {
+                return series.rrhh_id
+                  .toString()
+                  .includes(this.messagesPerDayFilterValue);
+              }
+              return true;
+            }),
+          };
+        })
+        .filter((series) => series.series.length > 0);
+    }
+  }
+  /**
+   * Filters the users per group data based on the selected filter and filter value.
+   *
+   * @remarks
+   * This function filters the users per group data based on the selected filter and filter value.
+   * It maps through the series data and filters the series based on the selected filter and filter value.
+   *
+   * @param {string} [selectedUsersPerGroupFilter] - The selected filter for users per group data.
+   * @param {string} [usersPerGroupFilterValue] - The filter value for users per group data.
+   *
+   * @returns {void} - This function does not return any value. It updates the filteredUsersPerGroupData property.
+   */
+  filterUsersPerGroup() {
+    if (!this.usersPerGroupFilterValue) {
+      this.filteredUsersPerGroupData = this.usersPerGroupData;
+    } else {
+      this.filteredUsersPerGroupData = this.usersPerGroupData.filter((item) => {
+        if (this.selectedUsersPerGroupFilter === 'name') {
+          return item['name']
+            .toLowerCase()
+            .includes(this.usersPerGroupFilterValue.toLowerCase());
+        } else if (this.selectedUsersPerGroupFilter === 'value') {
+          return item['name']
+            .toString()
+            .includes(this.usersPerGroupFilterValue);
         }
       });
     }
