@@ -27,6 +27,12 @@ export class InformsComponent implements OnInit {
   inactiveUsersChartType: string = 'normal';
   inactiveGroupsChartType: string = 'normal';
 
+  inactiveUsersTimeFilter = '4';
+  inactiveGroupsTimeFilter = '4';
+
+  inactiveUsersTimeValue = 1;
+  inactiveGroupsTimeValue = 1;
+
   selectedUsersPerGroupFilter: string = 'name';
   usersPerGroupFilterValue: string = '';
   filteredUsersPerGroupData: any[] = [];
@@ -71,6 +77,14 @@ export class InformsComponent implements OnInit {
 
     this.filteredMessagesPerDayData = this.messagesPerDayData;
     this.filteredUsersPerGroupData = this.usersPerGroupData;
+  }
+
+  updateInactiveUsersChart() {
+    console.log(`Filter: ${this.inactiveUsersTimeFilter}, Value: ${this.inactiveUsersTimeValue}`);
+  }
+
+  updateInactiveGroupsChart() {
+    console.log(`Filter: ${this.inactiveGroupsTimeFilter}, Value: ${this.inactiveGroupsTimeValue}`);
   }
   /**
    * Sets the user activity data for the inactive users chart.

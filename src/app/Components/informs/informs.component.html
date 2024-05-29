@@ -141,6 +141,9 @@
         </div>
       </div>
     </div>
+    <div class="export-button-container">
+      <button class="btn btn-primary export-button" (click)="exportPDF()">Exportar Excel</button>
+    </div>
     <br /><br />
     <ngx-charts-bar-vertical
       [view]="[900, 450]"
@@ -160,9 +163,9 @@
 
   <div *ngIf="showInactiveUsers">
     <h2>Active and Inactive Users</h2>
-    <label for="inactiveUsersChartType" class="form-label">Chart Type:</label>
-    <div class="input-group input-group-sm mb-3 d-flex justify-content-right">
-      <div style="max-width: 700px">
+    <div class="input-group input-group-sm mb-3 d-flex justify-content-between">
+      <div>
+        <label for="inactiveUsersChartType" class="form-label">Chart Type:</label>
         <select
           id="inactiveUsersChartType"
           class="form-select"
@@ -173,7 +176,33 @@
           <option value="advanced">Advanced</option>
         </select>
       </div>
+
+      <div>
+        <label for="inactiveUsersTimeFilter" class="form-label">Time Filter:</label>
+        <div class="d-flex">
+          <select
+            id="inactiveUsersTimeFilter"
+            class="form-select"
+            [(ngModel)]="inactiveUsersTimeFilter"
+            (change)="updateInactiveUsersChart()"
+          >
+            <option value="5">Hora</option>
+            <option value="4">Día</option>
+            <option value="3">Semana</option>
+            <option value="2">Mes</option>
+            <option value="1">Año</option>
+          </select>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="inactiveUsersTimeValue"
+            (input)="updateInactiveUsersChart()"
+            placeholder="Enter value"
+          />
+        </div>
+      </div>
     </div>
+
     <div class="center-chart">
       <ngx-charts-pie-chart
         *ngIf="inactiveUsersChartType === 'normal'"
@@ -202,9 +231,9 @@
 
   <div *ngIf="showInactiveGroups">
     <h2>Active and Inactive Groups</h2>
-    <label for="inactiveGroupsChartType" class="form-label">Chart Type:</label>
-    <div class="input-group input-group-sm mb-3 d-flex justify-content-right">
-      <div style="max-width: 700px">
+    <div class="input-group input-group-sm mb-3 d-flex justify-content-between">
+      <div>
+        <label for="inactiveGroupsChartType" class="form-label">Chart Type:</label>
         <select
           id="inactiveGroupsChartType"
           class="form-select"
@@ -215,7 +244,33 @@
           <option value="advanced">Advanced</option>
         </select>
       </div>
+
+      <div>
+        <label for="inactiveGroupsTimeFilter" class="form-label">Time Filter:</label>
+        <div class="d-flex">
+          <select
+            id="inactiveGroupsTimeFilter"
+            class="form-select"
+            [(ngModel)]="inactiveGroupsTimeFilter"
+            (change)="updateInactiveGroupsChart()"
+          >
+            <option value="5">Hora</option>
+            <option value="4">Día</option>
+            <option value="3">Semana</option>
+            <option value="2">Mes</option>
+            <option value="1">Año</option>
+          </select>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="inactiveGroupsTimeValue"
+            (input)="updateInactiveGroupsChart()"
+            placeholder="Enter value"
+          />
+        </div>
+      </div>
     </div>
+
     <div class="center-chart">
       <ngx-charts-pie-chart
         *ngIf="inactiveGroupsChartType === 'normal'"
@@ -241,6 +296,7 @@
       </ngx-charts-advanced-pie-chart>
     </div>
   </div>
+
 </body>
 
 <!-- pie chart to show the users active and inactive -->
