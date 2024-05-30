@@ -389,6 +389,30 @@ export class InformsComponent implements OnInit {
     }
   }
   /**
+   * Exports files to the user's device.
+   *
+   * @remarks
+   * This function creates a download link for the provided blob and namefile.
+   * It uses the `window.URL.createObjectURL` method to create a URL for the blob,
+   * and then creates an anchor element to simulate a click event on the URL.
+   *
+   * @param {Blob} blob - The blob object containing the file data to be exported.
+   * @param {string} namefile - The name of the file to be downloaded.
+   *
+   * @returns {void} - This function does not return any value.
+   * It creates a download link for the provided blob and namefile.
+   */
+  exportFiles(blob, namefile) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = namefile;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+  /**
    * Exports the group information based on the provided time filter and time value.
    *
    * @remarks
@@ -403,14 +427,7 @@ export class InformsComponent implements OnInit {
   exportGroupInfo() {
     this.gruopInfoExportService.exportGroupInfo().subscribe(
       (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'group_info.xlsx';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+        this.exportFiles(blob, 'group_info.xlsx');
       },
       (error) => {
         console.error('Error downloading the file', error);
