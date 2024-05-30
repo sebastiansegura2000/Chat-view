@@ -24,6 +24,7 @@ import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
 import { ChatService } from 'src/app/Services/Chat/chat.service';
 import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
 import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
+import { IGroupArchiveService } from 'src/app/Abstract/Group/Archive/igroup-archive.service';
 
 @Component({
   selector: 'app-group-list',
@@ -38,6 +39,7 @@ export class GroupListComponent implements OnInit {
   groupId: number = 0;
   visibleGroups: number = 2;
   loadingMoreGroups: boolean = false;
+  archiveGroups = [];
   constructor(
     private globalService: GlobalVariablesService,
     private groupManagementService: IGroupManagementService,
@@ -49,7 +51,8 @@ export class GroupListComponent implements OnInit {
     private mqttService: MqttHandlerService,
     private chatService: ChatService,
     private messageQueryService: IMessageQueryService,
-    private authService: UserAuthServiceService
+    private authService: UserAuthServiceService,
+    private archiveGroupService: IGroupArchiveService
   ) {
     this.createGroupForm = this.fb.group({
       groupName: ['', Validators.required],
@@ -98,6 +101,7 @@ export class GroupListComponent implements OnInit {
     this.chatService.$getChatGroupId.subscribe((id) => {
       this.groupId = id;
     });
+    this.setArchiveGroup();
   }
   // ----------------------------------------------------------------------------------------------------------------------------
 
@@ -105,9 +109,11 @@ export class GroupListComponent implements OnInit {
   filterValue: string = '';
 
   applyFilter(): void {
-    this.filteredGroups = this.groups.filter((group) =>
-      group.name.toLowerCase().includes(this.filterValue.toLowerCase())
-    ).slice(0, this.visibleGroups);
+    this.filteredGroups = this.groups
+      .filter((group) =>
+        group.name.toLowerCase().includes(this.filterValue.toLowerCase())
+      )
+      .slice(0, this.visibleGroups);
   }
 
   loadMoreGroups(): void {
@@ -239,10 +245,10 @@ export class GroupListComponent implements OnInit {
    * @returns A boolean value indicating whether the current user is a participant in the specified group.
    */
   isInGroup(id_group: number): boolean {
-    if (this.groups.length === 0) {
-      return true;
-    }
-    return this.groups.find((group) => group.id == id_group) ? true : false;
+    return (
+      (this.groups.find((group) => group.id == id_group) ? true : false) ||
+      (this.archiveGroups.find((group) => group.id == id_group) ? true : false)
+    );
   }
   /**
    * Marks all messages in the specified group as read.
@@ -253,7 +259,10 @@ export class GroupListComponent implements OnInit {
       id_sender: group_id,
       type: 2,
     };
-    const group = this.groups.find((group) => group.id == group_id);
+    let group = this.groups.find((group) => group.id == group_id);
+    group = group
+      ? group
+      : this.archiveGroups.find((group) => group.id == group_id);
     if (group['unreadMessages'] && group['unreadMessages'] > 0) {
       this.messageQueryService.markAllMessgesAsRead(data).subscribe(() => {});
       group['unreadMessages'] = 0;
@@ -321,6 +330,18 @@ export class GroupListComponent implements OnInit {
         'Please fill out all required fields.'
       );
     }
+  }
+
+  // Archive------------------------------------------------------------------------------------------------------------------------------
+  /**
+   * Sets the archive groups for the current user.
+   */
+  setArchiveGroup() {
+    this.archiveGroupService
+      .getArchivedGroupsForAUser()
+      .subscribe((response) => {
+        this.archiveGroups = response['groups'];
+      });
   }
   // Permissions --------------------------------------------------------------------------------------------------------------------------
   /**

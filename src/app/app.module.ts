@@ -54,6 +54,8 @@ import { IUserActivityService } from './Abstract/Exports/User/iuser-activity.ser
 import { UserActivityService } from './Services/Exports/User/user-activity.service';
 import { IGroupActivityService } from './Abstract/Exports/Group/igroup-activity.service';
 import { GroupActivityExportService } from './Services/Exports/Group/group-activity-export.service';
+import { IGroupArchiveService } from './Abstract/Group/Archive/igroup-archive.service';
+import { GroupArchiveService } from './Services/Group/Archive/group-archive.service';
 
   const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     hostname: environment.mqtt.server,
@@ -107,6 +109,7 @@ import { GroupActivityExportService } from './Services/Exports/Group/group-activ
     {provide: IUserReportService,useClass: UserReportService},
     {provide: IGroupInfoExportService,useClass: GroupInfoExportService},
     {provide: IUserActivityService,useClass: UserActivityService},
+    {provide: IGroupArchiveService,useClass: GroupArchiveService},
     {provide: IGroupActivityService,useClass: GroupActivityExportService},
   ],
   bootstrap: [AppComponent],

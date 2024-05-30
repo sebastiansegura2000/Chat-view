@@ -122,8 +122,8 @@
     </div>
 
     <!-- Modal archive groups -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+    <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog archive">
         <div class="modal-content">
           <div class="modal-header">
             <div class="input-group">
@@ -131,6 +131,20 @@
           </div>
           <div class="modal-body">
             <p>Archived Groups</p>
+            <ul class="contacts">
+              <a *ngFor="let group of archiveGroups" (click) = "setGroupId(group.id)" data-bs-dismiss="modal">
+                <li>
+                  <div class="d-flex bd-highlight">
+                    <div class="img_cont">
+                      <img src="https://i.pinimg.com/564x/ba/fb/cf/bafbcfca1737d802dda07214e8a680ca.jpg" class="rounded-circle user_img"/>
+                    </div>
+                    <div class="user_info">
+                      <span>{{ group.name }}</span>
+                    </div>
+                  </div>
+                </li>
+              </a>
+            </ul>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
