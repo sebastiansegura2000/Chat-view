@@ -93,7 +93,7 @@ export class InformsComponent implements OnInit {
     this.setGroupActivity(1, 5);
     this.setUserActivity(1, 5, 0);
     this.setmessagesPerDayData();
- 
+
     this.filteredUsersPerGroupData = this.usersPerGroupData;
   }
   /**
@@ -258,6 +258,10 @@ export class InformsComponent implements OnInit {
   setmessagesPerDayData() {
     this.messageReportService.getMessagesPerDayAllUsers().subscribe((data) => {
       this.messagesPerDayData = data['messages'];
+      this.messagesPerDayData.sort((a, b) => a['name'].localeCompare(b['name']));
+      this.messagesPerDayData.forEach((item) => {
+        item['series'].sort((a, b) => new Date(a['name']) - new Date(b['name']));
+      });
       this.filteredMessagesPerDayData = this.messagesPerDayData;
     });
   }
