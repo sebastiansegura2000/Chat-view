@@ -54,4 +54,24 @@ export class HttpHandlerService {
   putData(endpoint: string, data: any): Observable<any> {
     return this.http.put<any>(this.apiUrl + endpoint, data,{ headers: this.headers });
   }
+
+  /**
+   * Gets a file from the API endpoint with optional query parameters.
+   *
+   * @param endpoint The API endpoint to fetch the file from.
+   * @param params Optional query parameters to append to the request.
+   * @returns An Observable that emits the file blob.
+   */
+  getFile(endpoint: string, params: any = {}): Observable<any> {
+    let queryParams = new HttpParams();
+    Object.keys(params).forEach((key) => {
+      queryParams = queryParams.append(key, params[key]);
+    });
+
+    return this.http.get(this.apiUrl + endpoint, {
+      headers: this.headers,
+      params: queryParams,
+      responseType: 'blob' as 'json'
+    });
+  }
 }

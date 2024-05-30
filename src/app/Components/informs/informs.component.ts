@@ -4,6 +4,7 @@ import { IGroupUserReportService } from 'src/app/Abstract/Report/igroup-user-rep
 import { IActiveGroupReportService } from 'src/app/Abstract/Report/Group/iactive-group-report.service';
 import { IInactiveGroupReportService } from 'src/app/Abstract/Report/Group/iinactive-group-report.service';
 import { IUserReportService } from 'src/app/Abstract/Report/User/iuser-report.service';
+import { IGroupInfoExportService } from 'src/app/Abstract/Exports/Group/igroup-info-export.service';
 
 @Component({
   selector: 'app-informs',
@@ -38,7 +39,6 @@ export class InformsComponent implements OnInit {
 
   inactiveUsersTypeFilter: string = '0';
 
-
   filteredUsersPerGroupData: any[] = [];
   usersPerGroupData: object[] = [];
 
@@ -70,6 +70,7 @@ export class InformsComponent implements OnInit {
     private activeGroupService: IActiveGroupReportService,
     private inactiveGroupService: IInactiveGroupReportService,
     private userReportService: IUserReportService,
+    private gruopInfoExportService: IGroupInfoExportService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -386,5 +387,34 @@ export class InformsComponent implements OnInit {
         }
       });
     }
+  }
+  /**
+   * Exports the group information based on the provided time filter and time value.
+   *
+   * @remarks
+   * This function exports the group information to a file using the `IGroupInfoExportService`.
+   * It uses the `inactiveGroupsTimeValue` and `inactiveGroupsTimeFilter` properties to determine the time filter and time value for the export.
+   *
+   * @param {number} [inactiveGroupsTimeValue] - The selected time value for the inactive groups chart.
+   * @param {number} [inactiveGroupsTimeFilter] - The selected time filter for the inactive groups chart.
+   *
+   * @returns {void} - This function does not return any value. It logs the exported data to the console.
+   */
+  exportGroupInfo() {
+    this.gruopInfoExportService.exportGroupInfo().subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'group_info.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error('Error downloading the file', error);
+      }
+    );
   }
 }
