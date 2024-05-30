@@ -35,6 +35,10 @@ export class InformsComponent implements OnInit {
 
   selectedUsersPerGroupFilter: string = 'name';
   usersPerGroupFilterValue: string = '';
+
+  inactiveUsersTypeFilter: string = 'general';
+  inactiveGroupsTypeFilter: string = 'general';
+
   filteredUsersPerGroupData: any[] = [];
   usersPerGroupData: object[] = [];
 
@@ -94,9 +98,7 @@ export class InformsComponent implements OnInit {
    * @returns {void} - This function does not return any value. It logs the current time filter and time value to the console.
    */
   updateInactiveUsersChart() {
-    console.log(
-      `Filter: ${this.inactiveUsersTimeFilter}, Value: ${this.inactiveUsersTimeValue}`
-    );
+    console.log(`Filter: ${this.inactiveUsersTimeFilter}, Value: ${this.inactiveUsersTimeValue}, type: ${this.inactiveUsersTypeFilter}`);
   }
 
   /**
@@ -111,27 +113,9 @@ export class InformsComponent implements OnInit {
    * @returns {void} - This function does not return any value. It logs the current time filter and time value to the console.
    */
   updateInactiveGroupsChart() {
-    if (this.inactiveGroupsTimeValue && this.inactiveGroupsTimeValue != 0) {
-      this.setGroupActivity(
-        this.inactiveGroupsTimeValue,
-        parseInt(this.inactiveGroupsTimeFilter)
-      );
-      `Filter: ${this.inactiveGroupsTimeFilter}, Value: ${this.inactiveGroupsTimeValue}`;
-    }
+    console.log(`Filter: ${this.inactiveGroupsTimeFilter}, Value: ${this.inactiveGroupsTimeValue}`);
   }
-  /**
-   * Sets the user activity data for the inactive users chart.
-   *
-   * @remarks
-   * This function retrieves the user activity data based on the provided parameters and updates the `inactiveUsersData` array.
-   * It uses the `IUserReportService` to make HTTP requests to the backend API.
-   *
-   * @param {number} amount - The amount of users to retrieve.
-   * @param {number} conversion_type - The type of conversion to apply.
-   * @param {number} type_activity - The type of user activity to retrieve.
-   *
-   * @returns {void} - This function does not return any value. It updates the `inactiveUsersData` array.
-   */
+
   setUserActivity(
     amount: number,
     conversion_type: number,
