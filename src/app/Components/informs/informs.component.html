@@ -145,7 +145,7 @@
       </div>
     </div>
     <div class="export-button-container">
-      <button class="btn btn-primary export-button" (click)="exportPDF()">Exportar Excel</button>
+      <button class="btn btn-primary export-button" (click)="exportGroupInfo()">Exportar Excel</button>
     </div>
     <br /><br />
     <ngx-charts-bar-vertical
@@ -188,9 +188,9 @@
           [(ngModel)]="inactiveUsersTypeFilter"
           (change)="updateInactiveUsersChart()"
         >
-          <option value="general">General</option>
-          <option value="users">Users</option>
-          <option value="groups">Groups</option>
+          <option value="0" >General</option>
+          <option value="1">Users</option>
+          <option value="2">Groups</option>
         </select>
       </div>
 
@@ -203,7 +203,7 @@
             [(ngModel)]="inactiveUsersTimeFilter"
             (change)="updateInactiveUsersChart()"
           >
-            <option value="5">Hora</option>
+            <option value="5" selected>Hora</option>
             <option value="4">Día</option>
             <option value="3">Semana</option>
             <option value="2">Mes</option>
@@ -215,6 +215,7 @@
             [(ngModel)]="inactiveUsersTimeValue"
             (input)="updateInactiveUsersChart()"
             placeholder="Enter value"
+            value="1"
           />
         </div>
       </div>
@@ -267,19 +268,6 @@
         </select>
       </div>
 
-      <div>
-        <label for="inactiveGroupsTypeFilter" class="form-label">Type Filter:</label>
-        <select
-          id="inactiveGroupsTypeFilter"
-          class="form-select"
-          [(ngModel)]="inactiveGroupsTypeFilter"
-          (change)="updateInactiveGroupsChart()"
-        >
-          <option value="general">General</option>
-          <option value="users">Users</option>
-          <option value="groups">Groups</option>
-        </select>
-      </div>
 
       <div>
         <label for="inactiveGroupsTimeFilter" class="form-label">Time Filter:</label>
@@ -290,7 +278,7 @@
             [(ngModel)]="inactiveGroupsTimeFilter"
             (change)="updateInactiveGroupsChart()"
           >
-            <option value="5">Hora</option>
+            <option value="5" selected>Hora</option>
             <option value="4">Día</option>
             <option value="3">Semana</option>
             <option value="2">Mes</option>
@@ -302,6 +290,7 @@
             [(ngModel)]="inactiveGroupsTimeValue"
             (input)="updateInactiveGroupsChart()"
             placeholder="Enter value"
+            value="1"
           />
         </div>
       </div>

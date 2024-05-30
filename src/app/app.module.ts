@@ -48,6 +48,10 @@ import { IInactiveGroupReportService } from './Abstract/Report/Group/iinactive-g
 import { InactiveGroupReportService } from './Services/Report/Group/inactive-group-report.service';
 import { IUserReportService } from './Abstract/Report/User/iuser-report.service';
 import { UserReportService } from './Services/Report/User/user-report.service';
+import { IGroupInfoExportService } from './Abstract/Exports/Group/igroup-info-export.service';
+import { GroupInfoExportService } from './Services/Exports/Group/group-info-export.service';
+import { IUserActivityService } from './Abstract/Exports/User/iuser-activity.service';
+import { UserActivityService } from './Services/Exports/User/user-activity.service';
 
   const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     hostname: environment.mqtt.server,
@@ -98,7 +102,9 @@ import { UserReportService } from './Services/Report/User/user-report.service';
     {provide: IGroupUserReportService,useClass: GroupUserReportService},
     {provide: IActiveGroupReportService,useClass: ActiveGroupReportService},
     {provide: IInactiveGroupReportService,useClass: InactiveGroupReportService},
-    {provide: IUserReportService,useClass: UserReportService}
+    {provide: IUserReportService,useClass: UserReportService},
+    {provide: IGroupInfoExportService,useClass: GroupInfoExportService},
+    {provide: IUserActivityService,useClass: UserActivityService},
 
   ],
   bootstrap: [AppComponent],

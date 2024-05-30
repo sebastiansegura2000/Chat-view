@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { mensajesPorDiaData } from './data';
 import { IGroupUserReportService } from 'src/app/Abstract/Report/igroup-user-report.service';
 import { IActiveGroupReportService } from 'src/app/Abstract/Report/Group/iactive-group-report.service';
 import { IInactiveGroupReportService } from 'src/app/Abstract/Report/Group/iinactive-group-report.service';
 import { IUserReportService } from 'src/app/Abstract/Report/User/iuser-report.service';
+import { IGroupInfoExportService } from 'src/app/Abstract/Exports/Group/igroup-info-export.service';
 
 @Component({
   selector: 'app-informs',
@@ -27,8 +28,8 @@ export class InformsComponent implements OnInit {
   inactiveUsersChartType: string = 'normal';
   inactiveGroupsChartType: string = 'normal';
 
-  inactiveUsersTimeFilter = '4';
-  inactiveGroupsTimeFilter = '4';
+  inactiveUsersTimeFilter = '5';
+  inactiveGroupsTimeFilter = '5';
 
   inactiveUsersTimeValue = 1;
   inactiveGroupsTimeValue = 1;
@@ -36,8 +37,7 @@ export class InformsComponent implements OnInit {
   selectedUsersPerGroupFilter: string = 'name';
   usersPerGroupFilterValue: string = '';
 
-  inactiveUsersTypeFilter: string = 'general';
-  inactiveGroupsTypeFilter: string = 'general';
+  inactiveUsersTypeFilter: string = '0';
 
   filteredUsersPerGroupData: any[] = [];
   usersPerGroupData: object[] = [];
@@ -53,9 +53,15 @@ export class InformsComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA', '#1EDFCE'],
   };
 
-  inactiveUsersData: object[] = [];
+  inactiveUsersData: object[] = [
+    { name: 'Active', value: 0 },
+    { name: 'Inactive', value: 0 },
+  ];
 
-  inactiveGroupsData: object[] = [];
+  inactiveGroupsData: object[] = [
+    { name: 'Active', value: 0 },
+    { name: 'Inactive', value: 0 },
+  ];
 
   messagesPerDayData = mensajesPorDiaData;
 
@@ -63,7 +69,9 @@ export class InformsComponent implements OnInit {
     private groupService: IGroupUserReportService,
     private activeGroupService: IActiveGroupReportService,
     private inactiveGroupService: IInactiveGroupReportService,
-    private userReportService: IUserReportService
+    private userReportService: IUserReportService,
+    private gruopInfoExportService: IGroupInfoExportService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -76,34 +84,78 @@ export class InformsComponent implements OnInit {
       });
     });
 
-    this.activeGroupService.getActiveGroups(1, 5).subscribe((data) => {
-      this.inactiveGroupsData.push({
-        name: 'Active',
-        value: data['groups'].length,
-      });
-    });
-
-    this.inactiveGroupService.getInactiveGroups(1, 5).subscribe((data) => {
-      this.inactiveGroupsData.push({
-        name: 'Inactive',
-        value: data['groups'].length,
-      });
-    });
-
-    this.setUserActivity(1,5,0);
+    this.setGroupActivity(1, 5);
+    this.setUserActivity(1, 5, 0);
 
     this.filteredMessagesPerDayData = this.messagesPerDayData;
     this.filteredUsersPerGroupData = this.usersPerGroupData;
   }
-
+  /**
+   * Updates the inactive users chart based on the provided time filter and time value.
+   *
+   * @remarks
+   * This function logs the current time filter and time value to the console. It is intended to be called when the user interacts with the inactive users chart, such as when they select a new time filter or time value.
+   *
+   * @param {string} [inactiveUsersTimeFilter] - The selected time filter for the inactive users chart.
+   * @param {number} [inactiveUsersTimeValue] - The selected time value for the inactive users chart.
+   *
+   * @returns {void} - This function does not return any value. It logs the current time filter and time value to the console.
+   */
   updateInactiveUsersChart() {
-    console.log(`Filter: ${this.inactiveUsersTimeFilter}, Value: ${this.inactiveUsersTimeValue}, type: ${this.inactiveUsersTypeFilter}`);
+    if (this.inactiveUsersTimeValue && this.inactiveUsersTimeValue != 0) {
+      this.setUserActivity(
+        this.inactiveUsersTimeValue,
+        parseInt(this.inactiveUsersTimeFilter),
+        parseInt(this.inactiveUsersTypeFilter)
+      );
+    }
   }
 
+  /**
+   * Updates the inactive groups chart based on the provided time filter and time value.
+   *
+   * @remarks
+   * This function logs the current time filter and time value to the console. It is intended to be called when the user interacts with the inactive groups chart, such as when they select a new time filter or time value.
+   *
+   * @param {string} [inactiveGroupsTimeFilter] - The selected time filter for the inactive groups chart.
+   * @param {number} [inactiveGroupsTimeValue] - The selected time value for the inactive groups chart.
+   *
+   * @returns {void} - This function does not return any value. It logs the current time filter and time value to the console.
+   */
   updateInactiveGroupsChart() {
-    console.log(`Filter: ${this.inactiveGroupsTimeFilter}, Value: ${this.inactiveGroupsTimeValue}, type: ${this.inactiveGroupsTypeFilter}`);
+    if (this.inactiveGroupsTimeValue && this.inactiveGroupsTimeValue != 0) {
+      this.setGroupActivity(
+        this.inactiveGroupsTimeValue,
+        parseInt(this.inactiveGroupsTimeFilter)
+      );
+    }
   }
-
+  /**
+   * Sets the user activity data for the inactive users chart.
+   *
+   * @remarks
+   * This function retrieves the user activity data based on the provided parameters and updates the `inactiveUsersData` array.
+   * It uses the `IUserReportService` to make HTTP requests to the backend API.
+   *
+   * @param {number} amount - The amount of users to retrieve.
+   * @param {number} conversion_type - The type of conversion to apply.
+   * @param {number} type_activity - The type of activity to filter by.
+   *
+   * @returns {void} - This function does not return any value. It updates the `inactiveUsersData` array.
+   */
+  /**
+   * Sets the user activity data for the inactive users chart.
+   *
+   * @remarks
+   * This function retrieves the user activity data based on the provided parameters and updates the `inactiveUsersData` array.
+   * It uses the `IUserReportService` to make HTTP requests to the backend API.
+   *
+   * @param {number} amount - The amount of users to retrieve.
+   * @param {number} conversion_type - The type of conversion to apply.
+   * @param {number} type_activity - The type of activity to filter by.
+   *
+   * @returns {void} - This function does not return any value. It updates the `inactiveUsersData` array.
+   */
   setUserActivity(
     amount: number,
     conversion_type: number,
@@ -113,34 +165,78 @@ export class InformsComponent implements OnInit {
       this.userReportService
         .getGeneralActiveUsers(amount, conversion_type)
         .subscribe((data) => {
-          this.inactiveUsersData.push({
-            name: 'Active',
-            value: data['users'].length,
-          });
+          this.inactiveUsersData[0]['value'] = data['users'].length;
+          this.updateChartUser();
         });
+
       this.userReportService
         .getGeneralInactiveUsers(amount, conversion_type)
         .subscribe((data) => {
-          this.inactiveUsersData.push({
-            name: 'Inactive',
-            value: data['users'].length,
-          });
+          this.inactiveUsersData[1]['value'] = data['users'].length;
+          this.updateChartUser();
+        });
+    } else {
+      this.userReportService
+        .getSpecificActiveUsers(amount, conversion_type, type_activity)
+        .subscribe((data) => {
+          this.inactiveUsersData[0]['value'] = data['users'].length;
+          this.updateChartUser();
+        });
+
+      this.userReportService
+        .getSpecificInactiveUsers(amount, conversion_type, type_activity)
+        .subscribe((data) => {
+          this.inactiveUsersData[1]['value'] = data['users'].length;
+          this.updateChartUser();
+        });
+    }
+  }
+
+  updateChartUser() {
+    this.inactiveUsersData = [...this.inactiveUsersData];
+    this.changeDetectorRef.detectChanges();
+  }
+  /**
+   * Sets the group activity data for the inactive groups chart.
+   *
+   * @remarks
+   * This function retrieves the group activity data based on the provided parameters and updates the `inactiveGroupsData` array.
+   * It uses the `IActiveGroupReportService` and `IInactiveGroupReportService` to make HTTP requests to the backend API.
+   *
+   * @param {number} amount - The amount of groups to retrieve.
+   * @param {number} conversion_type - The type of conversion to apply.
+   *
+   * @returns {void} - This function does not return any value. It updates the `inactiveGroupsData` array.
+   */
+  setGroupActivity(amount: number, conversion_type: number) {
+    this.activeGroupService
+      .getActiveGroups(amount, conversion_type)
+      .subscribe((data) => {
+        this.inactiveGroupsData[0]['value'] = data['groups'].length;
+        this.updateChart();
       });
-    }
-    else{
-      this.userReportService.getSpecificActiveUsers(amount, conversion_type,type_activity).subscribe((data)=>{
-        this.inactiveUsersData.push({
-          name: 'Active',
-          value: data['users'].length,
-        });
-      })
-      this.userReportService.getSpecificInactiveUsers(amount, conversion_type,type_activity).subscribe((data)=>{
-        this.inactiveUsersData.push({
-          name: 'Inactive',
-          value: data['users'].length,
-        });
-      })
-    }
+
+    this.inactiveGroupService
+      .getInactiveGroups(amount, conversion_type)
+      .subscribe((data) => {
+        this.inactiveGroupsData[1]['value'] = data['groups'].length;
+        this.updateChart();
+      });
+  }
+  /**
+   * Updates the chart data for the inactive groups section.
+   *
+   * @remarks
+   * This function is responsible for updating the chart data for the inactive groups section.
+   * It creates a new reference of the `inactiveGroupsData` array to force change detection.
+   * This is necessary because Angular's change detection mechanism may not detect changes in arrays directly.
+   *
+   * @returns {void} - This function does not return any value. It updates the `inactiveGroupsData` array and triggers change detection.
+   */
+  updateChart() {
+    // Crear una nueva referencia del arreglo para forzar la detección de cambios
+    this.inactiveGroupsData = [...this.inactiveGroupsData];
+    this.changeDetectorRef.detectChanges();
   }
   /**
    * Shows the messages per day section in the component.
@@ -291,5 +387,34 @@ export class InformsComponent implements OnInit {
         }
       });
     }
+  }
+  /**
+   * Exports the group information based on the provided time filter and time value.
+   *
+   * @remarks
+   * This function exports the group information to a file using the `IGroupInfoExportService`.
+   * It uses the `inactiveGroupsTimeValue` and `inactiveGroupsTimeFilter` properties to determine the time filter and time value for the export.
+   *
+   * @param {number} [inactiveGroupsTimeValue] - The selected time value for the inactive groups chart.
+   * @param {number} [inactiveGroupsTimeFilter] - The selected time filter for the inactive groups chart.
+   *
+   * @returns {void} - This function does not return any value. It logs the exported data to the console.
+   */
+  exportGroupInfo() {
+    this.gruopInfoExportService.exportGroupInfo().subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'group_info.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error('Error downloading the file', error);
+      }
+    );
   }
 }
