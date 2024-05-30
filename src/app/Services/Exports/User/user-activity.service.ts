@@ -24,7 +24,7 @@ export class UserActivityService implements IUserActivityService {
       amount: amount,
       conversion_type: conversion_type,
     };
-    return this.httpService.getData('export/users/activity-general', data);
+    return this.httpService.getFile('export/users/activity-general', data);
   }
   /**
    * Exports specific user activity data.
@@ -45,6 +45,6 @@ export class UserActivityService implements IUserActivityService {
       recipient_type: type_activity,
     };
 
-    return this.httpService.getData('export/users/activity-specific', data);
+    return this.httpService.getFile('export/users/activity-specific', data);
   }
 }

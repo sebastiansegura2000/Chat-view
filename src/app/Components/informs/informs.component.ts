@@ -5,6 +5,8 @@ import { IActiveGroupReportService } from 'src/app/Abstract/Report/Group/iactive
 import { IInactiveGroupReportService } from 'src/app/Abstract/Report/Group/iinactive-group-report.service';
 import { IUserReportService } from 'src/app/Abstract/Report/User/iuser-report.service';
 import { IGroupInfoExportService } from 'src/app/Abstract/Exports/Group/igroup-info-export.service';
+import { IUserActivityService } from 'src/app/Abstract/Exports/User/iuser-activity.service';
+import { IGroupActivityService } from 'src/app/Abstract/Exports/Group/igroup-activity.service';
 
 @Component({
   selector: 'app-informs',
@@ -71,6 +73,8 @@ export class InformsComponent implements OnInit {
     private inactiveGroupService: IInactiveGroupReportService,
     private userReportService: IUserReportService,
     private gruopInfoExportService: IGroupInfoExportService,
+    private userActivityExportService: IUserActivityService,
+    private grouActivityExportService: IGroupActivityService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -433,5 +437,77 @@ export class InformsComponent implements OnInit {
         console.error('Error downloading the file', error);
       }
     );
+  }
+  /**
+   * Exports the user activity data based on the provided time filter and time value.
+   *
+   * @remarks
+   * This function exports the user activity data to a file using the `IUserActivityExportService`.
+   * It uses the `inactiveUsersTimeValue` and `inactiveUsersTimeFilter` properties to determine the time filter and time value for the export.
+   *
+   * @param {number} [inactiveUsersTimeValue] - The selected time value for the inactive users chart.
+   * @param {number} [inactiveUsersTimeFilter] - The selected time filter for the inactive users chart.
+   *
+   * @returns {void} - This function does not return any value. It logs the exported data to the console.
+   */
+  exportUserActivity() {
+    if (parseInt(this.inactiveUsersTypeFilter) == 0) {
+      this.userActivityExportService
+        .exportUserActivityGeneral(
+          this.inactiveUsersTimeValue,
+          parseInt(this.inactiveUsersTimeFilter)
+        )
+        .subscribe(
+          (blob) => {
+            this.exportFiles(blob, 'user_activity_general.xlsx');
+          },
+          (error) => {
+            console.error('Error downloading the file', error);
+          }
+        );
+    } else {
+      this.userActivityExportService
+        .exportUserActivitySpecific(
+          this.inactiveUsersTimeValue,
+          parseInt(this.inactiveUsersTimeFilter),
+          parseInt(this.inactiveUsersTypeFilter)
+        )
+        .subscribe(
+          (blob) => {
+            this.exportFiles(blob, 'user_activity_specific.xlsx');
+          },
+          (error) => {
+            console.error('Error downloading the file', error);
+          }
+        );
+    }
+  }
+  /**
+   * Exports the group activity data to a file.
+   *
+   * @remarks
+   * This method exports the group activity data to a file using the `IGroupActivityExportService`.
+   * It uses the `inactiveUsersTimeValue` and `inactiveUsersTimeFilter` properties to determine the time filter and time value for the export.
+   *
+   * @param {number} [inactiveUsersTimeValue] - The selected time value for the inactive users chart.
+   * @param {number} [inactiveUsersTimeFilter] - The selected time filter for the inactive users chart.
+   *
+   * @returns {void} - This method does not return any value. It logs the exported data to the console.
+   */
+  exportGroupActivity() {
+    this.grouActivityExportService;
+    this.grouActivityExportService
+      .GroupActivityExport(
+        this.inactiveGroupsTimeValue,
+        parseInt(this.inactiveGroupsTimeFilter)
+      )
+      .subscribe(
+        (blob) => {
+          this.exportFiles(blob, 'group_activity.xlsx');
+        },
+        (error) => {
+          console.error('Error downloading the file', error);
+        }
+      );
   }
 }
