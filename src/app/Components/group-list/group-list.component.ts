@@ -87,6 +87,7 @@ export class GroupListComponent implements OnInit {
   onEndKeyPress(event: KeyboardEvent) {
     if (event.key === 'End' || event.key === 'Fin') {
       this.loadMoreGroups();
+      this.loadMoreArchiveGroups();
     }
   }
   // ----------------------------------------------------------------------------------------------------------------------------
@@ -107,6 +108,9 @@ export class GroupListComponent implements OnInit {
 
   filteredGroups: any[] = [];
   filterValue: string = '';
+  filterValueArchive: string = '';
+  filteredArchiveGroups: Group[] = [];
+  visibleArchiveGroups: number = 2;
 
   applyFilter(): void {
     this.filteredGroups = this.groups
@@ -116,11 +120,25 @@ export class GroupListComponent implements OnInit {
       .slice(0, this.visibleGroups);
   }
 
+  applyFilterArchive(): void {
+    this.filteredArchiveGroups = this.archiveGroups
+      .filter((group) =>
+        group.name.toLowerCase().includes(this.filterValueArchive.toLowerCase())
+      )
+      .slice(0, this.visibleArchiveGroups);
+  }
+
   loadMoreGroups(): void {
     this.visibleGroups += 2;
     this.applyFilter();
     this.loadingMoreGroups = false;
   }
+
+  loadMoreArchiveGroups(): void {
+    this.visibleArchiveGroups += 2;
+    this.applyFilterArchive();
+  }
+
 
   // propeties participants -----------------------------------------------------------------------------------------------------
   get participantsControls(): FormArray {
@@ -341,6 +359,7 @@ export class GroupListComponent implements OnInit {
       .getArchivedGroupsForAUser()
       .subscribe((response) => {
         this.archiveGroups = response['groups'];
+        this.applyFilterArchive();
       });
   }
   // Permissions --------------------------------------------------------------------------------------------------------------------------

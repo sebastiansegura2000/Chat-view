@@ -127,24 +127,27 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="input-group">
+              <input type="text" placeholder="Search archived groups..." [(ngModel)]="filterValueArchive" (input)="applyFilterArchive()" class="form-control search" />
             </div>
           </div>
           <div class="modal-body">
-            <p>Archived Groups</p>
             <ul class="contacts">
-              <a *ngFor="let group of archiveGroups" (click) = "setGroupId(group.id)" data-bs-dismiss="modal">
+              <a *ngFor="let group of filteredArchiveGroups" (click) = "setGroupId(group.id)" data-bs-dismiss="modal">
                 <li>
                   <div class="d-flex bd-highlight">
                     <div class="img_cont">
                       <img src="https://i.pinimg.com/564x/ba/fb/cf/bafbcfca1737d802dda07214e8a680ca.jpg" class="rounded-circle user_img"/>
                     </div>
-                    <div class="user_info">
+                    <div class="user_info2">
                       <span>{{ group.name }}</span>
                     </div>
                   </div>
                 </li>
               </a>
             </ul>
+            <div class="d-flex justify-content-center" *ngIf="filteredArchiveGroups && archiveGroups">
+              <button *ngIf="filteredArchiveGroups.length < archiveGroups.length" (click)="loadMoreArchiveGroups()" class="btn btn-link">View more</button>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
