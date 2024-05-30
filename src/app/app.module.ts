@@ -56,6 +56,8 @@ import { IGroupActivityService } from './Abstract/Exports/Group/igroup-activity.
 import { GroupActivityExportService } from './Services/Exports/Group/group-activity-export.service';
 import { IGroupArchiveService } from './Abstract/Group/Archive/igroup-archive.service';
 import { GroupArchiveService } from './Services/Group/Archive/group-archive.service';
+import { IMessageReportService } from './Abstract/Report/Message/imessage-report.service';
+import { MessageReportService } from './Services/Report/Message/message-report.service';
 
   const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     hostname: environment.mqtt.server,
@@ -111,6 +113,7 @@ import { GroupArchiveService } from './Services/Group/Archive/group-archive.serv
     {provide: IUserActivityService,useClass: UserActivityService},
     {provide: IGroupArchiveService,useClass: GroupArchiveService},
     {provide: IGroupActivityService,useClass: GroupActivityExportService},
+    {provide: IMessageReportService,useClass: MessageReportService},
   ],
   bootstrap: [AppComponent],
 })

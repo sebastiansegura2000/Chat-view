@@ -7,6 +7,7 @@ import { IUserReportService } from 'src/app/Abstract/Report/User/iuser-report.se
 import { IGroupInfoExportService } from 'src/app/Abstract/Exports/Group/igroup-info-export.service';
 import { IUserActivityService } from 'src/app/Abstract/Exports/User/iuser-activity.service';
 import { IGroupActivityService } from 'src/app/Abstract/Exports/Group/igroup-activity.service';
+import { IMessageReportService } from 'src/app/Abstract/Report/Message/imessage-report.service';
 
 @Component({
   selector: 'app-informs',
@@ -65,7 +66,7 @@ export class InformsComponent implements OnInit {
     { name: 'Inactive', value: 0 },
   ];
 
-  messagesPerDayData = mensajesPorDiaData;
+  messagesPerDayData: object[];
 
   constructor(
     private groupService: IGroupUserReportService,
@@ -75,6 +76,7 @@ export class InformsComponent implements OnInit {
     private gruopInfoExportService: IGroupInfoExportService,
     private userActivityExportService: IUserActivityService,
     private grouActivityExportService: IGroupActivityService,
+    private messageReportService: IMessageReportService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -90,8 +92,8 @@ export class InformsComponent implements OnInit {
 
     this.setGroupActivity(1, 5);
     this.setUserActivity(1, 5, 0);
-
-    this.filteredMessagesPerDayData = this.messagesPerDayData;
+    this.setmessagesPerDayData();
+ 
     this.filteredUsersPerGroupData = this.usersPerGroupData;
   }
   /**
@@ -242,6 +244,23 @@ export class InformsComponent implements OnInit {
     this.inactiveGroupsData = [...this.inactiveGroupsData];
     this.changeDetectorRef.detectChanges();
   }
+
+  /**
+   * Sets the messages per day data for the messages per day section.
+   *
+   * @remarks
+   * This function retrieves the messages per day data from the backend API and updates the `messagesPerDayData` array.
+   * It uses the `IMessageReportService` to make HTTP requests to the backend API.
+   *
+   * @param {void} - This function does not take any parameters.
+   * @returns {void} - This function does not return any value. It updates the `messagesPerDayData` array.
+   */
+  setmessagesPerDayData() {
+    this.messageReportService.getMessagesPerDayAllUsers().subscribe((data) => {
+      this.messagesPerDayData = data['messages'];
+      this.filteredMessagesPerDayData = this.messagesPerDayData;
+    });
+  }
   /**
    * Shows the messages per day section in the component.
    *
@@ -331,9 +350,9 @@ export class InformsComponent implements OnInit {
         .map((series) => {
           return {
             ...series,
-            series: series.series.filter((item) => {
+            series: series['series'].filter((item) => {
               if (this.selectedMessagesPerDayFilter === 'name') {
-                return series.name
+                return series['name']
                   .toLowerCase()
                   .includes(this.messagesPerDayFilterValue.toLowerCase());
               }
@@ -352,7 +371,7 @@ export class InformsComponent implements OnInit {
                 return itemDate >= start && itemDate <= end;
               }
               if (this.selectedMessagesPerDayFilter === 'rrhh_id') {
-                return series.rrhh_id
+                return series['rrhh_id']
                   .toString()
                   .includes(this.messagesPerDayFilterValue);
               }
