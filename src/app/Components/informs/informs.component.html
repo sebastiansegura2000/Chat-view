@@ -186,7 +186,7 @@
             [(ngModel)]="inactiveUsersTimeFilter"
             (change)="updateInactiveUsersChart()"
           >
-            <option value="5">Hora</option>
+            <option value="5" selected>Hora</option>
             <option value="4">Día</option>
             <option value="3">Semana</option>
             <option value="2">Mes</option>
@@ -198,6 +198,7 @@
             [(ngModel)]="inactiveUsersTimeValue"
             (input)="updateInactiveUsersChart()"
             placeholder="Enter value"
+            value="1"
           />
         </div>
       </div>
@@ -254,7 +255,7 @@
             [(ngModel)]="inactiveGroupsTimeFilter"
             (change)="updateInactiveGroupsChart()"
           >
-            <option value="5">Hora</option>
+            <option value="5" selected>Hora</option>
             <option value="4">Día</option>
             <option value="3">Semana</option>
             <option value="2">Mes</option>
@@ -266,6 +267,7 @@
             [(ngModel)]="inactiveGroupsTimeValue"
             (input)="updateInactiveGroupsChart()"
             placeholder="Enter value"
+            value="1"
           />
         </div>
       </div>
