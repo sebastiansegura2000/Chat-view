@@ -19,17 +19,17 @@ display: block;
 }
 
 .modal-content {
-  background-color: #8a9ec9;
+  background-color: #778197;
   color: #000000;
 }
 
 .modal-header,
 .modal-footer {
-  background-color: #8a9ec9;
+  background-color: #778197;
 }
 
 .modal-header .form-control.search {
-  background-color: #8a9ec9;
+  background-color: #778197;
   color: #000000;
 }
 

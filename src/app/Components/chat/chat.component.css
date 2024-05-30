@@ -307,3 +307,8 @@ body {
 .markAsrRead{
     color: blue;
 }
+
+.btn-link {
+  text-decoration: none;
+  color: white;
+}

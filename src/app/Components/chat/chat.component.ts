@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/Interfaces/User/user.interface';
 import { IUSerRepositoryService } from 'src/app/Abstract/User/repository/iuser-repository.service';
@@ -16,7 +16,7 @@ import { ChatService } from 'src/app/Services/Chat/chat.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   recipient: User;
   sender: User;
   messages: Message[];
@@ -28,6 +28,7 @@ export class ChatComponent implements OnInit {
     time: string,
     read?: object[],
   }[] = [];
+  @ViewChild('scrollableDiv') scrollableDiv: ElementRef;
   constructor(
     private userRepository: IUSerRepositoryService,
     private messageService: IMessageQueryForUserService,
@@ -37,7 +38,6 @@ export class ChatComponent implements OnInit {
     private messageQueryService: IMessageQueryService,
     private chatService: ChatService
   ) {}
-
   ngOnInit(): void {
     this.getChatId();
 
@@ -48,6 +48,40 @@ export class ChatComponent implements OnInit {
       this.suscribeTopicForReadMessage(this.sender.id);
       this.suscribeTopicForMarkAllMessageAsRead(this.sender.id);
     });
+  }
+
+  // @HostListener('window:scroll', ['$event'])
+  // onScroll(event) {
+  // console.log("scrolling .....");
+  // }
+
+
+
+  ngAfterViewInit() {
+    if (this.scrollableDiv) {
+      this.scrollableDiv.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
+    } else {
+      console.error('scrollableDiv is not defined');
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.scrollableDiv) {
+      this.scrollableDiv.nativeElement.removeEventListener('scroll', this.onScroll.bind(this));
+    }
+  }
+
+  onScroll(event: Event): void {
+    const element = event.target as HTMLElement;
+    console.log('Scroll position:', element.scrollTop);
+  }
+
+  @HostListener('scroll') scrolling(){
+    console.log('scrolling');
+  }
+
+  @HostListener('click') clicking(){
+    console.log('clicking...');
   }
   /**
    * Toggles the visibility of the action menu.
@@ -110,6 +144,15 @@ export class ChatComponent implements OnInit {
   /**
    * Loads the messages for the current recipient.
    */
+
+  initialMessageCount: number = 5;
+  totalLoadedMessages: number = 0;
+
+  loadMoreMessages() {
+    this.initialMessageCount += 5;
+    this.loadMessage();
+  }
+
   loadMessage() {
     this.messageService.getMessage(this.recipient.id).subscribe((response) => {
       this.messages = response['messages'];

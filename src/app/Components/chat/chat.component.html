@@ -33,8 +33,14 @@
             </div>
           </div>
 
-          <div class="card-body msg_card_body">
-            <div *ngFor="let message of messages">
+          <div class="card-body msg_card_body" #scrollableDiv>
+
+            <div *ngIf="messages.length > initialMessageCount">
+              <button class="btn btn-link" (click)="loadMoreMessages()">Cargar más mensajes</button>
+            </div>
+
+            <div *ngFor="let message of messages.slice(0, initialMessageCount)">
+            <!-- <div *ngFor="let message of messages"> -->
               <div class="d-flex justify-content-start mb-4" *ngIf="message.sender_id == recipient.id">
                 <div class="msg_cotainer">
                   {{ message.content }}
