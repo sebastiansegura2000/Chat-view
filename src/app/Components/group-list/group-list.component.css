@@ -18,7 +18,24 @@ justify-content: center;
 display: block;
 }
 
+.modal-content {
+  background-color: #8a9ec9;
+  color: #000000;
+}
 
+.modal-header,
+.modal-footer {
+  background-color: #8a9ec9;
+}
+
+.modal-header .form-control.search {
+  background-color: #8a9ec9;
+  color: #000000;
+}
+
+.modal-header .btn-close {
+  filter: invert(1);
+}
 
 .unread_indicator {
   display: inline-block;
@@ -194,10 +211,26 @@ display: block;
   margin-left: 15px;
   position: relative;
 }
+.user_info2 {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 15px;
+  position: relative;
+}
 
 .user_info span {
   font-size: 20px;
   color: white;
+  display: inline-block;
+  width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user_info2 span {
+  font-size: 20px;
+  color: rgb(0, 0, 0);
   display: inline-block;
   width: 160px;
   white-space: nowrap;
