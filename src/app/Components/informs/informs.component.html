@@ -185,9 +185,9 @@
           [(ngModel)]="inactiveUsersTypeFilter"
           (change)="updateInactiveUsersChart()"
         >
-          <option value="general">General</option>
-          <option value="users">Users</option>
-          <option value="groups">Groups</option>
+          <option value="0" >General</option>
+          <option value="1">Users</option>
+          <option value="2">Groups</option>
         </select>
       </div>
 
@@ -262,19 +262,6 @@
         </select>
       </div>
 
-      <div>
-        <label for="inactiveGroupsTypeFilter" class="form-label">Type Filter:</label>
-        <select
-          id="inactiveGroupsTypeFilter"
-          class="form-select"
-          [(ngModel)]="inactiveGroupsTypeFilter"
-          (change)="updateInactiveGroupsChart()"
-        >
-          <option value="general">General</option>
-          <option value="users">Users</option>
-          <option value="groups">Groups</option>
-        </select>
-      </div>
 
       <div>
         <label for="inactiveGroupsTimeFilter" class="form-label">Time Filter:</label>

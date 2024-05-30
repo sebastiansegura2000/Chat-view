@@ -27,8 +27,8 @@ export class InformsComponent implements OnInit {
   inactiveUsersChartType: string = 'normal';
   inactiveGroupsChartType: string = 'normal';
 
-  inactiveUsersTimeFilter = '4';
-  inactiveGroupsTimeFilter = '4';
+  inactiveUsersTimeFilter = '5';
+  inactiveGroupsTimeFilter = '5';
 
   inactiveUsersTimeValue = 1;
   inactiveGroupsTimeValue = 1;
@@ -36,8 +36,8 @@ export class InformsComponent implements OnInit {
   selectedUsersPerGroupFilter: string = 'name';
   usersPerGroupFilterValue: string = '';
 
-  inactiveUsersTypeFilter: string = 'general';
-  inactiveGroupsTypeFilter: string = 'general';
+  inactiveUsersTypeFilter: string = '0';
+
 
   filteredUsersPerGroupData: any[] = [];
   usersPerGroupData: object[] = [];
@@ -53,7 +53,10 @@ export class InformsComponent implements OnInit {
     domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA', '#1EDFCE'],
   };
 
-  inactiveUsersData: object[] = [];
+  inactiveUsersData: object[] = [
+    { name: 'Active', value: 0 },
+    { name: 'Inactive', value: 0 },
+  ];
 
   inactiveGroupsData: object[] = [
     { name: 'Active', value: 0 },
@@ -98,7 +101,13 @@ export class InformsComponent implements OnInit {
    * @returns {void} - This function does not return any value. It logs the current time filter and time value to the console.
    */
   updateInactiveUsersChart() {
-    console.log(`Filter: ${this.inactiveUsersTimeFilter}, Value: ${this.inactiveUsersTimeValue}, type: ${this.inactiveUsersTypeFilter}`);
+    if (this.inactiveUsersTimeValue && this.inactiveUsersTimeValue != 0) {
+      this.setUserActivity(
+        this.inactiveUsersTimeValue,
+        parseInt(this.inactiveUsersTimeFilter),
+        parseInt(this.inactiveUsersTypeFilter)
+      );
+    }
   }
 
   /**
@@ -113,51 +122,78 @@ export class InformsComponent implements OnInit {
    * @returns {void} - This function does not return any value. It logs the current time filter and time value to the console.
    */
   updateInactiveGroupsChart() {
-    console.log(`Filter: ${this.inactiveGroupsTimeFilter}, Value: ${this.inactiveGroupsTimeValue}`);
+    if (this.inactiveGroupsTimeValue && this.inactiveGroupsTimeValue != 0) {
+      this.setGroupActivity(
+        this.inactiveGroupsTimeValue,
+        parseInt(this.inactiveGroupsTimeFilter)
+      );
+    }
   }
-
+  /**
+   * Sets the user activity data for the inactive users chart.
+   *
+   * @remarks
+   * This function retrieves the user activity data based on the provided parameters and updates the `inactiveUsersData` array.
+   * It uses the `IUserReportService` to make HTTP requests to the backend API.
+   *
+   * @param {number} amount - The amount of users to retrieve.
+   * @param {number} conversion_type - The type of conversion to apply.
+   * @param {number} type_activity - The type of activity to filter by.
+   *
+   * @returns {void} - This function does not return any value. It updates the `inactiveUsersData` array.
+   */
+  /**
+   * Sets the user activity data for the inactive users chart.
+   *
+   * @remarks
+   * This function retrieves the user activity data based on the provided parameters and updates the `inactiveUsersData` array.
+   * It uses the `IUserReportService` to make HTTP requests to the backend API.
+   *
+   * @param {number} amount - The amount of users to retrieve.
+   * @param {number} conversion_type - The type of conversion to apply.
+   * @param {number} type_activity - The type of activity to filter by.
+   *
+   * @returns {void} - This function does not return any value. It updates the `inactiveUsersData` array.
+   */
   setUserActivity(
     amount: number,
     conversion_type: number,
     type_activity: number
   ) {
     if (type_activity == 0) {
-      this.inactiveUsersData = [];
       this.userReportService
         .getGeneralActiveUsers(amount, conversion_type)
         .subscribe((data) => {
-          this.inactiveUsersData.push({
-            name: 'Active',
-            value: data['users'].length,
-          });
+          this.inactiveUsersData[0]['value'] = data['users'].length;
+          this.updateChartUser();
         });
+
       this.userReportService
         .getGeneralInactiveUsers(amount, conversion_type)
         .subscribe((data) => {
-          this.inactiveUsersData.push({
-            name: 'Inactive',
-            value: data['users'].length,
-          });
+          this.inactiveUsersData[1]['value'] = data['users'].length;
+          this.updateChartUser();
         });
     } else {
-      this.inactiveUsersData = [];
       this.userReportService
         .getSpecificActiveUsers(amount, conversion_type, type_activity)
         .subscribe((data) => {
-          this.inactiveUsersData.push({
-            name: 'Active',
-            value: data['users'].length,
-          });
+          this.inactiveUsersData[0]['value'] = data['users'].length;
+          this.updateChartUser();
         });
+
       this.userReportService
         .getSpecificInactiveUsers(amount, conversion_type, type_activity)
         .subscribe((data) => {
-          this.inactiveUsersData.push({
-            name: 'Inactive',
-            value: data['users'].length,
-          });
+          this.inactiveUsersData[1]['value'] = data['users'].length;
+          this.updateChartUser();
         });
     }
+  }
+
+  updateChartUser() {
+    this.inactiveUsersData = [...this.inactiveUsersData];
+    this.changeDetectorRef.detectChanges();
   }
   /**
    * Sets the group activity data for the inactive groups chart.
