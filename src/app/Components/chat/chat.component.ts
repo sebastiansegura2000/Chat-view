@@ -16,7 +16,7 @@ import { ChatService } from 'src/app/Services/Chat/chat.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
+export class ChatComponent implements OnInit{
   recipient: User;
   sender: User;
   messages: Message[];
@@ -28,7 +28,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
     time: string,
     read?: object[],
   }[] = [];
-  @ViewChild('scrollableDiv') scrollableDiv: ElementRef;
   constructor(
     private userRepository: IUSerRepositoryService,
     private messageService: IMessageQueryForUserService,
@@ -40,7 +39,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   ) {}
   ngOnInit(): void {
     this.getChatId();
-
     this.authService.UserAuth().subscribe((userData) => {
       this.globalService.userAuth.value.userData = userData.user;
       this.sender = this.globalService.userAuth.value.userData;
@@ -50,33 +48,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
     });
   }
 
-  // @HostListener('window:scroll', ['$event'])
-  // onScroll(event) {
-  // console.log("scrolling .....");
-  // }
-
-
-
-  ngAfterViewInit() {
-    if (this.scrollableDiv) {
-      this.scrollableDiv.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
-    } else {
-      console.error('scrollableDiv is not defined');
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.scrollableDiv) {
-      this.scrollableDiv.nativeElement.removeEventListener('scroll', this.onScroll.bind(this));
-    }
-  }
-
-  onScroll(event: Event): void {
-    const element = event.target as HTMLElement;
-    console.log('Scroll position:', element.scrollTop);
-  }
-
-  @HostListener('scroll') scrolling(){
+  @HostListener('window:scroll') scrolling(){
     console.log('scrolling');
   }
 
@@ -150,23 +122,25 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
 
   loadMoreMessages() {
     this.initialMessageCount += 5;
-    this.loadMessage();
+    this.loadMessage(true);
   }
 
-  loadMessage() {
+  loadMessage(loadMore: boolean = false) {
     this.messageService.getMessage(this.recipient.id).subscribe((response) => {
       this.messages = response['messages'];
-      this.messages.sort((a, b) => {
-        return (
-          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        );
-      });
-      setTimeout(() => {
-        const msgContainer = document.querySelector(
-          '.msg_card_body'
-        ) as HTMLElement;
-        msgContainer.scrollTop = msgContainer.scrollHeight;
-      }, 0);
+      this.messages.sort((b, a) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      if (loadMore) {
+        setTimeout(() => {
+          const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
+          msgContainer.scrollTop = 0;
+        }, 0);
+      } else {
+        setTimeout(() => {
+          const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
+          msgContainer.scrollTop = msgContainer.scrollHeight;
+        }, 0);
+      }
     });
   }
   /**
