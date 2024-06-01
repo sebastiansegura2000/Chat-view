@@ -10,6 +10,6 @@ import { HttpHandlerService } from 'src/app/Services/Http/http-handler.service';
 export abstract class IMessageQueryForUserService {
   constructor(private httpService:HttpHandlerService) { }
   public abstract countMessageNotReadForUser():Observable<MessageNotRead[]>;
-  public abstract getMessage(user_id):Observable<Message[]>;
+  public abstract getMessage(user_id,page,perPage):Observable<Message[]>;
   public abstract getMessageHistory(user_id:number):Observable<Message[]>;
 }

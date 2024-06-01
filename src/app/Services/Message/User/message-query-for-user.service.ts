@@ -24,10 +24,12 @@ export class MessageQueryForUserService implements IMessageQueryForUserService {
    * @param {string} user_id - The ID of the user for whom the messages should be retrieved.
    * @returns {Observable<Message[]>} - An Observable that emits an array of `Message` objects.
    */
-  public getMessage(user_id): Observable<Message[]> {
+  public getMessage(user_id,page,perPage): Observable<Message[]> {
     const data = {
       recipient_entity_id: user_id,
       recipient_type: '1',
+      page : page,
+      perPage: perPage
     };
     return this.httpService.getData('message/get', data);
   }

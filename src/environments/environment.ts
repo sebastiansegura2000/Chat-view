@@ -14,7 +14,8 @@ export const environment = {
   visibleContacts: 2,
   visibleContactsModal:5,
   loadMoreContacts:2,
-  loadMoreContactsModal:5
+  loadMoreContactsModal:5,
+  perPage:10
 };
 
 /*

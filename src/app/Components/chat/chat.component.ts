@@ -1,5 +1,13 @@
-import { Component, HostListener, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  OnDestroy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { User } from 'src/app/Interfaces/User/user.interface';
 import { IUSerRepositoryService } from 'src/app/Abstract/User/repository/iuser-repository.service';
 import { Subscription } from 'rxjs';
@@ -10,24 +18,29 @@ import { MqttHandlerService } from 'src/app/Services/Mqtt/mqtt-handler.service';
 import { UserAuthServiceService } from 'src/app/Services/Auth/user-auth-service.service';
 import { IMessageQueryService } from 'src/app/Abstract/Message/MessageQuery/imessage-query.service';
 import { ChatService } from 'src/app/Services/Chat/chat.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
 })
-export class ChatComponent implements OnInit{
+export class ChatComponent implements OnInit, OnDestroy {
+  @ViewChild('dynamicElement') dynamicElement: ElementRef;
   recipient: User;
   sender: User;
   messages: Message[];
   showActionMenu: boolean = false;
   recipientId: number = 0;
   managmentMessages: {
-    id_user: number,
-    text: string,
-    time: string,
-    read?: object[],
+    id_user: number;
+    text: string;
+    time: string;
+    read?: object[];
   }[] = [];
+  page: number = 2;
+  perPage: number = environment.perPage;
+  private scrollListener: () => void;
   constructor(
     private userRepository: IUSerRepositoryService,
     private messageService: IMessageQueryForUserService,
@@ -35,7 +48,8 @@ export class ChatComponent implements OnInit{
     private mqttService: MqttHandlerService,
     private authService: UserAuthServiceService,
     private messageQueryService: IMessageQueryService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
     this.getChatId();
@@ -45,16 +59,37 @@ export class ChatComponent implements OnInit{
       this.suscribeTopic(this.sender.id);
       this.suscribeTopicForReadMessage(this.sender.id);
       this.suscribeTopicForMarkAllMessageAsRead(this.sender.id);
+      console.log(this.dynamicElement);
     });
   }
 
-  @HostListener('window:scroll') scrolling(){
-    console.log('scrolling');
+  ngOnDestroy(): void {
+    if (this.scrollListener) {
+      this.dynamicElement.nativeElement.removeEventListener(
+        'scroll',
+        this.scrollListener
+      );
+    }
   }
 
-  @HostListener('click') clicking(){
-    console.log('clicking...');
+  onScroll(event: Event) {
+    const element = event.target as HTMLElement;
+    const scrollTop = element.scrollTop;
+    if (scrollTop === 0) {
+      this.loadMoreMessages().then((hasMessages) => {
+        if (hasMessages) {
+          setTimeout(() => {
+            const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
+            msgContainer.scrollTop = 15;
+          }, 0);
+        }
+      }).catch((error) => {
+        console.error('Error loading more messages:', error);
+      });
+    }
   }
+  
+
   /**
    * Toggles the visibility of the action menu.
    */
@@ -120,28 +155,50 @@ export class ChatComponent implements OnInit{
   initialMessageCount: number = 5;
   totalLoadedMessages: number = 0;
 
-  loadMoreMessages() {
-    this.initialMessageCount += 5;
-    this.loadMessage(true);
-  }
-
-  loadMessage(loadMore: boolean = false) {
-    this.messageService.getMessage(this.recipient.id).subscribe((response) => {
-      this.messages = response['messages'];
-      this.messages.sort((b, a) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
-      if (loadMore) {
-        setTimeout(() => {
-          const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
-          msgContainer.scrollTop = 0;
-        }, 0);
-      } else {
-        setTimeout(() => {
-          const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
-          msgContainer.scrollTop = msgContainer.scrollHeight;
-        }, 0);
-      }
+  loadMoreMessages(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.messageService.getMessage(this.recipient.id, this.page, this.perPage).subscribe((response) => {
+        if (response['messages'].length === 0) {
+          resolve(false); // Resuelve con false si no hay mensajes
+        } else {
+          this.messages = this.messages.concat(response['messages']);
+          this.messages.sort(
+            (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
+          this.page++;
+          resolve(true); // Resuelve con true si se agregaron mensajes
+        }
+      }, (error) => {
+        reject(error); // Rechaza la promesa en caso de error
+      });
     });
+  }
+  loadMessage(loadMore: boolean = false) {
+    this.messageService
+      .getMessage(this.recipient.id, 1, this.perPage)
+      .subscribe((response) => {
+        this.messages = response['messages'];
+        this.messages.sort(
+          (b, a) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+
+        if (loadMore) {
+          setTimeout(() => {
+            const msgContainer = document.querySelector(
+              '.msg_card_body'
+            ) as HTMLElement;
+            msgContainer.scrollTop = 0;
+          }, 0);
+        } else {
+          setTimeout(() => {
+            const msgContainer = document.querySelector(
+              '.msg_card_body'
+            ) as HTMLElement;
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+          }, 0);
+        }
+      });
   }
   /**
    * Loads the messages for the current recipient and marks them as read.
@@ -286,10 +343,14 @@ export class ChatComponent implements OnInit{
         name: message.reader_name,
         read_at: message.read_at,
       };
-      if (message.recipient_entity_id == this.recipientId &&message.recipient_type == "user") {
+      if (
+        message.recipient_entity_id == this.recipientId &&
+        message.recipient_type == 'user'
+      ) {
         if (this.managmentMessages.length > 0) {
           this.managmentMessages[this.managmentMessages.length - 1].read =
-            this.managmentMessages[this.managmentMessages.length - 1].read || [];
+            this.managmentMessages[this.managmentMessages.length - 1].read ||
+            [];
           this.managmentMessages[this.managmentMessages.length - 1].read.push(
             data
           );
@@ -328,6 +389,17 @@ export class ChatComponent implements OnInit{
         this.managmentMessages = [];
         this.messages = [];
         this.getRecipient(userId);
+        setTimeout(() => {
+          this.cdr.detectChanges();
+
+          if (this.dynamicElement) {
+            this.scrollListener = this.onScroll.bind(this);
+            this.dynamicElement.nativeElement.addEventListener(
+              'scroll',
+              this.scrollListener
+            );
+          }
+        }, 500);
       }
     });
   }
@@ -362,7 +434,7 @@ export class ChatComponent implements OnInit{
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     const teclaPresionada = event.key.toLowerCase();
-
+    this.page = 2;
     if (teclaPresionada === this.secuenciaTeclas[this.indiceSecuencia]) {
       this.indiceSecuencia++;
 
