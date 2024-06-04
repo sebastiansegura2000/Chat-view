@@ -59,7 +59,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.suscribeTopic(this.sender.id);
       this.suscribeTopicForReadMessage(this.sender.id);
       this.suscribeTopicForMarkAllMessageAsRead(this.sender.id);
-      console.log(this.dynamicElement);
     });
   }
 
@@ -75,20 +74,28 @@ export class ChatComponent implements OnInit, OnDestroy {
   onScroll(event: Event) {
     const element = event.target as HTMLElement;
     const scrollTop = element.scrollTop;
+    const containerHeight = element.clientHeight;
+    const scrollHeight = element.scrollHeight;
+    const scrollBottom = scrollHeight - containerHeight - scrollTop;
+
     if (scrollTop === 0) {
-      this.loadMoreMessages().then((hasMessages) => {
-        if (hasMessages) {
-          setTimeout(() => {
-            const msgContainer = document.querySelector('.msg_card_body') as HTMLElement;
-            msgContainer.scrollTop = 15;
-          }, 0);
-        }
-      }).catch((error) => {
-        console.error('Error loading more messages:', error);
-      });
+      this.loadMoreMessages()
+        .then((hasMessages) => {
+          if (hasMessages) {
+            setTimeout(() => {
+              const msgContainer = document.querySelector(
+                '.msg_card_body'
+              ) as HTMLElement;
+              const targetScroll = containerHeight / 2 + 15;
+              msgContainer.scrollTop = targetScroll;
+            }, 0);
+          }
+        })
+        .catch((error) => {
+          console.error('Error loading more messages:', error);
+        });
     }
   }
-  
 
   /**
    * Toggles the visibility of the action menu.
@@ -149,30 +156,51 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
   /**
-   * Loads the messages for the current recipient.
+   * Loads more messages for the current recipient.
+   *
+   * @param {number} [loadMore=false] - Indicates whether to load more messages or not.
+   * @returns {Promise<boolean>} - A promise that resolves to true if more messages are loaded, false otherwise.
    */
-
-  initialMessageCount: number = 5;
-  totalLoadedMessages: number = 0;
-
   loadMoreMessages(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      this.messageService.getMessage(this.recipient.id, this.page, this.perPage).subscribe((response) => {
-        if (response['messages'].length === 0) {
-          resolve(false); // Resuelve con false si no hay mensajes
-        } else {
-          this.messages = this.messages.concat(response['messages']);
-          this.messages.sort(
-            (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-          );
-          this.page++;
-          resolve(true); // Resuelve con true si se agregaron mensajes
-        }
-      }, (error) => {
-        reject(error); // Rechaza la promesa en caso de error
-      });
+      this.messageService
+        .getMessage(this.recipientId, this.page, this.perPage)
+        .subscribe(
+          (response) => {
+            if (response['messages'].length === 0) {
+              resolve(false);
+            } else {
+              this.messages = this.messages.concat(response['messages']);
+
+              var hash = {};
+              this.messages = this.messages.filter(function (current) {
+                var exists = !hash[current.id];
+                hash[current.id] = true;
+                return exists;
+              });
+
+              this.messages.sort(
+                (a, b) =>
+                  new Date(a.created_at).getTime() -
+                  new Date(b.created_at).getTime()
+              );
+              this.page++;
+              resolve(true);
+            }
+          },
+          (error) => {
+            reject(error);
+          }
+        );
     });
   }
+
+  /**
+   * Loads the messages for the current recipient.
+   *
+   * @param {boolean} [loadMore=false] - Indicates whether to load more messages or not.
+   * @returns {void} - No return value.
+   */
   loadMessage(loadMore: boolean = false) {
     this.messageService
       .getMessage(this.recipient.id, 1, this.perPage)
@@ -182,22 +210,6 @@ export class ChatComponent implements OnInit, OnDestroy {
           (b, a) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
-
-        if (loadMore) {
-          setTimeout(() => {
-            const msgContainer = document.querySelector(
-              '.msg_card_body'
-            ) as HTMLElement;
-            msgContainer.scrollTop = 0;
-          }, 0);
-        } else {
-          setTimeout(() => {
-            const msgContainer = document.querySelector(
-              '.msg_card_body'
-            ) as HTMLElement;
-            msgContainer.scrollTop = msgContainer.scrollHeight;
-          }, 0);
-        }
       });
   }
   /**
@@ -383,6 +395,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   getChatId() {
     this.chatService.$getChatId.subscribe((id) => {
       this.recipient = undefined;
+      this.messages = undefined;
+      this.page = 2;
       const userId = id;
       this.recipientId = id;
       if (userId != 0) {
@@ -399,6 +413,12 @@ export class ChatComponent implements OnInit, OnDestroy {
               this.scrollListener
             );
           }
+          setTimeout(() => {
+            const msgContainer = document.querySelector(
+              '.msg_card_body'
+            ) as HTMLElement;
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+          }, 0)
         }, 500);
       }
     });
@@ -434,7 +454,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     const teclaPresionada = event.key.toLowerCase();
-    this.page = 2;
+
     if (teclaPresionada === this.secuenciaTeclas[this.indiceSecuencia]) {
       this.indiceSecuencia++;
 
