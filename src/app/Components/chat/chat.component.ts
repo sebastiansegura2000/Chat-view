@@ -4,7 +4,6 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
-  AfterViewInit,
   OnDestroy,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -40,6 +39,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }[] = [];
   page: number = 2;
   perPage: number = environment.perPage;
+  isLoading: boolean = false;
   private scrollListener: () => void;
   constructor(
     private userRepository: IUSerRepositoryService,
@@ -70,15 +70,17 @@ export class ChatComponent implements OnInit, OnDestroy {
       );
     }
   }
-
+  /**
+   * Event listener for scrolling to the bottom of the chat window.
+   *
+   * @param {Event} event - The event object containing information about the scroll event.
+   */
   onScroll(event: Event) {
     const element = event.target as HTMLElement;
     const scrollTop = element.scrollTop;
-    const containerHeight = element.clientHeight;
-    const scrollHeight = element.scrollHeight;
-    const scrollBottom = scrollHeight - containerHeight - scrollTop;
 
-    if (scrollTop === 0) {
+    if (scrollTop === 0 && !this.isLoading) {
+      this.isLoading = true; // Set loading state to true
       this.loadMoreMessages()
         .then((hasMessages) => {
           if (hasMessages) {
@@ -86,13 +88,14 @@ export class ChatComponent implements OnInit, OnDestroy {
               const msgContainer = document.querySelector(
                 '.msg_card_body'
               ) as HTMLElement;
-              const targetScroll = containerHeight / 2 + 15;
-              msgContainer.scrollTop = targetScroll;
+              msgContainer.scrollTop = 400; // Adjust scroll position
             }, 0);
           }
+          this.isLoading = false; // Reset loading state
         })
         .catch((error) => {
           console.error('Error loading more messages:', error);
+          this.isLoading = false; // Reset loading state even on error
         });
     }
   }
@@ -172,19 +175,22 @@ export class ChatComponent implements OnInit, OnDestroy {
             } else {
               this.messages = this.messages.concat(response['messages']);
 
-              var hash = {};
-              this.messages = this.messages.filter(function (current) {
-                var exists = !hash[current.id];
+              // Remove duplicates
+              const hash = {};
+              this.messages = this.messages.filter((current) => {
+                const exists = !hash[current.id];
                 hash[current.id] = true;
                 return exists;
               });
 
+              // Sort messages by created_at in ascending order
               this.messages.sort(
                 (a, b) =>
                   new Date(a.created_at).getTime() -
                   new Date(b.created_at).getTime()
               );
-              this.page++;
+
+              this.page = this.page + 1;
               resolve(true);
             }
           },
@@ -418,7 +424,7 @@ export class ChatComponent implements OnInit, OnDestroy {
               '.msg_card_body'
             ) as HTMLElement;
             msgContainer.scrollTop = msgContainer.scrollHeight;
-          }, 0)
+          }, 0);
         }, 500);
       }
     });
